@@ -1,14 +1,30 @@
 package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObjects;
+import Caprish.Model.imp.business.enums.branch_type;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
 @Entity
-@Table (name="branch")
+@Table(name="branch")
 public class Branch extends MyObjects {
         @Id
-        @GeneratedValue (strategy=GenerationType.Identity)
+        @GeneratedValue(strategy=GenerationType.AUTO)
         private Long id;
-        private Long id;
+        @ManyToOne
+        @JoinColumn(name = "id_business")
+        private Business business;
+        @Column(unique=true,nullable = false)
+        @NotBlank(message="La direccion no puede estar vacia")
         private String address;
+        @Column(nullable = false)
+        @NotBlank(message="El tipo de sucursal no puede estar vacio")
+        @Enumerated(EnumType.STRING)
+        private branch_type type;
+
         private
 
     String sql =    "CREATE TABLE branch (\n" +

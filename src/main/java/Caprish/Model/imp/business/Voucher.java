@@ -19,7 +19,3 @@
 //}
 /**PARA PENSAR**/
 
- joan mogolico
-
-
-

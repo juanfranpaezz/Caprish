@@ -7,8 +7,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
 @Entity
+@Setter
+@Getter
 @Table(name="branch")
 public class Branch extends MyObjects {
         @Id
@@ -25,15 +31,19 @@ public class Branch extends MyObjects {
         @Enumerated(EnumType.STRING)
         private branch_type type;
 
-        private
-
-    String sql =    "CREATE TABLE branch (\n" +
-                    "  id_branch BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
-                    "  id_business BIGINT NOT NULL,\n" +
-                    "  address VARCHAR(200) NOT NULL,\n" +
-                    "  branch_type ENUM(SALES_POINT, WAREHOUSE) NOT NULL," +
-                    "  FOREIGN KEY (id_business)\n" +
-                    "  REFERENCES business(id_business)\n" +
-                    "  ON DELETE CASCADE\n" +
-                    ");";
+        public Branch(String address, Business business, branch_type type) {
+                this.address = address;
+                this.business = business;
+                this.type = type;
+        }
+        //
+//    String sql =    "CREATE TABLE branch (\n" +
+//                    "  id_branch BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
+//                    "  id_business BIGINT NOT NULL,\n" +
+//                    "  address VARCHAR(200) NOT NULL,\n" +
+//                    "  branch_type ENUM(SALES_POINT, WAREHOUSE) NOT NULL," +
+//                    "  FOREIGN KEY (id_business)\n" +
+//                    "  REFERENCES business(id_business)\n" +
+//                    "  ON DELETE CASCADE\n" +
+//                    ");";
 }

@@ -16,7 +16,6 @@ public class Business extends MyObjects {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_business;
-
     @Column(unique=true)
 
 
@@ -29,7 +28,7 @@ public class Business extends MyObjects {
             "    business_name VARCHAR(100) NOT NULL UNIQUE,\n" +
             "    description TEXT NOT NULL,\n" +
             "    slogan TEXT NOT NULL,\n" +
-            "    id_boss INT,\n" +
+            "    id_staff INT,\n" +
             "    address VARCHAR(50) NOT NULL,\n" +
             "    tax INT,\n" +
             "    FOREIGN KEY (id_boss) REFERENCES bosses(id_boss)    \n" +

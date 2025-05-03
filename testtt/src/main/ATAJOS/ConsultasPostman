@@ -1,0 +1,25 @@
+http://localhost:8080/api/sign-up?email=emailquequieran@gmail.com&password=contraseñaQueQuieran
+METODO POST, para REGISTRARSE, automaticamente dsps de hacer esto vayan al verify-token para ver si les funciona :D
+
+http://localhost:8080/api/send-token?to=emailquequieran@gmail.com
+METODO POST, para mandar token a un mail
+
+http://localhost:8080/api/verify-token
+METODO POST, para verificar token, ir a body, x-www-form-urlencoded
+TODAS LAS KEYS TIENEN QUE SER TEXT
+key1: email | value 1: emailquequieran@gmail.com
+key 2: code | value 2: (el token que les llegue)
+
+http://localhost:8080/api/send-email
+METODO POST, para mandar un mail, ir a form-data
+TODAS LAS KEYS TIENEN QUE SER TEXT
+key1: to | value 1: emailquequieran@gmail.com
+key2: subject | value 2: tema que quieran
+key3: name | value 3: lo q quieran poner de nombre en el saludo
+
+http://localhost:8080/view-mails-received?email=mailquequieran@gmail.com
+METODO GET, para ver mails recibidos, cambiar recevied por sended para ver los enviados
+
+http://localhost:8080/api/login?email=emailquequieran@gmail.com&password=contraseñaQueQuieran
+METODO POST, para INICIAR SESION
+

@@ -1,8 +1,15 @@
 package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObjects;
-
+@Entity
+@Table (name="branch")
 public class Branch extends MyObjects {
+        @Id
+        @GeneratedValue (strategy=GenerationType.Identity)
+        private Long id;
+        private Long id;
+        private String address;
+        private
 
     String sql =    "CREATE TABLE branch (\n" +
                     "  id_branch BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +

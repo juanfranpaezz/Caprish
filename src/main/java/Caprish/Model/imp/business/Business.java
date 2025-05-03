@@ -1,8 +1,28 @@
 package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObjects;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Table
+@Entity(name="business")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Business extends MyObjects {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id_business;
+
+    @Column(unique=true)
+
+
+
+
+
 
     String sql = "CREATE TABLE business (\n" +
             "    id_business INT PRIMARY KEY AUTO_INCREMENT,\n" +

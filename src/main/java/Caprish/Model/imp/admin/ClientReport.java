@@ -32,12 +32,12 @@ public class ClientReport {
         this.report_data = report_data;
     }
     //    String sql =    "CREATE TABLE client_report (\n" +
-//                    "  id_client_report BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
-//                    "  id_sale BIGINT,\n" +
-//                    "  generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
-//                    "  report_data TEXT,\n" +
-//                    "  FOREIGN KEY (id_sale)\n" +
-//                    "    REFERENCES sale(id_sale)\n" +
-//                    "    ON DELETE SET NULL\n" +
-//                    ");";
+    //                    "  id_client_report BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
+    //                    "  id_sale BIGINT,\n" +
+    //                    "  generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
+    //                    "  report_data TEXT,\n" +
+    //                    "  FOREIGN KEY (id_sale)\n" +
+    //                    "    REFERENCES sale(id_sale)\n" +
+    //                    "    ON DELETE SET NULL\n" +
+    //                    ");";
 }

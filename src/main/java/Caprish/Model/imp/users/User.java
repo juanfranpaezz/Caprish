@@ -16,13 +16,6 @@ import lombok.Setter;
 @Setter
 
 public abstract class User extends MyObjects {
-
-    public User(Long id, String email, String password_hash) {
-        this.id = id;
-        this.email = email;
-        this.password_hash = password_hash;
-    }
-
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -35,6 +28,12 @@ public abstract class User extends MyObjects {
     @Column(columnDefinition = "text")
     @NotBlank(message = "La contraseña no puede estar vacia.")
     private String password_hash;
+
+    public User(Long id, String email, String password_hash) {
+        this.id = id;
+        this.email = email;
+        this.password_hash = password_hash;
+    }
 
     /*padre de: admin, boss, client, employee, */
 }

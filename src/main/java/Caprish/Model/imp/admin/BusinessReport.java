@@ -29,13 +29,13 @@ public class BusinessReport extends MyObjects {
     @NotBlank(message="aaa")
     private String about;
 
-    String sql =    "CREATE TABLE business (" +
-                    "id_business_report BIGINT PRIMARY KEY AUTO_INCREMENT," +
-                    "id_business INT NOT NULL," +
-                    "generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
-                    "CONSTRAINT id_business FOREIGN KEY (id_business)" +
-                    "REFERENCES business(id_business)" +
-                    "about VARCHAR(200), NOT NULL" +
-                    "description TEXT" +
-                    ");";
+//    String sql =    "CREATE TABLE business (" +
+//                    "id_business_report BIGINT PRIMARY KEY AUTO_INCREMENT," +
+//                    "id_business INT NOT NULL," +
+//                    "generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
+//                    "CONSTRAINT id_business FOREIGN KEY (id_business)" +
+//                    "REFERENCES business(id_business)" +
+//                    "about VARCHAR(200), NOT NULL" +
+//                    "description TEXT" +
+//                    ");";
 }

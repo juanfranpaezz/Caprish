@@ -1,16 +1,53 @@
 package Caprish.Model.imp.users;
 
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Table
+@Entity(name="clients")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Client extends User {
 
-    String sql =    "CREATE TABLE clients (" +
-                    "    id_client INT PRIMARY KEY AUTO_INCREMENT," +
-                    "    first_name VARCHAR(50) NOT NULL," +
-                    "    pass VARCHAR(255) NOT NULL," +
-                    "    last_name VARCHAR(50) NOT NULL," +
-                    "    email VARCHAR(100) NOT NULL UNIQUE," +
-                    "    phone int NOT NULL UNIQUE" +
-                    ");";
+    public Client(Long id, String email, String password_hash, Long id_client, String first_name, String last_name, String password, String email1, Integer phone) {
+        super(id, email, password_hash);
+        this.id_client = id_client;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.password = password;
+        this.email = email1;
+        this.phone = phone;
+    }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id_client;
 
+    @Column(columnDefinition = "text")
+    @NotBlank(message = "El nombre no puede estar vacío")
+    private String first_name;
+
+    @Column(columnDefinition = "text")
+    @NotBlank(message = "El apellido no puede estar vacío")
+    private String last_name;
+
+    @Column(columnDefinition = "text")
+    @NotBlank(message = "La contrasena no puede estar vacía")
+    private String password;
+
+    @Column(unique=true, columnDefinition = "text")
+    @NotBlank(message = "El email no puede estar vacío")
+    @Email(message = "El email no es válido")
+    private String email;
+
+    @Column(unique=true)
+    @NotBlank(message = "El telefono no puede estar vacío")
+    private Integer phone;
 
 }

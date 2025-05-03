@@ -1,15 +1,40 @@
 package Caprish.Model.imp.users;
 
 import Caprish.Model.imp.MyObjects;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name="users")
+@NoArgsConstructor
+@Getter
+@Setter
 
 public abstract class User extends MyObjects {
 
-    String sql =    "  CREATE TABLE users (" +
-                    "   id_users BIGINT PRIMARY KEY AUTO_INCREMENT," +
-                    "   email VARCHAR(150) UNIQUE NOT NULL," +
-                    "   password_hash VARCHAR(255) NOT NULL," +
-                    "   " +
-                    ");";
+    public User(Long id, String email, String password_hash) {
+        this.id = id;
+        this.email = email;
+        this.password_hash = password_hash;
+    }
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long id;
+
+    @Column(unique=true, columnDefinition = "text")
+    @NotBlank(message = "El email no puede estar vacío")
+    @Email(message = "El email no es válido")
+    private String email;
+
+    @Column(columnDefinition = "text")
+    @NotBlank(message = "La contraseña no puede estar vacia.")
+    private String password_hash;
 
     /*padre de: admin, boss, client, employee, */
 }

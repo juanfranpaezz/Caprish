@@ -26,8 +26,13 @@ public class Sale  extends MyObjects {
     @Column(nullable = false,precision = 20, scale = 10)
     private BigDecimal total_amount;
 
+    public Sale(ShoppingCart id_cart, LocalDate sale_date, BigDecimal total_amount) {
+        this.id_cart = id_cart;
+        this.sale_date = sale_date;
+        this.total_amount = total_amount;
+    }
 
-//
+    //
 //    String sql =    "CREATE TABLE sale (\n" +
 //                    "  id_sale        BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
 //                    "  id_cart   BIGINT NOT NULL,\n" +

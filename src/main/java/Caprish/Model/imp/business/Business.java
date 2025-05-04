@@ -33,8 +33,16 @@ public class Business extends MyObjects {
     @NotBlank(message="El cuit no puede estar vacio")
     private int tax;
 
+    public Business(String bussiness_name, String description, String slogan, Staff id_staff, String address, int tax) {
+        this.bussiness_name = bussiness_name;
+        this.description = description;
+        this.slogan = slogan;
+        this.id_staff = id_staff;
+        this.address = address;
+        this.tax = tax;
+    }
 
-//    String sql = "CREATE TABLE business (\n" +
+    //    String sql = "CREATE TABLE business (\n" +
 //            "    id_business INT PRIMARY KEY AUTO_INCREMENT,\n" +
 //            "    business_name VARCHAR(100) NOT NULL UNIQUE,\n" +
 //            "    description TEXT NOT NULL,\n" +
@@ -45,50 +53,6 @@ public class Business extends MyObjects {
 //            "    FOREIGN KEY (id_staff) REFERENCES bosses(id_staff)    \n" +
 //            ");";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
--- 2) Clientes
-    CREATE TABLE client (
-            user_id BIGINT PRIMARY KEY,
-            loyalty_points INT DEFAULT 0,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- 3) Staff
-    CREATE TABLE staff (
-            user_id BIGINT PRIMARY KEY,
-            department VARCHAR(100),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- 4) Jefes (boss)
-    CREATE TABLE boss (
-            user_id BIGINT PRIMARY KEY,
-            company_id BIGINT UNIQUE,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (company_id) REFERENCES company(id)
-            );
-
--- 5) Admins
-    CREATE TABLE admin (
-            user_id BIGINT PRIMARY KEY,
-            role_level INT,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);*/
 
 
 };

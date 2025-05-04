@@ -3,6 +3,7 @@ package Caprish.Model.imp.sales;
 public class SaleItem {
 
 
+
     String sql =    "CREATE TABLE sale_item (\n" +
                     "  id_sale_item  BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
                     "  id_sale       BIGINT NOT NULL,\n" +

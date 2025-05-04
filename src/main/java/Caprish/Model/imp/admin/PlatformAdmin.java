@@ -17,13 +17,16 @@ public class PlatformAdmin {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id_platform_admin;
+
     @Column(unique=true, columnDefinition = "text",nullable=false)
     @NotBlank(message = "El email no puede estar vacío")
     @Email(message = "El email no es válido")
     private String email;
+
     @Column(columnDefinition = "TEXT",nullable=false)
     @NotBlank(message="La contraseña no puede estar vacia")
     private String password_hash;
+
     @Column(nullable=false)
     private LocalDate created_at;
 

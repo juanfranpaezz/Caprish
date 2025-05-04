@@ -18,17 +18,23 @@ public class Business extends MyObjects {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_business;
+
     @Column(unique=true,columnDefinition="TEXT",nullable=false)
     private String bussiness_name;
+
     @Column(nullable=false,columnDefinition = "TEXT")
     private String description;
+
     @Column(nullable = false,columnDefinition = "TEXT")
     private String slogan;
-    @OneToOne
+
+    @OneToOne(optional = false)
     @JoinColumn(nullable = false,name="id_staff")
     private Staff id_staff;
+
     @Column(nullable = false,columnDefinition = "TEXT")
     private String address;
+
     @Column(nullable = false)
     @NotBlank(message="El cuit no puede estar vacio")
     private int tax;

@@ -9,15 +9,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table
-@Entity(name="staff")
+@Table(name="staff")
+@Entity
 @NoArgsConstructor
 @Getter
 @Setter
 public class Staff extends User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id_staff;
 
     @Column(columnDefinition = "text", nullable = false)
     @NotBlank(message = "El nombre no puede estar vacío")
@@ -40,13 +37,12 @@ public class Staff extends User {
     @Column(nullable = false)
     private WorkRole work_role;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(nullable = false, name = "id_business")
     private Business business;
 
-    public Staff(Long id, String email, String password_hash, Long id_staff, String first_name, String last_name, String password, String email1, WorkRole work_role, Business business) {
-        super(id, email, password_hash);
-        this.id_staff = id_staff;
+    public Staff(String email, String password_hash, String first_name, String last_name, String password, String email1, WorkRole work_role, Business business) {
+        super(email, password_hash);
         this.first_name = first_name;
         this.last_name = last_name;
         this.password = password;

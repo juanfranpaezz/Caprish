@@ -28,8 +28,8 @@ public class Cart {
     @Enumerated(EnumType.STRING)
     private cart_type cart_type;
 
-    @OneToOne
-    @JoinColumn(name = "id_client")
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_client",nullable = false)
     private Client client;
 
     @ManyToMany

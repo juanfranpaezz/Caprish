@@ -2,7 +2,9 @@ package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObjects;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,7 +13,10 @@ import java.util.List;
 @Table
 @Entity(name = "voucher")
 @NoArgsConstructor
+@Getter
+@Setter
 public class Voucher extends MyObjects {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id_voucher;

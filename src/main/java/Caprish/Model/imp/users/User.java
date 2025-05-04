@@ -4,18 +4,18 @@ import Caprish.Model.imp.MyObjects;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="users")
+@Table(name="user")
 @NoArgsConstructor
 @Getter
 @Setter
 
 public abstract class User extends MyObjects {
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -29,8 +29,7 @@ public abstract class User extends MyObjects {
     @NotBlank(message = "La contraseña no puede estar vacia.")
     private String password_hash;
 
-    public User(Long id, String email, String password_hash) {
-        this.id = id;
+    public User(String email, String password_hash) {
         this.email = email;
         this.password_hash = password_hash;
     }

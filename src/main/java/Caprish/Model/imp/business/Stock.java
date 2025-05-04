@@ -12,21 +12,29 @@ import lombok.Setter;
 @Entity
 @Table(name="stock")
 public class Stock extends MyObjects {
+
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(nullable = false,name="id_product")
     private Product id_product;
 
-    @ManyToOne
-    @JoinColumn(name="id_branch")
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false,name="id_branch")
     private Branch id_branch;
 
     @Column(nullable = false)
     private int quantity;
-//    String sql =    "CREATE TABLE stock_history (\n" +
+
+    public Stock(Product id_product, Branch id_branch, int quantity) {
+        this.id_product = id_product;
+        this.id_branch = id_branch;
+        this.quantity = quantity;
+    }
+
+//      String sql =    "CREATE TABLE stock_history (\n" +
 //                    "  id_stock BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
 //                    "  id_product BIGINT NOT NULL,\n" +
 //                    "  id_branch BIGINT NOT NULL,\n" +
@@ -37,11 +45,4 @@ public class Stock extends MyObjects {
 //                    "    REFERENCES branch(id_branch)\n" +
 //                    "    ON DELETE CASCADE\n" +
 //                    ");\n";
-
-
-    public Stock(Product id_product, Branch id_branch, int quantity) {
-        this.id_product = id_product;
-        this.id_branch = id_branch;
-        this.quantity = quantity;
-    }
 }

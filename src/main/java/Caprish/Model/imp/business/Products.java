@@ -1,8 +1,21 @@
 package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObjects;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="products")
 public class Products  extends MyObjects {
+    @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
+    private Long id;
+    @ManyToOne
+    @JoinColumn(nullable = false,name="id_business")
+    private Business business;
+    @Column(nullable=false,columnDefinition = "TEXT")
+    private String name;
+    @Column(nullable=false)
+
 
     String sql =    "CREATE TABLE product (\n" +
                     "  id_product BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +

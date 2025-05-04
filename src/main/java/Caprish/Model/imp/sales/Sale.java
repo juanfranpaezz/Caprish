@@ -18,7 +18,7 @@ public class Sale  extends MyObjects {
 
     @OneToOne
     @JoinColumn(name="id_cart")
-    private ShoppingCart id_cart;
+    private Cart id_cart;
 
     @Column(nullable = false)
     private LocalDate sale_date;
@@ -26,7 +26,7 @@ public class Sale  extends MyObjects {
     @Column(nullable = false,precision = 20, scale = 10)
     private BigDecimal total_amount;
 
-    public Sale(ShoppingCart id_cart, LocalDate sale_date, BigDecimal total_amount) {
+    public Sale(Cart id_cart, LocalDate sale_date, BigDecimal total_amount) {
         this.id_cart = id_cart;
         this.sale_date = sale_date;
         this.total_amount = total_amount;

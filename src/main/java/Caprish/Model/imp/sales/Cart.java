@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ShoppingCart {
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,7 +40,7 @@ public class ShoppingCart {
     @Column(nullable = false)
     private cart_status cart_status;
 
-    public ShoppingCart(Long id_cart, Caprish.Model.imp.sales.enums.cart_type cart_type, Client client, List<Voucher> vouchers, Caprish.Model.imp.sales.enums.cart_status cart_status) {
+    public Cart(Long id_cart, Caprish.Model.imp.sales.enums.cart_type cart_type, Client client, List<Voucher> vouchers, Caprish.Model.imp.sales.enums.cart_status cart_status) {
         this.id_cart = id_cart;
         this.cart_type = cart_type;
         this.client = client;
@@ -50,7 +50,6 @@ public class ShoppingCart {
 
     //    String sql =    "CREATE TABLE cart (\n" +
 //                    "  id_cart      BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
-//                    "  cart_type    ENUM('PURCHASE','SALE') NOT NULL,\n" +
 //                    "  id_client    BIGINT,    -- sólo para PURCHASE\n" +
 //                    "  id_voucher   BIGINT,\n" +
 //                    "  status       ENUM('OPEN','CONFIRMED') NOT NULL DEFAULT 'OPEN',\n" +

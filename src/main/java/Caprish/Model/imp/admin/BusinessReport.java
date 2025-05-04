@@ -19,14 +19,17 @@ public class BusinessReport extends MyObjects {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id_business_report;
-    @Column (nullable=false)
+
     @ManyToOne
     @JoinColumn(name = "id_business", nullable = false)  // FK en la tabla business_report
     private Business id_business; //tiene que ser un objeto
+
     @Column (nullable=false)
     private LocalDate generated_at;
+
     @Column (columnDefinition= "TEXT")
     private String description;
+
     @NotBlank(message="la descripcion no puede estar vacia")
     private String about;
 

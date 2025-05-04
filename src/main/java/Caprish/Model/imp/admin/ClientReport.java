@@ -19,7 +19,7 @@ public class ClientReport {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
-    @Column(name="id_sale" ,nullable = false)
+    @Column(name= "id_sale" ,nullable = false)
     private Sale id_sale;
     @Column (nullable = false)
     private LocalDate report_date;

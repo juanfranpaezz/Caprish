@@ -37,7 +37,6 @@ public class Client extends User {
     private String email;
 
     @Column(unique=true,nullable = false)
-    @NotBlank(message = "El telefono no puede estar vacío")
     private Integer phone;
 
     public Client(Long id, String email, String password_hash, Long id_client, String first_name, String last_name, String password, String email1, Integer phone) {

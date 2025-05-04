@@ -3,10 +3,12 @@ package Caprish.Model.imp.business;
 import Caprish.Model.imp.MyObjects;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name="stock")
 public class Stock extends MyObjects {
@@ -15,11 +17,11 @@ public class Stock extends MyObjects {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false,name="id_branch")
+    @JoinColumn(nullable = false,name="id_product")
     private Product id_product;
 
     @ManyToOne
-    @JoinColumn(name="id_product")
+    @JoinColumn(name="id_branch")
     private Branch id_branch;
 
     @Column(nullable = false)

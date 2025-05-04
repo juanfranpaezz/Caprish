@@ -1,6 +1,6 @@
 package Caprish.Model.imp.sales;
 
-public class CartProduct {
+public class CartItem {
 
     String sql =    "CREATE TABLE cart_product (\n" +
                     "  id_cart_product  BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +

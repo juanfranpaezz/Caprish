@@ -1,7 +1,7 @@
 package Caprish.Model.imp.sales;
 
 
-import Caprish.Model.imp.sales.enums.cart_type;
+import Caprish.Model.imp.sales.enums.cart_status;
 import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.users.Staff;
 import jakarta.persistence.*;
@@ -21,7 +21,7 @@ public class SaleCart {
     private Long id_cart;
 
     @Enumerated(EnumType.STRING)
-    private cart_type cart_type;
+    private cart_status cart_type;
 
     @OneToOne
     @JoinColumn(name = "id_client")
@@ -31,9 +31,9 @@ public class SaleCart {
     @JoinColumn(name = "id_employee")
     private Staff staff;
 
-    @ManyToOne
-    @JoinColumn(name = "id_employee")
-    private Staff staff;
+//    @ManyToOne
+//    @JoinColumn(name = "id_employee")
+//    private Staff staff;
 
 
     //SIN ENTIDAD

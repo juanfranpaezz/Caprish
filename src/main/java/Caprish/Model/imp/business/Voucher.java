@@ -17,10 +17,6 @@ import java.util.List;
 @Setter
 public class Voucher extends MyObjects {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id_voucher;
-
     @ManyToMany
     @Column(nullable = false,name="id_business")
     private List<Business> businesses;

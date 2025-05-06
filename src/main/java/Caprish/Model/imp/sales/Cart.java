@@ -3,6 +3,7 @@ package Caprish.Model.imp.sales;
 
 
 
+import Caprish.Model.imp.MyObjects;
 import Caprish.Model.imp.business.Voucher;
 import Caprish.Model.imp.sales.enums.cart_status;
 import Caprish.Model.imp.sales.enums.cart_type;
@@ -19,11 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Cart {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id_cart;
+public class Cart extends MyObjects {
 
     @Enumerated(EnumType.STRING)
     private cart_type cart_type;
@@ -33,15 +30,18 @@ public class Cart {
     private Client client;
 
     @ManyToMany
-    @JoinColumn(name="id_voucher")
+    @JoinTable(
+            name = "cart_voucher",
+            joinColumns = @JoinColumn(name = "cart_id"),
+            inverseJoinColumns = @JoinColumn(name = "voucher_id")
+    )
     private List<Voucher> vouchers;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private cart_status cart_status;
 
-    public Cart(Long id_cart, Caprish.Model.imp.sales.enums.cart_type cart_type, Client client, List<Voucher> vouchers, Caprish.Model.imp.sales.enums.cart_status cart_status) {
-        this.id_cart = id_cart;
+    public Cart(Caprish.Model.imp.sales.enums.cart_type cart_type, Client client, List<Voucher> vouchers, Caprish.Model.imp.sales.enums.cart_status cart_status) {
         this.cart_type = cart_type;
         this.client = client;
         this.vouchers = vouchers;

@@ -13,10 +13,6 @@ import lombok.Setter;
 @Table(name="stock")
 public class Stock extends MyObjects {
 
-    @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    private Long id;
-
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false,name="id_product")
     private Product id_product;

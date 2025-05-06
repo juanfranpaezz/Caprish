@@ -18,10 +18,6 @@ import lombok.Setter;
 @Table(name="branch")
 public class Branch extends MyObjects {
 
-        @Id
-        @GeneratedValue(strategy=GenerationType.AUTO)
-        private Long id;
-
         @ManyToOne(optional = false)
         @JoinColumn(name = "id_business",nullable = false)
         private Business business;

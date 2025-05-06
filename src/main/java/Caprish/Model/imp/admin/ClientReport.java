@@ -1,5 +1,6 @@
 package Caprish.Model.imp.admin;
 
+import Caprish.Model.imp.MyObjects;
 import Caprish.Model.imp.sales.Sale;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,11 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name="client_report")
-public class ClientReport {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class ClientReport extends MyObjects {
 
     @ManyToOne (optional = false)
     @JoinColumn(name = "id_sale", nullable = false)

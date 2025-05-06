@@ -1,4 +1,5 @@
 package Caprish.Model.imp.admin;
+import Caprish.Model.imp.MyObjects;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,10 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name="platform_admin")
-public class PlatformAdmin {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id_platform_admin;
+public class PlatformAdmin extends MyObjects {
 
     @Column(unique=true, columnDefinition = "text",nullable=false)
     @NotBlank(message = "El email no puede estar vacío")

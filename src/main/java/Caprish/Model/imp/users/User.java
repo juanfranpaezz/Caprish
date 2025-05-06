@@ -8,17 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name="user")
 @NoArgsConstructor
 @Getter
 @Setter
-
+@MappedSuperclass
 public abstract class User extends MyObjects {
-
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
 
     @Column(unique=true, columnDefinition = "text")
     @NotBlank(message = "El email no puede estar vacío")

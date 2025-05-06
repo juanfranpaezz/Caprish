@@ -1,7 +1,7 @@
-package Caprish.Service.agregados;
-
-import org.springframework.stereotype.Service;
-
-@Service
-public class ChatService {
-}
+//package Caprish.Service.agregados;
+//
+//import org.springframework.stereotype.Service;
+//
+//@Service
+//public class ChatService {
+//}

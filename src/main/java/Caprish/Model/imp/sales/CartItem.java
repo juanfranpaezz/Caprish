@@ -1,5 +1,6 @@
 package Caprish.Model.imp.sales;
 
+import Caprish.Model.imp.MyObjects;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Table(name = "cart_item")
-public class CartItem {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCartProduct;
+public class CartItem extends MyObjects {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_cart")

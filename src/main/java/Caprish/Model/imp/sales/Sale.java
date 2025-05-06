@@ -13,9 +13,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name="sale")
 public class Sale  extends MyObjects {
-    @Id
-    @GeneratedValue (strategy= GenerationType.AUTO)
-    private Long id;
 
     @OneToOne
     @JoinColumn(name="id_cart",nullable = true)//permite nulos

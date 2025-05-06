@@ -14,10 +14,6 @@ import java.math.BigDecimal;
 @Table(name="product")
 public class Product extends MyObjects {
 
-    @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    private Long id;
-
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false,name="id_business")
     private Business business;

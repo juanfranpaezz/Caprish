@@ -24,15 +24,6 @@ public class Staff extends User {
     @NotBlank(message = "El apellido no puede estar vacío")
     private String last_name;
 
-    @Column(columnDefinition = "text", nullable = false)
-    @NotBlank(message = "La contrasena no puede estar vacía")
-    private String password;
-
-    @Column(unique=true, columnDefinition = "text", nullable = false)
-    @NotBlank(message = "El email no puede estar vacío")
-    @Email(message = "El email no es válido")
-    private String email;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WorkRole work_role;
@@ -41,12 +32,10 @@ public class Staff extends User {
     @JoinColumn(nullable = false, name = "id_business")
     private Business business;
 
-    public Staff(String email, String password_hash, String first_name, String last_name, String password, String email1, WorkRole work_role, Business business) {
+    public Staff(String email, String password_hash, String first_name, String last_name, WorkRole work_role, Business business) {
         super(email, password_hash);
         this.first_name = first_name;
         this.last_name = last_name;
-        this.password = password;
-        this.email = email1;
         this.work_role = work_role;
         this.business = business;
     }

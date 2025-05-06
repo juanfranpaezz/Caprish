@@ -15,10 +15,6 @@ import lombok.Setter;
 @Setter
 public class Business extends MyObjects {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_business;
-
     @Column(unique=true,columnDefinition="TEXT",nullable=false)
     private String bussiness_name;
 

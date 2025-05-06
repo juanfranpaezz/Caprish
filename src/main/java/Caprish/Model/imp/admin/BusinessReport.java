@@ -16,9 +16,6 @@ import java.time.LocalDate;
 @Setter
 @Table(name="businness_report")
 public class BusinessReport extends MyObjects {
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id_business_report;
 
     @ManyToOne (optional = false)
     @JoinColumn(name = "id_business", nullable = false)  // FK en la tabla business_report

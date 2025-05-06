@@ -35,5 +35,5 @@ public abstract class User extends MyObjects {
         this.password_hash = password_hash;
     }
 
-    /*padre de: admin, boss, client, employee, */
+    /*padre de: client y staff, */
 }

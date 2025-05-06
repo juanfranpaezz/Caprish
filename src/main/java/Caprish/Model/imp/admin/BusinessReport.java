@@ -20,7 +20,7 @@ public class BusinessReport extends MyObjects {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id_business_report;
 
-    @ManyToOne
+    @ManyToOne (optional = false)
     @JoinColumn(name = "id_business", nullable = false)  // FK en la tabla business_report
     private Business id_business; //tiene que ser un objeto
 

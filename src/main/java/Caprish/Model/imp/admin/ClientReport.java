@@ -18,11 +18,14 @@ public class ClientReport {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
-    @Column(name= "id_sale" ,nullable = false)
+
+    @ManyToOne (optional = false)
+    @JoinColumn(name = "id_sale", nullable = false)
     private Sale id_sale;
+
     @Column (nullable = false)
     private LocalDate report_date;
+
     @Column (name = "TEXT")
     private String report_data;
 

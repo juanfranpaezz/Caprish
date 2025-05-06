@@ -17,15 +17,19 @@ import lombok.Setter;
 @Getter
 @Table(name="branch")
 public class Branch extends MyObjects {
+
         @Id
         @GeneratedValue(strategy=GenerationType.AUTO)
         private Long id;
-        @ManyToOne
-        @JoinColumn(name = "id_business")
+
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "id_business",nullable = false)
         private Business business;
+
         @Column(unique=true,nullable = false)
         @NotBlank(message="La direccion no puede estar vacia")
         private String address;
+
         @Column(nullable = false)
         @NotBlank(message="El tipo de sucursal no puede estar vacio")
         @Enumerated(EnumType.STRING)
@@ -36,7 +40,7 @@ public class Branch extends MyObjects {
                 this.business = business;
                 this.type = type;
         }
-        //
+
 //    String sql =    "CREATE TABLE branch (\n" +
 //                    "  id_branch BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
 //                    "  id_business BIGINT NOT NULL,\n" +

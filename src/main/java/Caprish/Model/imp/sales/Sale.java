@@ -1,6 +1,7 @@
 package Caprish.Model.imp.sales;
 
 import Caprish.Model.imp.MyObjects;
+import Caprish.Model.imp.users.Staff;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -17,8 +18,12 @@ public class Sale  extends MyObjects {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name="id_cart")
+    @JoinColumn(name="id_cart",nullable = true)//permite nulos
     private Cart id_cart;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_staff")
+    private Staff id_staff;
 
     @Column(nullable = false)
     private LocalDate sale_date;
@@ -26,8 +31,9 @@ public class Sale  extends MyObjects {
     @Column(nullable = false,precision = 20, scale = 10)
     private BigDecimal total_amount;
 
-    public Sale(Cart id_cart, LocalDate sale_date, BigDecimal total_amount) {
+    public Sale(Staff id_staff,Cart id_cart, LocalDate sale_date, BigDecimal total_amount) {
         this.id_cart = id_cart;
+        this.id_staff = id_staff;
         this.sale_date = sale_date;
         this.total_amount = total_amount;
     }

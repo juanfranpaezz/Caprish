@@ -1,5 +1,4 @@
 package Caprish;
-
 import java.util.Scanner;
 
 public class Main {

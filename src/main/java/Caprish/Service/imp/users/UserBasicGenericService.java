@@ -2,13 +2,12 @@ package Caprish.Service.imp.users;
 
 import Caprish.Model.imp.users.User;
 import Caprish.Repository.interfaces.users.UserBasicGenericRepository;
-import Caprish.Service.interfaces.users.IUserBasicGenericService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
 
-public abstract class UserBasicGenericService<T extends User>
-        implements IUserBasicGenericService<T> {
+public abstract class UserBasicGenericService<T extends User>{
 
     protected final UserBasicGenericRepository<T, Long> repository;
 
@@ -23,7 +22,6 @@ public abstract class UserBasicGenericService<T extends User>
         return saved;
     }
 
-    @Override
     public void updateEmail(Long id, String newEmail) {
         T user = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
@@ -31,7 +29,6 @@ public abstract class UserBasicGenericService<T extends User>
         repository.save(user);
     }
 
-    @Override
     public void changePassword(Long id, String newPassword) {
         T user = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
@@ -42,10 +39,10 @@ public abstract class UserBasicGenericService<T extends User>
     protected void validateBeforeSave(T entity) {}
     protected void postSave(T original, T persisted) {}
 
-    @Override public Optional<T> findById(Long id) { return repository.findById(id); }
-    @Override public List<T> findAll()       { return repository.findAll(); }
-    @Override public void deleteById(Long id){ repository.deleteById(id); }
-    @Override public Optional<T> findByEmail(String email){
+    public Optional<T> findById(Long id) { return repository.findById(id); }
+    public List<T> findAll()       { return repository.findAll(); }
+    public void deleteById(Long id){ repository.deleteById(id); }
+    public Optional<T> findByEmail(String email){
         return Optional.ofNullable(repository.findByEmail(email));
     }
 }

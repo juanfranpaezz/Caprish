@@ -14,8 +14,8 @@ public class ClientService
 
     @Autowired
     ClientRepository clientRepository;
-    public ClientService(ClientRepository clientRepository) {
-        super(clientRepository);
+    public ClientService(ClientRepository repo) {
+        super(repo);
     }
 
     @Override

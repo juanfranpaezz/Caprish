@@ -1,6 +1,6 @@
 package Caprish.Model.imp.business;
 
-import Caprish.Model.imp.MyObjects;
+import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +12,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 @Table(name="product")
-public class Product extends MyObjects {
+public class Product extends MyObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = false,name="id_business")
+    @JoinColumn(nullable = false,name="id")
     private Business business;
 
     @Column(nullable=false,columnDefinition = "TEXT")
@@ -39,15 +39,4 @@ public class Product extends MyObjects {
         this.price = price;
     }
 
-//    String sql =    "CREATE TABLE product (\n" +
-//                    "  id_product BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
-//                    "  id_business BIGINT NOT NULL,\n" +
-//                    "  name VARCHAR(150) NOT NULL,\n" +
-//                    "  bar-code INT NOT NULL,\n" +
-//                    "  description TEXT,\n" +
-//                    "  price DECIMAL(12,2) NOT NULL,\n" +
-//                    "  FOREIGN KEY (id_business)\n" +
-//                    "    REFERENCES business(id_business)\n" +
-//                    "    ON DELETE CASCADE\n" +
-//                    ");";
 }

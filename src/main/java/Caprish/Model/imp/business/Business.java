@@ -1,6 +1,6 @@
 package Caprish.Model.imp.business;
 
-import Caprish.Model.imp.MyObjects;
+import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.users.Staff;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Business extends MyObjects {
+public class Business extends MyObject {
 
     @Column(unique=true,columnDefinition="TEXT",nullable=false)
     private String bussiness_name;
@@ -25,7 +25,7 @@ public class Business extends MyObjects {
     private String slogan;
 
     @OneToOne(optional = false)
-    @JoinColumn(nullable = false,name="id_staff")
+    @JoinColumn(nullable = false,name="id")
     private Staff id_staff;
 
     @Column(nullable = false,columnDefinition = "TEXT")
@@ -43,18 +43,6 @@ public class Business extends MyObjects {
         this.address = address;
         this.tax = tax;
     }
-
-    //    String sql = "CREATE TABLE business (\n" +
-//            "    id_business INT PRIMARY KEY AUTO_INCREMENT,\n" +
-//            "    business_name VARCHAR(100) NOT NULL UNIQUE,\n" +
-//            "    description TEXT NOT NULL,\n" +
-//            "    slogan TEXT NOT NULL,\n" +
-//            "    id_staff INT,\n" +
-//            "    address VARCHAR(50) NOT NULL,\n" +
-//            "    tax INT,\n" +
-//            "    FOREIGN KEY (id_staff) REFERENCES bosses(id_staff)    \n" +
-//            ");";
-
 
 
 };

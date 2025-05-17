@@ -1,6 +1,6 @@
 package Caprish.Model.imp.admin;
 
-import Caprish.Model.imp.MyObjects;
+import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Business;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -15,10 +15,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name="businness_report")
-public class BusinessReport extends MyObjects {
+public class BusinessReport extends MyObject {
 
     @ManyToOne (optional = false)
-    @JoinColumn(name = "id_business", nullable = false)  // FK en la tabla business_report
+    @JoinColumn(name = "id", nullable = false)  // FK en la tabla business_report
     private Business id_business; //tiene que ser un objeto
 
     @Column (nullable=false)

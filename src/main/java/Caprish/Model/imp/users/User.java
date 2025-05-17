@@ -1,6 +1,6 @@
 package Caprish.Model.imp.users;
 
-import Caprish.Model.imp.MyObjects;
+import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @MappedSuperclass
 @AllArgsConstructor
-public abstract class User extends MyObjects {
+public abstract class User extends MyObject {
 
     @Column(unique=true, columnDefinition = "text")
     @NotBlank(message = "El email no puede estar vacío")

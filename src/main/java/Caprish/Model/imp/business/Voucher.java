@@ -1,6 +1,6 @@
 package Caprish.Model.imp.business;
 
-import Caprish.Model.imp.MyObjects;
+import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Voucher extends MyObjects {
+public class Voucher extends MyObject {
 
     @ManyToMany
-    @Column(nullable = false,name="id_business")
+    @Column(nullable = false,name="id")
     private List<Business> businesses;
 
     @Column(nullable = false,columnDefinition = "TEXT")
@@ -44,20 +44,5 @@ public class Voucher extends MyObjects {
         this.valid_to = valid_to;
         this.created_at = created_at;
     }
-
-//    String sql = "CREATE TABLE voucher (\n" +
-//            "  id_voucher BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
-//            "  id_business BIGINT NOT NULL,\n" +
-//            "  code VARCHAR(50) UNIQUE NOT NULL,\n" +
-//            "  discount_percent DECIMAL(5,2) NOT NULL,\n" +
-//            "  valid_from DATE,\n" +
-//            "min_amount " +
-//            "max_discount" +
-//            "  valid_to DATE,\n" +
-//            "  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
-//            "  FOREIGN KEY (business_id)\n" +
-//            "    REFERENCES business(id)\n" +
-//            "    ON DELETE CASCADE\n" +
-//            ");\n";
 
 }

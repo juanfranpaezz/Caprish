@@ -1,6 +1,6 @@
 package Caprish.Model.imp.sales;
 
-import Caprish.Model.imp.MyObjects;
+import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.users.Staff;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -12,14 +12,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name="sale")
-public class Sale  extends MyObjects {
+public class Sale  extends MyObject {
 
     @OneToOne
-    @JoinColumn(name="id_cart",nullable = true)//permite nulos
+    @JoinColumn(name="id",nullable = true)//permite nulos
     private Cart id_cart;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_staff")
+    @JoinColumn(name = "id")
     private Staff id_staff;
 
     @Column(nullable = false)
@@ -35,14 +35,6 @@ public class Sale  extends MyObjects {
         this.total_amount = total_amount;
     }
 
-    //
-//    String sql =    "CREATE TABLE sale (\n" +
-//                    "  id_sale        BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
-//                    "  id_cart   BIGINT NOT NULL,\n" +
-//                    "  sale_date      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
-//                    "  total_amount   DECIMAL(12,2) NOT NULL,\n" +
-//                    "  FOREIGN KEY (id_cart) REFERENCES cart(id_cart) ON DELETE RESTRICT\n" +
-//                    ");";
 
 }
 

@@ -1,13 +1,14 @@
 package Caprish.Model.imp;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @MappedSuperclass
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyObjects {
+@Getter
+@Setter
+public class MyObject {
         @Id
         @GeneratedValue(strategy=GenerationType.IDENTITY)
         private Long id;

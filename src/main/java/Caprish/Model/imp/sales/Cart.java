@@ -1,12 +1,8 @@
 package Caprish.Model.imp.sales;
-
-
-
-
-import Caprish.Model.imp.MyObjects;
+import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Voucher;
-import Caprish.Model.imp.sales.enums.cart_status;
-import Caprish.Model.imp.sales.enums.cart_type;
+import Caprish.Model.enums.CartStatus;
+import Caprish.Model.enums.CartType;
 import Caprish.Model.imp.users.Client;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,13 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Cart extends MyObjects {
+public class Cart extends MyObject {
 
-    @Enumerated(EnumType.STRING)
-    private cart_type cart_type;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id",nullable = false)
+    private CartType cartType;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "id_client",nullable = false)
+    @JoinColumn(name = "id",nullable = false)
     private Client client;
 
     @ManyToMany
@@ -37,25 +34,16 @@ public class Cart extends MyObjects {
     )
     private List<Voucher> vouchers;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private cart_status cart_status;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id",nullable = false)
+    private CartStatus cartStatus;
 
-    public Cart(Caprish.Model.imp.sales.enums.cart_type cart_type, Client client, List<Voucher> vouchers, Caprish.Model.imp.sales.enums.cart_status cart_status) {
-        this.cart_type = cart_type;
+    public Cart(CartType CartType, Client client, List<Voucher> vouchers, CartStatus cartStatus) {
+        this.cartType = CartType;
         this.client = client;
         this.vouchers = vouchers;
-        this.cart_status = cart_status;
+        this.cartStatus = cartStatus;
     }
-
-    //    String sql =    "CREATE TABLE cart (\n" +
-//                    "  id_cart      BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
-//                    "  id_client    BIGINT,    -- sólo para PURCHASE\n" +
-//                    "  id_voucher   BIGINT,\n" +
-//                    "  status       ENUM('OPEN','CONFIRMED') NOT NULL DEFAULT 'OPEN',\n" +
-//                    "  FOREIGN KEY (id_client)   REFERENCES clients(id_client),\n" +
-//                    "  FOREIGN KEY (id_voucher)  REFERENCES vouchers(id_voucher)\n" +
-//                    ");";
 
 }
 

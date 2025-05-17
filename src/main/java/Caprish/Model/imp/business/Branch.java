@@ -1,9 +1,8 @@
 package Caprish.Model.imp.business;
 
-import Caprish.Model.imp.MyObjects;
-import Caprish.Model.imp.business.enums.branch_type;
+import Caprish.Model.imp.MyObject;
+import Caprish.Model.enums.BranchType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -16,22 +15,21 @@ import lombok.Setter;
 @Setter
 @Getter
 @Table(name="branch")
-public class Branch extends MyObjects {
+public class Branch extends MyObject {
 
         @ManyToOne(optional = false)
-        @JoinColumn(name = "id_business",nullable = false)
+        @JoinColumn(name = "id",nullable = false)
         private Business business;
 
         @Column(unique=true,nullable = false)
         @NotBlank(message="La direccion no puede estar vacia")
         private String address;
 
-        @Column(nullable = false)
-        @NotBlank(message="El tipo de sucursal no puede estar vacio")
-        @Enumerated(EnumType.STRING)
-        private branch_type type;
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "id",nullable = false)
+        private BranchType type;
 
-        public Branch(String address, Business business, branch_type type) {
+        public Branch(String address, Business business, BranchType type) {
                 this.address = address;
                 this.business = business;
                 this.type = type;

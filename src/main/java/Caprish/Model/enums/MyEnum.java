@@ -17,4 +17,5 @@ import lombok.Setter;
 public abstract class MyEnum extends MyObject {
     @Column(nullable = false)
     private String value;
+
 }

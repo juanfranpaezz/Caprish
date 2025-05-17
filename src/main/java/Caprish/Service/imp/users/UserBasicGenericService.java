@@ -45,4 +45,11 @@ public abstract class UserBasicGenericService<T extends User>{
     public Optional<T> findByEmail(String email){
         return Optional.ofNullable(repository.findByEmail(email));
     }
+
+
+
+
+
+
+
 }

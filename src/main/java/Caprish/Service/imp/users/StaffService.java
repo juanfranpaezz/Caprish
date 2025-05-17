@@ -21,7 +21,7 @@ public class StaffService
     public void promoteStaff(Long staffId) {
         Staff s = repository.findById(staffId)
                 .orElseThrow(() -> new IllegalArgumentException("Staff no encontrado: " + staffId));
-        s.setWork_role(WorkRole.valueOf("SENIOR"));
+        s.setWork_role(new WorkRole("Senior"));
         repository.save(s);
     }
 }

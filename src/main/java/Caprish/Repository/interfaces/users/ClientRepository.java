@@ -1,11 +1,15 @@
 package Caprish.Repository.interfaces.users;
 
 import Caprish.Model.imp.users.Client;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends UserGenericRepository<Client, Long> {
-    List<Client> findByPhone(Integer phone);
+   Optional<Client> findByPhone(Integer phone);
+
+
 }

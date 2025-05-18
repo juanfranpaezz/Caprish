@@ -42,12 +42,12 @@ public abstract class MyObjectController<T extends MyObject, R extends MyObjectG
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         if (!service.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok("Usuario no encontrado");
         }
         service.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Usuario eliminado con exito");
     }
 }
 

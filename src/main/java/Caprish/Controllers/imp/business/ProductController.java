@@ -4,8 +4,8 @@ import Caprish.Controllers.MyObjectController;
 import Caprish.Model.imp.business.Product;
 import Caprish.Repository.interfaces.business.ProductRepository;
 import Caprish.Service.imp.business.ProductService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
@@ -14,5 +14,11 @@ public class ProductController extends MyObjectController<Product, ProductReposi
     public ProductController(ProductService service) {
         super(service);
     }
+//
+//    @PostMapping("/update")
+//    public ResponseEntity<Product> update(@RequestBody Product product) {
+//
+//    }
+
 
 }

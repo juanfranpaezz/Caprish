@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class Product extends MyObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = false,name="id")
+    @JoinColumn(nullable = false,name="id_business")
     private Business business;
 
     @Column(nullable=false,columnDefinition = "TEXT")

@@ -25,7 +25,7 @@ public class Business extends MyObject {
     private String slogan;
 
     @OneToOne(optional = false)
-    @JoinColumn(nullable = false,name="id")
+    @JoinColumn(nullable = false,name="id_staff")
     private Staff id_staff;
 
     @Column(nullable = false,columnDefinition = "TEXT")

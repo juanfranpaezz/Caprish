@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public abstract class User extends MyObject {
 
     @Column(name = "password_hash", columnDefinition = "text")
     @NotBlank(message = "La contraseña no puede estar vacia.")
-    private String passwordHash;
+    private String password_hash;
 
     @Column(columnDefinition = "text",nullable = false)
     @NotBlank(message = "El nombre no puede estar vacío")
@@ -33,5 +35,15 @@ public abstract class User extends MyObject {
     @NotBlank(message = "El apellido no puede estar vacío")
     private String last_name;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(email, user.email) && Objects.equals(password_hash, user.password_hash);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, password_hash);
+    }
 }

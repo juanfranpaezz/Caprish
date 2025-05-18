@@ -12,9 +12,8 @@ public class StaffService
 
     @Autowired
     StaffRepository staffRepository;
-
-    public StaffService(StaffRepository repo) {
-        super(repo);
+    public StaffService(StaffRepository repository) {
+            super(repository);
     }
 
 
@@ -24,4 +23,5 @@ public class StaffService
         s.setWork_role(new WorkRole("Senior"));
         repository.save(s);
     }
+
 }

@@ -17,11 +17,11 @@ import lombok.Setter;
 public class Staff extends User {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id",nullable = false)
+    @JoinColumn(name = "id_work_role",nullable = false)
     private WorkRole work_role;
 
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = false, name = "id")
+    @JoinColumn(nullable = false, name = "id_business")
     private Business business;
 
 }

@@ -15,12 +15,12 @@ import java.time.LocalDate;
 public class Sale  extends MyObject {
 
     @OneToOne
-    @JoinColumn(name="id",nullable = true)//permite nulos
-    private Cart id_cart;
+    @JoinColumn(name="id_cart",nullable = true)//permite nulos
+    private Cart cart;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id")
-    private Staff id_staff;
+    @JoinColumn(name = "id_staff")
+    private Staff staff;
 
     @Column(nullable = false)
     private LocalDate sale_date;
@@ -28,9 +28,9 @@ public class Sale  extends MyObject {
     @Column(nullable = false,precision = 20, scale = 10)
     private BigDecimal total_amount;
 
-    public Sale(Staff id_staff,Cart id_cart, LocalDate sale_date, BigDecimal total_amount) {
-        this.id_cart = id_cart;
-        this.id_staff = id_staff;
+    public Sale(Staff staff, Cart cart, LocalDate sale_date, BigDecimal total_amount) {
+        this.cart = cart;
+        this.staff = staff;
         this.sale_date = sale_date;
         this.total_amount = total_amount;
     }

@@ -19,11 +19,11 @@ import java.util.List;
 public class Cart extends MyObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id",nullable = false)
-    private CartType cartType;
+    @JoinColumn(name = "id_cart_type",nullable = false)
+    private CartType cart_type;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "id",nullable = false)
+    @JoinColumn(name = "id_client",nullable = false)
     private Client client;
 
     @ManyToMany
@@ -35,14 +35,14 @@ public class Cart extends MyObject {
     private List<Voucher> vouchers;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id",nullable = false)
-    private CartStatus cartStatus;
+    @JoinColumn(name = "id_cart_status",nullable = false)
+    private CartStatus cart_status;
 
-    public Cart(CartType CartType, Client client, List<Voucher> vouchers, CartStatus cartStatus) {
-        this.cartType = CartType;
+    public Cart(CartType cart_type, Client client, List<Voucher> vouchers, CartStatus cart_status) {
+        this.cart_type = cart_type;
         this.client = client;
         this.vouchers = vouchers;
-        this.cartStatus = cartStatus;
+        this.cart_status = cart_status;
     }
 
 }

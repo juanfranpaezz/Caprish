@@ -18,7 +18,7 @@ import java.util.List;
 public class Voucher extends MyObject {
 
     @ManyToMany
-    @Column(nullable = false,name="id")
+    @Column(nullable = false,name="id_business")
     private List<Business> businesses;
 
     @Column(nullable = false,columnDefinition = "TEXT")

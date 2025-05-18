@@ -17,11 +17,11 @@ import java.math.BigDecimal;
 public class SaleItem extends MyObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id_sale")
     private Sale sale;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id_product")
     private Product product;
 
     @Column(nullable = false)

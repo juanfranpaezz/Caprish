@@ -14,11 +14,11 @@ import lombok.Setter;
 public class Stock extends MyObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = false,name="id")
+    @JoinColumn(nullable = false,name="id_product")
     private Product id_product;
 
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = false,name="id")
+    @JoinColumn(nullable = false,name="id_branch")
     private Branch id_branch;
 
     @Column(nullable = false)

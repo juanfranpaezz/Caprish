@@ -18,7 +18,7 @@ import lombok.Setter;
 public class Branch extends MyObject {
 
         @ManyToOne(optional = false)
-        @JoinColumn(name = "id",nullable = false)
+        @JoinColumn(name = "id_business",nullable = false)
         private Business business;
 
         @Column(unique=true,nullable = false)
@@ -26,13 +26,13 @@ public class Branch extends MyObject {
         private String address;
 
         @ManyToOne(optional = false)
-        @JoinColumn(name = "id",nullable = false)
-        private BranchType type;
+        @JoinColumn(name = "id_branch_type",nullable = false)
+        private BranchType barnch_type;
 
-        public Branch(String address, Business business, BranchType type) {
+        public Branch(String address, Business business, BranchType barnch_type) {
                 this.address = address;
                 this.business = business;
-                this.type = type;
+                this.barnch_type = barnch_type;
         }
 
 //    String sql =    "CREATE TABLE branch (\n" +

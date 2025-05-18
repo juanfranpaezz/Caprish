@@ -10,13 +10,14 @@ import lombok.Setter;
 
 @Entity
 @Table(name="cart_status")
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class CartStatus extends MyEnum {
     public CartStatus(String value) {
         super(value);
     }
-//    OPEN, CONFIRMED;
+
+    public CartStatus() {
+    }
+    //    OPEN, CONFIRMED;
 }

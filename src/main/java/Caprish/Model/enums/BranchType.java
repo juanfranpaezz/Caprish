@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -17,5 +15,8 @@ public class BranchType extends MyEnum {
     public BranchType(String value) {
         super(value);
     }
-//    SALES_POINT, WAREHOUSE
+
+    public BranchType() {
+    }
+    //    SALES_POINT, WAREHOUSE
 }

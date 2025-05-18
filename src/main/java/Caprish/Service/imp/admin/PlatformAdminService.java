@@ -13,8 +13,4 @@ public class PlatformAdminService extends MyObjectGenericService<PlatformAdmin, 
         super(childRepository);
     }
 
-    @Override
-    protected Class<PlatformAdmin> getEntityClass() {
-        return PlatformAdmin.class;
-    }
 }

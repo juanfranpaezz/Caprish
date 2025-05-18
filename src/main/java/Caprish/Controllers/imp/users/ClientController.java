@@ -23,6 +23,7 @@ public class ClientController extends UserGenericController<Client, ClientReposi
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
     @PutMapping("/update/{id}/{phone}")
     public ResponseEntity<Integer> update(@PathVariable Long id, @PathVariable Integer phone) {
         return ResponseEntity.ok(service.changePhone(id, phone));

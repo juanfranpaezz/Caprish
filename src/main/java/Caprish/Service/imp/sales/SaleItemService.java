@@ -12,8 +12,4 @@ public class SaleItemService extends MyObjectGenericService<SaleItem, SaleItemRe
         super(childRepository);
     }
 
-    @Override
-    protected Class<SaleItem> getEntityClass() {
-        return SaleItem.class;
-    }
 }

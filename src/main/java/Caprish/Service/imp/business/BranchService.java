@@ -13,11 +13,6 @@ public class BranchService extends MyObjectGenericService<Branch, BranchReposito
         super(childRepository);
     }
 
-    @Override
-    protected Class<Branch> getEntityClass() {
-        return Branch.class;
-    }
-
 
     public void changeAddress(Long id, String address) {
         ((BranchService) AopContext.currentProxy()).updateField(id, "address", "address");

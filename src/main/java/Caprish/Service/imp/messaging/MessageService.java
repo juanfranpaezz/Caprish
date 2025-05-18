@@ -13,8 +13,4 @@ public class MessageService extends MyObjectGenericService<Message, MessageRepos
         super(childRepository);
     }
 
-    @Override
-    protected Class<Message> getEntityClass() {
-        return Message.class;
-    }
 }

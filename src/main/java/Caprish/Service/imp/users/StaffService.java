@@ -17,9 +17,5 @@ public class StaffService extends UserGenericService<Staff, StaffRepository, Sta
         ((StaffService) AopContext.currentProxy()).updateField(id, "work_role", "Supervisor");
     }
 
-    @Override
-    protected Class<Staff> getEntityClass() {
-        return Staff.class;
-    }
 
 }

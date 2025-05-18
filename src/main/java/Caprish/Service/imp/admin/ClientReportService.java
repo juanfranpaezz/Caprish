@@ -12,8 +12,4 @@ public class ClientReportService extends MyObjectGenericService<ClientReport, Cl
         super(childRepository);
     }
 
-    @Override
-    protected Class<ClientReport> getEntityClass() {
-        return ClientReport.class;
-    }
 }

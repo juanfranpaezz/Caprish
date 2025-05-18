@@ -11,12 +11,6 @@ public class CartItemService extends MyObjectGenericService<CartItem, CartItemRe
         super(childRepository);
     }
 
-    @Override
-    protected Class<CartItem> getEntityClass() {
-        return CartItem.class;
-    }
-
-    
 
 
 }

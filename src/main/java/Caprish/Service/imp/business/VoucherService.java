@@ -16,10 +16,6 @@ public class VoucherService extends MyObjectGenericService<Voucher, VoucherRepos
         super(childRepository);
     }
 
-    @Override
-    protected Class<Voucher> getEntityClass() {
-        return Voucher.class;
-    }
     public void changeValid_from(Long id, LocalDate valid_from) {
         ((VoucherService) AopContext.currentProxy()).updateField(id, "valid_from", valid_from);
     }

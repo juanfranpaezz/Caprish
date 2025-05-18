@@ -13,11 +13,6 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
         super(childRepository);
     }
 
-    @Override
-    protected Class<Business> getEntityClass() {
-        return Business.class;
-    }
-
 
     public void changeBussiness_name(Long id, String bussiness_name) {
         ((BusinessService) AopContext.currentProxy()).updateField(id, "bussiness_name", bussiness_name);

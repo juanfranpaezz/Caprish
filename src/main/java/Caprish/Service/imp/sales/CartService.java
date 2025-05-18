@@ -10,9 +10,4 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository> {
     protected CartService(CartRepository childRepository) {
         super(childRepository);
     }
-
-    @Override
-    protected Class<Cart> getEntityClass() {
-        return Cart.class;
-    }
 }

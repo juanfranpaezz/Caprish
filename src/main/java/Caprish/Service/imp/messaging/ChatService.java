@@ -13,8 +13,4 @@ public class ChatService extends MyObjectGenericService<Chat, ChatRepository> {
         super(childRepository);
     }
 
-    @Override
-    protected Class<Chat> getEntityClass() {
-        return Chat.class;
-    }
 }

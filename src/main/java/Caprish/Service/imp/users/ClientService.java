@@ -30,8 +30,4 @@ public class ClientService
         ((ClientService) AopContext.currentProxy()).updateField(id, "tax", tax);
     }
 
-    @Override
-    protected Class<Client> getEntityClass() {
-        return Client.class;
-    }
 }

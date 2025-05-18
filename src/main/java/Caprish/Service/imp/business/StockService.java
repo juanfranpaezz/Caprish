@@ -13,11 +13,6 @@ public class StockService extends MyObjectGenericService<Stock, StockRepository>
         super(childRepository);
     }
 
-    @Override
-    protected Class<Stock> getEntityClass() {
-        return Stock.class;
-    }
-
 
     public void changeQuantity(Long id, int quantity) {
         ((StockService) AopContext.currentProxy()).updateField(id, "quantity", quantity);

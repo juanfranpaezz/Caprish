@@ -8,6 +8,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.core.ResolvableType;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +20,12 @@ public abstract class MyObjectGenericService<T extends MyObject, R extends MyObj
     protected EntityManager em;
 
     protected final R repository;
+    
 
     protected MyObjectGenericService(R childRepository) {
         this.repository = childRepository;
     }
+
 
     @Transactional
     protected int updateField(Long id, String fieldName, Object value) {
@@ -33,7 +37,11 @@ public abstract class MyObjectGenericService<T extends MyObject, R extends MyObj
         return em.createQuery(update).executeUpdate();
     }
 
-    protected abstract Class<T> getEntityClass();
+    @SuppressWarnings("unchecked")
+    protected Class<T> getEntityClass(){
+        return (Class<T>) ResolvableType.forClass(AopProxyUtils.ultimateTargetClass(this))
+                .as(MyObjectGenericService.class).getGeneric(0).resolve();
+    }
 
 
     public boolean existsById(Long id) {

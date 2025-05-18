@@ -8,11 +8,13 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MyObject {
+public class MyObject{
         @Id
         @GeneratedValue(strategy=GenerationType.IDENTITY)
         private Long id;
+
 }
+
 
 
 

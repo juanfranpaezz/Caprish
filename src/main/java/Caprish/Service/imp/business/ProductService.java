@@ -25,11 +25,4 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
     }
 
 
-    @Override
-    protected Class<Product> getEntityClass() {
-        return Product.class;
-    }
-
-
-
 }

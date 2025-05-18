@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 @Service
-public class ProductService extends MyObjectGenericService<Product> {
+public class ProductService extends MyObjectGenericService<Product, ProductRepository> {
 
     @Autowired
     ProductRepository productRepository;
 
-    protected ProductService(MyObjectGenericRepository<Product, Long> repository) {
+    protected ProductService(ProductRepository repository) {
         super(repository);
     }
 

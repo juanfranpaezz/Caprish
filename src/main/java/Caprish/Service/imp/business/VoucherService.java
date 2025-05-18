@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 
 @Service
-public class VoucherService extends MyObjectGenericService<Voucher> {
+public class VoucherService extends MyObjectGenericService<Voucher, VoucherRepository> {
     protected VoucherService(VoucherRepository childRepository) {
         super(childRepository);
     }

@@ -9,7 +9,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 import java.util.Optional;
 
 @NoRepositoryBean
-public interface UserGenericRepository<T extends User, Long>
-        extends MyObjectGenericRepository<T, Long> {
+public interface UserGenericRepository<T extends User, Long> extends MyObjectGenericRepository<T, Long> {
     Optional<T> findByEmail(String email);
 }

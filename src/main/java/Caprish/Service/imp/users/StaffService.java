@@ -7,17 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StaffService extends UserGenericService<Staff> {
+public class StaffService extends UserGenericService<Staff, StaffRepository> {
 
-    @Autowired
-    StaffRepository staffRepository;
+
     public StaffService(StaffRepository repo) {super(repo);}
 
     public void promoteStaff(Long staffId) {
-        Staff s = userRepository.findById(staffId)
+        Staff s = repository.findById(staffId)
                 .orElseThrow(() -> new IllegalArgumentException("Staff no encontrado: " + staffId));
         s.setWork_role(new WorkRole("Supervisor"));
-        userRepository.save(s);
+        repository.save(s);
     }
 
     @Override

@@ -8,7 +8,7 @@ import Caprish.Service.imp.MyObjectGenericService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MessageService extends MyObjectGenericService<Message> {
+public class MessageService extends MyObjectGenericService<Message, MessageRepository> {
     protected MessageService(MessageRepository childRepository) {
         super(childRepository);
     }

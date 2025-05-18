@@ -6,7 +6,7 @@ import Caprish.Service.imp.MyObjectGenericService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BusinessService extends MyObjectGenericService<Business> {
+public class BusinessService extends MyObjectGenericService<Business, BusinessRepository> {
 
     protected BusinessService(BusinessRepository childRepository) {
         super(childRepository);

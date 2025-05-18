@@ -2,6 +2,7 @@ package Caprish.Controllers.imp.users;
 
 import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.users.Staff;
+import Caprish.Repository.interfaces.users.StaffRepository;
 import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.users.StaffService;
 import Caprish.Service.imp.users.UserGenericService;
@@ -11,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/staff")
-public class StaffController extends UserGenericController<Staff, StaffService> {
+public class StaffController extends UserGenericController<Staff, StaffRepository, StaffService> {
 
-    public StaffController(Caprish.Service.imp.users.StaffService service) {
+    public StaffController(StaffService service) {
         super(service);
     }
 

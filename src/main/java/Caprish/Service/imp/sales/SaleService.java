@@ -7,13 +7,16 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class SaleService extends MyObjectGenericService<Sale> {
-    protected SaleService(SaleRepository childRepository) {
-        super(childRepository);
+public class SaleService extends MyObjectGenericService<Sale, SaleRepository> {
+
+    protected SaleService(SaleRepository repository) {
+        super(repository);
     }
 
     @Override
     protected Class<Sale> getEntityClass() {
         return Sale.class;
     }
+
+
 }

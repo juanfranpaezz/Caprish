@@ -1,53 +1,17 @@
 package Caprish.Controllers.imp.users;
 
+import Caprish.Controllers.MyObjectController;
 import Caprish.Model.imp.users.User;
+import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.users.UserGenericService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-public abstract class UserGenericController<T extends User, S extends UserGenericService<T>> {
+public abstract class UserGenericController<T extends User, R extends UserGenericRepository<T, Long>, S extends UserGenericService<T, R>> extends MyObjectController<T, R, S>{
 
-    protected final S service;
-
-    protected UserGenericController(S service) {
-        this.service = service;
+    public UserGenericController(S childService) {
+        super(childService);
     }
 
-    @GetMapping
-    public List<T> findAll() {
-        return service.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<T> findById(@PathVariable Long id) {
-        return service.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public T create(@RequestBody T entity) {
-        return service.save(entity);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<T> update(@PathVariable Long id, @RequestBody T entity) {
-        if (!service.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(service.save(entity));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!service.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        service.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
 }
 
 

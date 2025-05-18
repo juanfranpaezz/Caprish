@@ -1,6 +1,7 @@
 package Caprish.Controllers.imp.users;
 
 import Caprish.Model.imp.users.Client;
+import Caprish.Repository.interfaces.users.ClientRepository;
 import Caprish.Service.imp.users.ClientService;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,14 +9,14 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/clientes")
-public class ClientController extends UserGenericController<Client, ClientService> {
+@RequestMapping("/clients")
+public class ClientController extends UserGenericController<Client, ClientRepository, ClientService> {
 
-    public ClientController(Caprish.Service.imp.users.ClientService service) {
-        super(service);
+    public ClientController(ClientService childService) {
+        super(childService);
     }
 
-    @GetMapping("/busqueda/telefono/{phone}")
+    @GetMapping("/search/phone/{phone}")
     public List<Client> searchByPhone(@PathVariable Integer phone) {
         return service.searchByPhone(phone);
     }

@@ -9,17 +9,19 @@ import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 
-public abstract class MyObjectGenericService<T extends MyObject> {
+import java.util.List;
+import java.util.Optional;
+
+public abstract class MyObjectGenericService<T extends MyObject, R extends MyObjectGenericRepository<T, Long>> {
 
     @PersistenceContext
     protected EntityManager em;
 
-    protected final MyObjectGenericRepository<T, Long> repository;
+    protected final R repository;
 
-    protected MyObjectGenericService(MyObjectGenericRepository<T, Long> childRepository) {
+    protected MyObjectGenericService(R childRepository) {
         this.repository = childRepository;
     }
-
 
     @Transactional
     protected int updateField(Long id, String fieldName, Object value) {
@@ -37,4 +39,24 @@ public abstract class MyObjectGenericService<T extends MyObject> {
     public boolean existsById(Long id) {
         return repository.existsById(id);
     }
+
+    public final T save(T entity) {
+        return repository.save(entity);
+    }
+
+
+
+    public Optional<T> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    public List<T> findAll() {
+        return repository.findAll();
+    }
+
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
+
 }

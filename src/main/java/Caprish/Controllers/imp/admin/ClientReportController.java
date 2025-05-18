@@ -1,7 +1,18 @@
-//package Caprish.Controllers.imp.admin;
-//
-//import org.springframework.web.bind.annotation.RestController;
-//
-//@RestController
-//public class ClientReportController {
-//}
+package Caprish.Controllers.imp.admin;
+
+import Caprish.Controllers.MyObjectController;
+import Caprish.Model.imp.admin.ClientReport;
+import Caprish.Repository.interfaces.admin.ClientReportRepository;
+import Caprish.Service.imp.admin.ClientReportService;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/client_report")
+public class ClientReportController extends MyObjectController<ClientReport, ClientReportRepository, ClientReportService> {
+
+    public ClientReportController(ClientReportService service) {
+        super(service);
+    }
+
+}

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class StockService extends MyObjectGenericService<Stock> {
+public class StockService extends MyObjectGenericService<Stock, StockRepository> {
     protected StockService(StockRepository childRepository) {
         super(childRepository);
     }
@@ -18,7 +18,7 @@ public class StockService extends MyObjectGenericService<Stock> {
     }
 
 
-    public int changeQuantity(Long id, int email) {
-        return updateField(id, "quantity", email);
+    public int changeQuantity(Long id, int quantity) {
+        return updateField(id, "quantity", quantity);
     }
 }

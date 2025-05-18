@@ -5,30 +5,20 @@ import Caprish.Model.imp.users.User;
 import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 
-import java.util.List;
 import java.util.Optional;
 
-public abstract class UserGenericService<T extends User> extends MyObjectGenericService<T> {
+public abstract class UserGenericService<T extends User, R extends UserGenericRepository<T, Long>> extends MyObjectGenericService<T, R> {
 
-    protected final UserGenericRepository<T, Long> userRepository;
 
-    protected UserGenericService(UserGenericRepository<T, Long> childRepository) {
+    protected UserGenericService(R childRepository) {
         super(childRepository);
-        this.userRepository = childRepository;
-    }
-
-    public final T save(T entity) {
-        validateBeforeSave(entity);
-        T saved = userRepository.save(entity);
-        postSave(entity, saved);
-        return saved;
     }
 
     public void changePassword(Long id, String newPassword) {
-        T user = userRepository.findById(id)
+        T user = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
         user.setPassword_hash(newPassword);
-        userRepository.save(user);
+        repository.save(user);
     }
 
     protected void validateBeforeSave(T entity) {
@@ -37,20 +27,9 @@ public abstract class UserGenericService<T extends User> extends MyObjectGeneric
     protected void postSave(T original, T persisted) {
     }
 
-    public Optional<T> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public List<T> findAll() {
-        return userRepository.findAll();
-    }
-
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
-    }
 
     public Optional<T> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return repository.findByEmail(email);
     }
 
 
@@ -60,7 +39,7 @@ public abstract class UserGenericService<T extends User> extends MyObjectGeneric
         }
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             throw new UserException("El email no puede ser nulo");
-        } else userRepository.save(user);
+        } else repository.save(user);
     }
 
     public boolean log(T user) throws UserException {
@@ -70,7 +49,7 @@ public abstract class UserGenericService<T extends User> extends MyObjectGeneric
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             throw new UserException("El email no puede ser nulo");
         }
-        Optional<T> userOp = userRepository.findByEmail(user.getEmail());
+        Optional<T> userOp = repository.findByEmail(user.getEmail());
         if (userOp.isPresent()) {
             if (userOp.get().equals(user)) {
                 return true;
@@ -80,9 +59,9 @@ public abstract class UserGenericService<T extends User> extends MyObjectGeneric
 
 
     public void deleteMyOwn(T user) throws UserException {
-        Optional<T> userOp = userRepository.findByEmail(user.getEmail());
+        Optional<T> userOp = repository.findByEmail(user.getEmail());
         if (userOp.isPresent()) {
-            if (userOp.get().equals(user)) userRepository.deleteById(user.getId());
+            if (userOp.get().equals(user)) repository.deleteById(user.getId());
             else throw new UserException("La contrasenia es incorrecta");
         } else throw new UserException("El usuario no existe");
     }
@@ -91,8 +70,8 @@ public abstract class UserGenericService<T extends User> extends MyObjectGeneric
         if (Optional.ofNullable(user).isEmpty()) throw new UserException("El user no puede ser nulo");
         else if (user.getEmail() == null || user.getEmail().trim().isEmpty())
             throw new UserException("El email no puede ser nulo");
-        else if (userRepository.findByEmail(user.getEmail()).isEmpty()) throw new UserException("El usuario no existe");
-        else userRepository.deleteById(user.getId());
+        else if (repository.findByEmail(user.getEmail()).isEmpty()) throw new UserException("El usuario no existe");
+        else repository.deleteById(user.getId());
     }
 
 
@@ -135,4 +114,24 @@ public abstract class UserGenericService<T extends User> extends MyObjectGeneric
         return updateField(id, "last_name", last_name);
     }
 
+
+    /*    public final T save(T entity) {
+        validateBeforeSave(entity);
+        T saved = userRepository.save(entity);
+        postSave(entity, saved);
+        return saved;
+    }
+
+    public Optional<T> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public List<T> findAll() {
+        return userRepository.findAll();
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+*/
 }

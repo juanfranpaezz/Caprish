@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public abstract class MyObjectController<T extends MyObject, R extends MyObjectGenericRepository<T, Long>, S extends MyObjectGenericService<T, R>> {
+public abstract class MyObjectGenericController<T extends MyObject, R extends MyObjectGenericRepository<T, Long>, S extends MyObjectGenericService<T, R>> {
 
     protected final S service;
 
-    protected MyObjectController(S childService) {
+    protected MyObjectGenericController(S childService) {
         this.service = childService;
     }
 

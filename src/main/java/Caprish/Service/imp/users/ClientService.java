@@ -9,11 +9,11 @@ import java.util.List;
 
 @Service
 public class ClientService
-        extends UserBasicGenericService<Client>
-         {
+        extends UserGenericService<Client> {
 
     @Autowired
     ClientRepository clientRepository;
+
     public ClientService(ClientRepository repo) {
         super(repo);
     }
@@ -30,5 +30,22 @@ public class ClientService
         return clientRepository.findByPhone(phone);
     }
 
+    public void changePhone(Long id, Integer phone) {
+        Client user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
+        user.setPhone(phone);
+        userRepository.save(user);
+    }
 
+    public void changeTax(Long id, String tax) {
+        Client user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
+        user.setTax(tax);
+        userRepository.save(user);
+    }
+
+    @Override
+    protected Class<Client> getEntityClass() {
+        return Client.class;
+    }
 }

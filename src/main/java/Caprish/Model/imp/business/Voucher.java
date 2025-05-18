@@ -2,6 +2,7 @@ package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.List;
 @Table
 @Entity(name = "voucher")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Voucher extends MyObject {
@@ -35,14 +37,5 @@ public class Voucher extends MyObject {
 
     @Column(nullable = false)
     private LocalDate created_at;
-
-    public Voucher(List<Business> businesses, String code, BigDecimal discount_percent, LocalDate valid_from, LocalDate valid_to, LocalDate created_at) {
-        this.businesses = businesses;
-        this.code = code;
-        this.discount_percent = discount_percent;
-        this.valid_from = valid_from;
-        this.valid_to = valid_to;
-        this.created_at = created_at;
-    }
 
 }

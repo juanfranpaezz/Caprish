@@ -1,18 +1,20 @@
 package Caprish.Controllers.imp.users;
 
+import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.users.Staff;
-import Caprish.Repository.interfaces.users.UserBasicGenericRepository;
-import Caprish.Service.imp.users.UserBasicGenericService;
+import Caprish.Repository.interfaces.users.UserGenericRepository;
+import Caprish.Service.imp.users.StaffService;
+import Caprish.Service.imp.users.UserGenericService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class StaffController extends UserBasicGenericService<Staff> {
+@RequestMapping("/staff")
+public class StaffController extends UserGenericController<Staff, StaffService> {
 
-    @Autowired
-    private UserBasicGenericRepository<Staff, Long> staffRepository;
-    protected StaffController(UserBasicGenericRepository<Staff, Long> repository) {
-        super(repository);
+    public StaffController(Caprish.Service.imp.users.StaffService service) {
+        super(service);
     }
-}
 
+}

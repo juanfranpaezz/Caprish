@@ -19,4 +19,7 @@ public class Client extends User {
     @Column(unique=true,nullable = false)
     private Integer phone;
 
+    @Column(unique=true,nullable = false)
+    private String tax;
+
 }

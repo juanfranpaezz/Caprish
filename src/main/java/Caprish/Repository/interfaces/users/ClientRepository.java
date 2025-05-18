@@ -1,9 +1,11 @@
-// src/main/java/Caprish/Repository/interfaces/users/ClientRepository.java
 package Caprish.Repository.interfaces.users;
 
 import Caprish.Model.imp.users.Client;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-public interface ClientRepository extends UserBasicGenericRepository<Client, Long> {
+@Repository
+public interface ClientRepository extends UserGenericRepository<Client, Long> {
     List<Client> findByPhone(Integer phone);
 }

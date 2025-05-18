@@ -1,7 +1,34 @@
 package Caprish.Service.imp.business;
 
+import Caprish.Model.imp.business.Product;
+import Caprish.Repository.interfaces.MyObjectGenericRepository;
+import Caprish.Repository.interfaces.business.ProductRepository;
+import Caprish.Service.imp.MyObjectGenericService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
-public class ProductService {
+public class ProductService extends MyObjectGenericService<Product> {
+
+    @Autowired
+    ProductRepository productRepository;
+
+    protected ProductService(MyObjectGenericRepository<Product, Long> repository) {
+        super(repository);
+    }
+
+    public int changePrice(Long id, BigDecimal price) {
+        return updateField(id, "price", price);
+    }
+
+
+    @Override
+    protected Class<Product> getEntityClass() {
+        return Product.class;
+    }
+
+
+
 }

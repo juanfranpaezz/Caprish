@@ -2,6 +2,7 @@ package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="stock")
 public class Stock extends MyObject {
@@ -23,11 +25,5 @@ public class Stock extends MyObject {
 
     @Column(nullable = false)
     private int quantity;
-
-    public Stock(Product id_product, Branch id_branch, int quantity) {
-        this.id_product = id_product;
-        this.id_branch = id_branch;
-        this.quantity = quantity;
-    }
 
 }

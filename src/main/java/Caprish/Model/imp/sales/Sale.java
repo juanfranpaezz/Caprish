@@ -3,13 +3,19 @@ package Caprish.Model.imp.sales;
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.users.Staff;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name="sale")
 public class Sale  extends MyObject {

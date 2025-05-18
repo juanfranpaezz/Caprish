@@ -2,6 +2,7 @@ package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="product")
 public class Product extends MyObject {
@@ -30,13 +32,5 @@ public class Product extends MyObject {
     private BigDecimal price;
 
 
-
-    public Product(Business business, String name, Double bar_code, String description, BigDecimal price) {
-        this.business = business;
-        this.name = name;
-        this.bar_code = bar_code;
-        this.description = description;
-        this.price = price;
-    }
 
 }

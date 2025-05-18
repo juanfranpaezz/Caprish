@@ -4,6 +4,7 @@ import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Business;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name="businness_report")
@@ -30,11 +32,5 @@ public class BusinessReport extends MyObject {
     @NotBlank(message="la descripcion no puede estar vacia")
     private String about;
 
-    public BusinessReport(Business id_business, LocalDate generated_at, String description, String about) {
-        this.id_business = id_business;
-        this.generated_at = generated_at;
-        this.description = description;
-        this.about = about;
-    }
 
 }

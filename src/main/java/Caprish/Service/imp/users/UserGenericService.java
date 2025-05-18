@@ -2,31 +2,33 @@ package Caprish.Service.imp.users;
 
 import Caprish.Exception.UserException;
 import Caprish.Model.imp.users.User;
-import Caprish.Repository.interfaces.users.UserBasicGenericRepository;
+import Caprish.Repository.interfaces.users.UserGenericRepository;
+import Caprish.Service.imp.MyObjectGenericService;
 
 import java.util.List;
 import java.util.Optional;
 
-public abstract class UserBasicGenericService<T extends User> {
+public abstract class UserGenericService<T extends User> extends MyObjectGenericService<T> {
 
-    protected final UserBasicGenericRepository<T, Long> repository;
+    protected final UserGenericRepository<T, Long> userRepository;
 
-    protected UserBasicGenericService(UserBasicGenericRepository<T, Long> repository) {
-        this.repository = repository;
+    protected UserGenericService(UserGenericRepository<T, Long> childRepository) {
+        super(childRepository);
+        this.userRepository = childRepository;
     }
 
     public final T save(T entity) {
         validateBeforeSave(entity);
-        T saved = repository.save(entity);
+        T saved = userRepository.save(entity);
         postSave(entity, saved);
         return saved;
     }
 
     public void changePassword(Long id, String newPassword) {
-        T user = repository.findById(id)
+        T user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
         user.setPassword_hash(newPassword);
-        repository.save(user);
+        userRepository.save(user);
     }
 
     protected void validateBeforeSave(T entity) {
@@ -36,19 +38,19 @@ public abstract class UserBasicGenericService<T extends User> {
     }
 
     public Optional<T> findById(Long id) {
-        return repository.findById(id);
+        return userRepository.findById(id);
     }
 
     public List<T> findAll() {
-        return repository.findAll();
+        return userRepository.findAll();
     }
 
     public void deleteById(Long id) {
-        repository.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     public Optional<T> findByEmail(String email) {
-        return repository.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
 
@@ -58,7 +60,7 @@ public abstract class UserBasicGenericService<T extends User> {
         }
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             throw new UserException("El email no puede ser nulo");
-        } else repository.save(user);
+        } else userRepository.save(user);
     }
 
     public boolean log(T user) throws UserException {
@@ -68,7 +70,7 @@ public abstract class UserBasicGenericService<T extends User> {
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             throw new UserException("El email no puede ser nulo");
         }
-        Optional<T> userOp = repository.findByEmail(user.getEmail());
+        Optional<T> userOp = userRepository.findByEmail(user.getEmail());
         if (userOp.isPresent()) {
             if (userOp.get().equals(user)) {
                 return true;
@@ -78,18 +80,19 @@ public abstract class UserBasicGenericService<T extends User> {
 
 
     public void deleteMyOwn(T user) throws UserException {
-        Optional<T> userOp = repository.findByEmail(user.getEmail());
+        Optional<T> userOp = userRepository.findByEmail(user.getEmail());
         if (userOp.isPresent()) {
-            if (userOp.get().equals(user)) repository.deleteById(user.getId());
+            if (userOp.get().equals(user)) userRepository.deleteById(user.getId());
             else throw new UserException("La contrasenia es incorrecta");
         } else throw new UserException("El usuario no existe");
     }
 
     private void delete(T user) throws UserException {
         if (Optional.ofNullable(user).isEmpty()) throw new UserException("El user no puede ser nulo");
-        else if (user.getEmail() == null || user.getEmail().trim().isEmpty()) throw new UserException("El email no puede ser nulo");
-        else if (repository.findByEmail(user.getEmail()).isEmpty()) throw new UserException("El usuario no existe");
-        else repository.deleteById(user.getId());
+        else if (user.getEmail() == null || user.getEmail().trim().isEmpty())
+            throw new UserException("El email no puede ser nulo");
+        else if (userRepository.findByEmail(user.getEmail()).isEmpty()) throw new UserException("El usuario no existe");
+        else userRepository.deleteById(user.getId());
     }
 
 
@@ -112,13 +115,24 @@ public abstract class UserBasicGenericService<T extends User> {
         }
     }
 
-//    public void changePassword(String password) throws UserException {
-//        verifyPassword(password);
-//        repository.
-//    }
 
-    public void modifyPassword(String password) {
+    public int changePassword_hash(Long id, String password) {
+        return updateField(id, "password", password);
+    }
 
+
+    public int changeEmail(Long id, String email) {
+        return updateField(id, "email", email);
+    }
+
+
+    public int changeFirst_name(Long id, String first_name) {
+        return updateField(id, "first_name", first_name);
+    }
+
+
+    public int changeLast_name(Long id, String last_name) {
+        return updateField(id, "last_name", last_name);
     }
 
 }

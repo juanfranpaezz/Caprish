@@ -1,6 +1,8 @@
 package Caprish.Repository.interfaces.users;
 
 import Caprish.Model.imp.users.Staff;
+import org.springframework.stereotype.Repository;
 
-public interface StaffRepository extends UserBasicGenericRepository<Staff, Long> {
+@Repository
+public interface StaffRepository extends UserGenericRepository<Staff, Long> {
 }

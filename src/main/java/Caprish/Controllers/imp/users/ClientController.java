@@ -1,18 +1,24 @@
 package Caprish.Controllers.imp.users;
 
 import Caprish.Model.imp.users.Client;
-import Caprish.Model.imp.users.Staff;
-import Caprish.Repository.interfaces.users.UserBasicGenericRepository;
-import Caprish.Service.imp.users.UserBasicGenericService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import Caprish.Service.imp.users.ClientService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 
 @RestController
-public class ClientController extends UserBasicGenericService<Client> {
+@RequestMapping("/clientes")
+public class ClientController extends UserGenericController<Client, ClientService> {
 
-    @Autowired
-    private UserBasicGenericRepository<Client, Long> staffRepository;
-    protected ClientController(UserBasicGenericRepository<Client, Long> repository) {
-        super(repository);
+    public ClientController(Caprish.Service.imp.users.ClientService service) {
+        super(service);
+    }
+
+    @GetMapping("/busqueda/telefono/{phone}")
+    public List<Client> searchByPhone(@PathVariable Integer phone) {
+        return service.searchByPhone(phone);
     }
 }
+
+

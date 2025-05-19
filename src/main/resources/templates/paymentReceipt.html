@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Recibo de Pago</title>
+    <link rel="stylesheet" href="paymentReceipt.css" />
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <div class="header-left">
+<!--            <img th:if="${logoUrl}" th:src="@{${logoUrl}}" alt="Logo" class="logo"/>-->
+            <h2 th:text="${empresaNombre}"></h2>
+            <p th:text="${empresaDireccion}"></p>
+            <p th:text="'Tel: ' + ${empresaTelefono}"></p>
+            <p th:text="'Email: ' + ${empresaEmail}"></p>
+        </div>
+        <div class="header-right">
+            <h1>RECIBO DE PAGO</h1>
+            <p><span>Recibo N°:</span> <span th:text="${reciboNumero}"></span></p>
+            <p><span>Fecha:</span> <span th:text="${fecha}"></span></p>
+        </div>
+    </header>
+
+    <section class="cliente-info">
+        <div>
+            <p><strong>Cliente:</strong> <span th:text="${cliente}"></span></p>
+<!--            <p><strong>Dirección:</strong> <span th:text="${clienteDireccion}"></span></p>-->
+        </div>
+        <div>
+            <p><strong>ID Cliente:</strong> <span th:text="${clienteId}"></span></p>
+            <p><strong>Método de Pago:</strong> <span th:text="${metodoPago}"></span></p>
+        </div>
+    </section>
+
+    <table class="items">
+        <thead>
+        <tr>
+            <th>Cant.</th>
+            <th>Descripción</th>
+            <th>Precio Unit.</th>
+            <th>Subtotal</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.cantidad}"></td>
+            <td th:text="${item.descripcion}"></td>
+            <td th:text="${#numbers.formatDecimal(item.precio,1,'COMMA',2,'POINT')}"></td>
+            <td th:text="${#numbers.formatDecimal(item.subtotal,1,'COMMA',2,'POINT')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="totales">
+        <div>
+            <p><span>Subtotal:</span> <span th:text="${#numbers.formatDecimal(subtotal,1,'COMMA',2,'POINT')}"></span></p>
+        </div>
+        <div class="total-final">
+            <p><strong>Total:</strong></p>
+            <p th:text="${#numbers.formatDecimal(total,1,'COMMA',2,'POINT')}"></p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p class="legal">Este recibo no es válido como factura fiscal.</p>
+    </footer>
+</div>
+</body>
+</html>

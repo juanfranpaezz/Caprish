@@ -26,14 +26,8 @@ public class Business extends MyObject {
     @Column(nullable = false,columnDefinition = "TEXT")
     private String slogan;
 
-    @OneToOne(optional = false)
-    @JoinColumn(nullable = false,name="id_staff")
-    private Staff id_staff;
-
-
     @Column(nullable = false)
     @NotBlank(message="El cuit no puede estar vacio")
     private int tax;
-
 
 };

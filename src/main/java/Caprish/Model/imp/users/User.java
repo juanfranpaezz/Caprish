@@ -35,6 +35,10 @@ public abstract class User extends MyObject {
     @NotBlank(message = "El apellido no puede estar vacío")
     private String last_name;
 
+    public String getCompleteName(){
+        return first_name + " " + last_name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

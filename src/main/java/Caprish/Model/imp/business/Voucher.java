@@ -1,6 +1,7 @@
 package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObject;
+import Caprish.Model.imp.sales.Cart;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,12 @@ public class Voucher extends MyObject {
     @Column(nullable = false,name="id_business")
     private List<Business> businesses;
 
+    @ManyToMany
+    @JoinTable(name="cart_x_voucher",
+            joinColumns = @JoinColumn(name="voucher_id"),
+            inverseJoinColumns = @JoinColumn(name="cart_id"))
+    private List<Cart> carts;
+
     @Column(nullable = false,columnDefinition = "TEXT")
     private String code;
 
@@ -39,3 +46,5 @@ public class Voucher extends MyObject {
     private LocalDate created_at;
 
 }
+
+

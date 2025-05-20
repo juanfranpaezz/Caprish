@@ -2,6 +2,7 @@ package Caprish.Model.imp.admin;
 
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Business;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -19,18 +20,18 @@ import java.time.LocalDate;
 @Table(name="businness_report")
 public class BusinessReport extends MyObject {
 
-    @ManyToOne (optional = false)
-    @JoinColumn(name = "id_business", nullable = false)  // FK en la tabla business_report
-    private Business id_business; //tiene que ser un objeto
+    @ManyToOne(optional = false)
+    @JsonBackReference
+    @JoinColumn(name = "id_business", nullable = false)
+    private Business business;
 
-    @Column (nullable=false)
-    private LocalDate generated_at;
+    @Column(nullable=false)
+    private LocalDate generatedAt;
 
-    @Column (columnDefinition= "TEXT")
+    @Column(columnDefinition= "TEXT")
     private String description;
 
-    @NotBlank(message="la descripcion no puede estar vacia")
+    @NotBlank(message="La descripción no puede estar vacía")
     private String about;
-
-
 }
+

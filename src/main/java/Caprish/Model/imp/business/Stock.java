@@ -1,6 +1,7 @@
 package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObject;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,16 +15,16 @@ import lombok.Setter;
 @Entity
 @Table(name="stock")
 public class Stock extends MyObject {
+    @ManyToOne(optional = false)
+    @JsonBackReference
+    @JoinColumn(name="id_product")
+    private Product product;
 
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = false,name="id_product")
-    private Product id_product;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false,name="id_branch")
-    private Branch id_branch;
+    @JsonBackReference
+    @JoinColumn(name="id_branch")
+    private Branch branch;
 
     @Column(nullable = false)
     private int quantity;
-
 }

@@ -3,6 +3,8 @@ package Caprish.Model.imp.sales;
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.users.Staff;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +13,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -19,15 +23,19 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name="sale")
-public class Sale  extends MyObject {
-
-    @OneToOne
-    @JoinColumn(name="id_cart",nullable = true)//permite nulos
+public class Sale extends MyObject {
+    @OneToOne(optional = false)
+    @JsonManagedReference
+    @JoinColumn(name="id_cart")
     private Cart cart;
 
-    @ManyToOne
-    @JoinColumn(name = "id_staff", nullable = true)
+    @ManyToOne(optional = false)
+    @JoinColumn(name="id_staff")
     private Staff staff;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_client", nullable = false)
+    private Client client;
 
     @Column(nullable = false)
     private LocalDate sale_date;
@@ -35,9 +43,4 @@ public class Sale  extends MyObject {
     @Column(nullable = false,precision = 20, scale = 10)
     private BigDecimal total_amount;
 
-
 }
-
-
-
-

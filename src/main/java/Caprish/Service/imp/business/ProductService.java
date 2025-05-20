@@ -16,6 +16,9 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    private ImageService imageService;
+
     protected ProductService(ProductRepository repository) {
         super(repository);
     }
@@ -24,5 +27,11 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
         return ((ProductService) AopContext.currentProxy()).updateField(id, "price", price);
     }
 
-
+    public Product findByIdWithImages(Long id) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product != null) {
+            product.setImagenes(imageService.findByEntidadAndReferenciaId("Producto", product.getId()));
+        }
+        return product;
+    }
 }

@@ -3,6 +3,7 @@ package Caprish.Model.imp.messaging;
 import Caprish.Model.enums.SenderType;
 import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +21,7 @@ public class Message extends MyObject {
     @Column(name = "id_sender", nullable = false)
     private Long id_sender;
 
+    @NotBlank(message = "El texto no puede estar vacío")
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 

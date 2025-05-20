@@ -15,7 +15,5 @@ public class SenderType extends MyEnum {
         super(value);
     }
 
-    public SenderType() {
-    }
 // ADMIN, CLIENT, STAFF
 }

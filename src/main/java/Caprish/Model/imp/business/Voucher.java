@@ -2,6 +2,7 @@ package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class Voucher extends MyObject {
     @Column(nullable = false,name="id_business")
     private List<Business> businesses;
 
+    @NotBlank(message = "El texto no puede estar vacío")
     @Column(nullable = false,columnDefinition = "TEXT")
     private String code;
 

@@ -26,6 +26,7 @@ public class BusinessReport extends MyObject {
     @Column (nullable=false)
     private LocalDate generated_at;
 
+    @NotBlank(message = "El texto no puede estar vacío")
     @Column (columnDefinition= "TEXT")
     private String description;
 

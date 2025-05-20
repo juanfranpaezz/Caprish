@@ -19,6 +19,7 @@ public class Client extends User {
     @Column(unique=true,nullable = false)
     private Integer phone;
 
+    @NotBlank(message = "El tax no puede ser nulo")
     @Column(unique=true,nullable = false)
     private String tax;
 

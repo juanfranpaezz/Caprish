@@ -2,6 +2,7 @@ package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +21,13 @@ public class Product extends MyObject {
     @JoinColumn(nullable = false,name="id_business")
     private Business business;
 
+    @NotBlank(message = "El texto no puede estar vacío")
     @Column(nullable=false,columnDefinition = "TEXT")
     private String name;
 
     private Double bar_code;
 
+    @NotBlank(message = "El texto no puede estar vacío")
     @Column(nullable=false,columnDefinition = "TEXT")
     private String description;
 

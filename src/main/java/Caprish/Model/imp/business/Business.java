@@ -17,12 +17,15 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Business extends MyObject {
 
+    @NotBlank(message = "El texto no puede estar vacío")
     @Column(unique=true,columnDefinition="TEXT",nullable=false)
     private String bussiness_name;
 
+    @NotBlank(message = "El texto no puede estar vacío")
     @Column(nullable=false,columnDefinition = "TEXT")
     private String description;
 
+    @NotBlank(message = "El texto no puede estar vacío")
     @Column(nullable = false,columnDefinition = "TEXT")
     private String slogan;
 

@@ -5,6 +5,6 @@ import Caprish.Repository.interfaces.MyObjectGenericRepository;
 
 import java.util.Optional;
 
-public interface SaleRepository extends MyObjectGenericRepository<Sale, Long> {
+public interface SaleRepository extends MyObjectGenericRepository<Sale> {
     Optional<Sale> findByCartId(Long id);
 }

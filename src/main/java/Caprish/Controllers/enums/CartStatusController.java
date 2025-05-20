@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/cart_status")
 public class CartStatusController extends MyEnumGenericController<CartStatus, CartStatusRepository, CartStatusService> {
-    public CartStatusController(CartStatusService childService) {
-        super(childService);
+    public CartStatusController(CartStatusService service) {
+        super(service);
     }
 }

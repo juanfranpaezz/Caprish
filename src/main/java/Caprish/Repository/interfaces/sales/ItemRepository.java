@@ -5,6 +5,6 @@ import Caprish.Repository.interfaces.MyObjectGenericRepository;
 
 import java.util.List;
 
-public interface ItemRepository extends MyObjectGenericRepository<Item, Long> {
+public interface ItemRepository extends MyObjectGenericRepository<Item> {
     List<Item> findByCartId(Long id);
 }

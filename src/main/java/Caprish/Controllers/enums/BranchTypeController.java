@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/branch_type")
 public class BranchTypeController extends MyEnumGenericController<BranchType, BranchTypeRepository, BranchTypeService> {
-    public BranchTypeController(BranchTypeService childService) {
-        super(childService);
+    public BranchTypeController(BranchTypeService service) {
+        super(service);
     }
 }

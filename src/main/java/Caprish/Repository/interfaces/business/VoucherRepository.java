@@ -5,5 +5,5 @@ import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-public interface VoucherRepository extends MyObjectGenericRepository<Voucher, Long> {
+public interface VoucherRepository extends MyObjectGenericRepository<Voucher> {
 }

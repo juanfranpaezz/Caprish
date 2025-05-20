@@ -7,13 +7,13 @@ import org.springframework.aop.framework.AopContext;
 import java.util.Optional;
 
 
-public abstract class MyEnumGenericService<T extends MyEnum, R extends MyEnumGenericRepository<T, Long>, S extends MyEnumGenericService<T,R,S>> extends MyObjectGenericService<T, R> {
+public abstract class MyEnumGenericService<M extends MyEnum, R extends MyEnumGenericRepository<M>, S extends MyEnumGenericService<M,R,S>> extends MyObjectGenericService<M, R> {
 
     protected MyEnumGenericService(R childRepository) {
         super(childRepository);
     }
 
-    public Optional<T> findByValue(String email) {
+    public Optional<M> findByValue(String email) {
         return repository.findByValue(email);
     }
 

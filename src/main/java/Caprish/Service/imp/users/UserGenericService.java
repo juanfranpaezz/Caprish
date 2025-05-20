@@ -8,26 +8,26 @@ import org.springframework.aop.framework.AopContext;
 
 import java.util.Optional;
 
-public abstract class UserGenericService<T extends User, R extends UserGenericRepository<T, Long>, S extends UserGenericService<T,R,S>> extends MyObjectGenericService<T, R> {
+public abstract class UserGenericService<M extends User, R extends UserGenericRepository<M>, S extends UserGenericService<M,R,S>> extends MyObjectGenericService<M, R> {
 
 
     protected UserGenericService(R childRepository) {
         super(childRepository);
     }
 
-    protected void validateBeforeSave(T entity) {
+    protected void validateBeforeSave(M entity) {
     }
 
-    protected void postSave(T original, T persisted) {
+    protected void postSave(M original, M persisted) {
     }
 
 
-    public Optional<T> findByEmail(String email) {
+    public Optional<M> findByEmail(String email) {
         return repository.findByEmail(email);
     }
 
 
-    public void register(T user) throws UserException {
+    public void register(M user) throws UserException {
         if (Optional.ofNullable(user).isEmpty()) {
             throw new UserException("El user no puede ser nulo");
         }
@@ -36,14 +36,14 @@ public abstract class UserGenericService<T extends User, R extends UserGenericRe
         } else repository.save(user);
     }
 
-    public boolean log(T user) throws UserException {
+    public boolean log(M user) throws UserException {
         if (Optional.ofNullable(user).isEmpty()) {
             throw new UserException("El user no puede ser nulo");
         }
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             throw new UserException("El email no puede ser nulo");
         }
-        Optional<T> userOp = repository.findByEmail(user.getEmail());
+        Optional<M> userOp = repository.findByEmail(user.getEmail());
         if (userOp.isPresent()) {
             if (userOp.get().equals(user)) {
                 return true;
@@ -52,15 +52,15 @@ public abstract class UserGenericService<T extends User, R extends UserGenericRe
     }
 
 
-    public void deleteMyOwn(T user) throws UserException {
-        Optional<T> userOp = repository.findByEmail(user.getEmail());
+    public void deleteMyOwn(M user) throws UserException {
+        Optional<M> userOp = repository.findByEmail(user.getEmail());
         if (userOp.isPresent()) {
             if (userOp.get().equals(user)) repository.deleteById(user.getId());
             else throw new UserException("La contrasenia es incorrecta");
         } else throw new UserException("El usuario no existe");
     }
 
-    private void delete(T user) throws UserException {
+    private void delete(M user) throws UserException {
         if (Optional.ofNullable(user).isEmpty()) throw new UserException("El user no puede ser nulo");
         else if (user.getEmail() == null || user.getEmail().trim().isEmpty())
             throw new UserException("El email no puede ser nulo");

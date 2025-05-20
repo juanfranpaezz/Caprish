@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-public interface ClientRepository extends UserGenericRepository<Client, Long> {
+public interface ClientRepository extends UserGenericRepository<Client> {
    Optional<Client> findByPhone(Integer phone);
 
 

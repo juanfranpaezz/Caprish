@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/work_role")
 public class WorkRoleController extends MyEnumGenericController<WorkRole, WorkRoleRepository, WorkRoleService> {
-    public WorkRoleController(WorkRoleService childService) {
-        super(childService);
+    public WorkRoleController(WorkRoleService service) {
+        super(service);
     }
 }
-

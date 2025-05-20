@@ -6,7 +6,7 @@ import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.users.UserGenericService;
 
 
-public abstract class UserGenericController<T extends User, R extends UserGenericRepository<T, Long>, S extends UserGenericService<T, R, S>> extends MyObjectGenericController<T, R, S> {
+public abstract class UserGenericController<M extends User, R extends UserGenericRepository<M>, S extends UserGenericService<M, R, S>> extends MyObjectGenericController<M, R, S> {
 
     public UserGenericController(S childService) {
         super(childService);

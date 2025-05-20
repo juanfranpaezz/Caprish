@@ -14,7 +14,7 @@ import org.springframework.core.ResolvableType;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class MyObjectGenericService<T extends MyObject, R extends MyObjectGenericRepository<T, Long>> {
+public abstract class MyObjectGenericService<M extends MyObject, R extends MyObjectGenericRepository<M>> {
 
     @PersistenceContext
     protected EntityManager em;
@@ -30,16 +30,16 @@ public abstract class MyObjectGenericService<T extends MyObject, R extends MyObj
     @Transactional
     protected int updateField(Long id, String fieldName, Object value) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaUpdate<T> update = cb.createCriteriaUpdate(getEntityClass());
-        Root<T> root = update.from(getEntityClass());
+        CriteriaUpdate<M> update = cb.createCriteriaUpdate(getEntityClass());
+        Root<M> root = update.from(getEntityClass());
         update.set(root.get(fieldName), value);
         update.where(cb.equal(root.get("id"), id));
         return em.createQuery(update).executeUpdate();
     }
 
     @SuppressWarnings("unchecked")
-    protected Class<T> getEntityClass(){
-        return (Class<T>) ResolvableType.forClass(AopProxyUtils.ultimateTargetClass(this))
+    protected Class<M> getEntityClass(){
+        return (Class<M>) ResolvableType.forClass(AopProxyUtils.ultimateTargetClass(this))
                 .as(MyObjectGenericService.class).getGeneric(0).resolve();
     }
 
@@ -48,17 +48,17 @@ public abstract class MyObjectGenericService<T extends MyObject, R extends MyObj
         return repository.existsById(id);
     }
 
-    public final T save(T entity) {
+    public final M save(M entity) {
         return repository.save(entity);
     }
 
 
 
-    public Optional<T> findById(Long id) {
+    public Optional<M> findById(Long id) {
         return repository.findById(id);
     }
 
-    public List<T> findAll() {
+    public List<M> findAll() {
         return repository.findAll();
     }
 

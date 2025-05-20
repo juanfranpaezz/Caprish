@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public abstract class MyObjectGenericController<T extends MyObject, R extends MyObjectGenericRepository<T, Long>, S extends MyObjectGenericService<T, R>> {
+public abstract class MyObjectGenericController<M extends MyObject, R extends MyObjectGenericRepository<M>, S extends MyObjectGenericService<M, R>> {
 
     protected final S service;
 
@@ -17,24 +17,24 @@ public abstract class MyObjectGenericController<T extends MyObject, R extends My
     }
 
     @GetMapping
-    public List<T> findAll() {
+    public List<M> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<T> findById(@PathVariable Long id) {
+    public ResponseEntity<M> findById(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public T create(@RequestBody T entity) {
+    public M create(@RequestBody M entity) {
         return service.save(entity);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<T> update(@PathVariable Long id, @RequestBody T entity) {
+    public ResponseEntity<M> update(@PathVariable Long id, @RequestBody M entity) {
         if (!service.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

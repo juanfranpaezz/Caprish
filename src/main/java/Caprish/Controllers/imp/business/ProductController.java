@@ -24,7 +24,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
 //
 //    }
 
-    @GetMapping("/{id}")
+    @GetMapping("/product/images/{id}/")
     public ResponseEntity<Product> getProductWithImages(@PathVariable Long id) {
         return ResponseEntity.ok(productService.findByIdWithImages(id));
     }

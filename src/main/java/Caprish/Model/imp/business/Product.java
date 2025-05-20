@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,6 +33,7 @@ public class Product extends MyObject {
     @Column(nullable=false,precision = 20, scale = 10)
     private BigDecimal price;
 
-
+    @Transient
+    private List<Image> imagenes = new ArrayList<>();
 
 }

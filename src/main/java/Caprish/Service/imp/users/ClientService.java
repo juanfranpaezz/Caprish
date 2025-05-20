@@ -1,5 +1,6 @@
 package Caprish.Service.imp.users;
 
+import Caprish.Exception.ClientException;
 import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.users.ClientRepository;
 import org.springframework.aop.framework.AopContext;
@@ -17,8 +18,13 @@ public class ClientService
     }
 
 
-    public Optional<Client> searchByPhone(Integer phone) {
-        return repository.findByPhone(phone);
+    public Client searchByPhone(Integer phone) {
+        Optional<Client> client = repository.findByPhone(phone);
+        if (client.isEmpty() || client.get().getId() == null) {
+            throw new ClientException("No existe ningun cliente con ese numero de telefono.");
+        }else{
+            return client.get();
+        }
     }
 
     public int changePhone(Long id, Integer phone) {

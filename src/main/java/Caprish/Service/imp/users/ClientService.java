@@ -21,13 +21,4 @@ public class ClientService
         return repository.findByPhone(phone);
     }
 
-    public int changePhone(Long id, Integer phone) {
-        return ((ClientService) AopContext.currentProxy()).updateField(id, "phone", phone);
-    }
-
-
-    public void changeTax(Long id, String tax) {
-        ((ClientService) AopContext.currentProxy()).updateField(id, "tax", tax);
-    }
-
 }

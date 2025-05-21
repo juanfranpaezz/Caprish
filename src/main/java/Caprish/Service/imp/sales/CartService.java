@@ -6,7 +6,7 @@ import Caprish.Service.imp.MyObjectGenericService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CartService extends MyObjectGenericService<Cart, CartRepository> {
+public class CartService extends MyObjectGenericService<Cart, CartRepository, CartService> {
     protected CartService(CartRepository childRepository) {
         super(childRepository);
     }

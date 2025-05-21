@@ -24,10 +24,9 @@ import java.util.List;
 @Getter
 @Setter
 public class Cart extends MyObject {
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_cart_type", nullable = false)
-    private CartType cartType;
+    private CartType cart_type;
 
     @OneToOne(optional = false)
     @JoinColumn(name = "id_client",nullable = false)

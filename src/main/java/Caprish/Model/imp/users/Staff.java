@@ -10,10 +10,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@EntityScan(basePackages = "Caprish.Model.imp.business")
 @Entity
 @Table(name = "staff")
 @NoArgsConstructor
@@ -29,7 +31,7 @@ public class Staff extends User {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_work_role", nullable = false)
-    private WorkRole workRole;
+    private WorkRole work_role;
 
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

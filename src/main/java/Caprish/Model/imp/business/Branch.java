@@ -34,7 +34,7 @@ public class Branch extends MyObject {
 
         @ManyToOne(optional = false)
         @JoinColumn(name = "id_branch_type", nullable = false)
-        private BranchType branchType;
+        private BranchType branch_type;
 
         @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
         @JsonManagedReference

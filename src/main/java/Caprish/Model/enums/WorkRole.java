@@ -1,6 +1,9 @@
 package Caprish.Model.enums;
 
+import Caprish.Model.imp.sales.Cart;
+import Caprish.Model.imp.users.Staff;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,17 +11,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.checkerframework.checker.units.qual.A;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name="work_role")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class WorkRole extends MyEnum {
-    public WorkRole(String value) {
-        super(value);
-    }
-
-    public WorkRole() {
-    }
-    //    EMPLOYEE, SUPERVISOR;
+    @OneToMany(mappedBy = "work_role")
+    private List<Staff> staff = new ArrayList<>();
+    //    EMPLOYEE, SUPERVISOR, BOSS;
 }

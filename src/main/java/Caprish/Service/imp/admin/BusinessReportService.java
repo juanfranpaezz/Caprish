@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class BusinessReportService extends MyObjectGenericService<BusinessReport, BusinessReportRepository> {
+public class BusinessReportService extends MyObjectGenericService<BusinessReport, BusinessReportRepository, BusinessReportService> {
     protected BusinessReportService(BusinessReportRepository childRepository) {
         super(childRepository);
     }

@@ -8,7 +8,7 @@ import org.springframework.aop.framework.AopContext;
 
 import java.util.Optional;
 
-public abstract class UserGenericService<M extends User, R extends UserGenericRepository<M>, S extends UserGenericService<M,R,S>> extends MyObjectGenericService<M, R> {
+public abstract class UserGenericService<M extends User, R extends UserGenericRepository<M>, S extends UserGenericService<M,R,S>> extends MyObjectGenericService<M, R, S> {
 
 
     protected UserGenericService(R childRepository) {
@@ -88,25 +88,6 @@ public abstract class UserGenericService<M extends User, R extends UserGenericRe
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void changePassword_hash(Long id, String password) {
-        ((S) AopContext.currentProxy()).updateField(id, "password_hash", password);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void changeEmail(Long id, String email) {
-        ((S) AopContext.currentProxy()).updateField(id, "email", email);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void changeFirst_name(Long id, String first_name) {
-        ((S) AopContext.currentProxy()).updateField(id, "first_name", first_name);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void changeLast_name(Long id, String last_name) {
-        ((S) AopContext.currentProxy()).updateField(id, "last_name", last_name);
-    }
 
 
     /*    public final T save(T entity) {

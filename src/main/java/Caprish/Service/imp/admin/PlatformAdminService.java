@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class PlatformAdminService extends MyObjectGenericService<PlatformAdmin, PlatformAdminRepository> {
+public class PlatformAdminService extends MyObjectGenericService<PlatformAdmin, PlatformAdminRepository, PlatformAdminService> {
 
     protected PlatformAdminService(PlatformAdminRepository childRepository) {
         super(childRepository);

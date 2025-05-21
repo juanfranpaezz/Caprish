@@ -1,20 +1,23 @@
 package Caprish.Service.imp;
 
+import Caprish.Model.BeanUtils;
 import Caprish.Model.imp.MyObject;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
+import Caprish.Service.imp.users.ClientService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.core.ResolvableType;
 
 import java.util.List;
 import java.util.Optional;
 
-public abstract class MyObjectGenericService<M extends MyObject, R extends MyObjectGenericRepository<M>> {
+public abstract class MyObjectGenericService<M extends MyObject, R extends MyObjectGenericRepository<M>, S extends MyObjectGenericService<M,R,S>> {
 
     @PersistenceContext
     protected EntityManager em;
@@ -43,6 +46,13 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
                 .as(MyObjectGenericService.class).getGeneric(0).resolve();
     }
 
+    @SuppressWarnings("unchecked")
+    public int changeField(Long id, String fieldName, Object value) {
+        if (!BeanUtils.getPropertyNames(getEntityClass()).contains(fieldName)) {
+            throw new IllegalArgumentException("Campo inválido: " + fieldName);
+        }
+        return ((S) AopContext.currentProxy()).updateField(id, fieldName, value);
+    }
 
     public boolean existsById(Long id) {
         return repository.existsById(id);

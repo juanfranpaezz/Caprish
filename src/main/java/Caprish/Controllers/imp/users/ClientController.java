@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/client")
 public class ClientController extends UserGenericController<Client, ClientRepository, ClientService> {
 
     public ClientController(ClientService childService) {
@@ -17,17 +17,20 @@ public class ClientController extends UserGenericController<Client, ClientReposi
     }
 
 
-    @GetMapping("/search/phone/{phone}")
+    @GetMapping("/searchPhone/{phone}")
     public ResponseEntity<Client> findByPhone(@PathVariable Integer phone) {
         return service.searchByPhone(phone)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/update/{id}/{phone}")
+    @PutMapping("/updatePhone/{id}/{phone}")
     public ResponseEntity<Integer> update(@PathVariable Long id, @PathVariable Integer phone) {
-        return ResponseEntity.ok(service.changePhone(id, phone));
+        return ResponseEntity.ok(service.changeField(id, "phone", phone));
     }
+
+
+
 
 }
 

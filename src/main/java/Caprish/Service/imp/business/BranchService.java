@@ -8,17 +8,10 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class BranchService extends MyObjectGenericService<Branch, BranchRepository> {
+public class BranchService extends MyObjectGenericService<Branch, BranchRepository, BranchService> {
     protected BranchService(BranchRepository childRepository) {
         super(childRepository);
     }
 
 
-    public void changeAddress(Long id, String address) {
-        ((BranchService) AopContext.currentProxy()).updateField(id, "address", "address");
-    }
-
-    public void changeBranch_type(Long id, String branch_type) {
-        ((BranchService) AopContext.currentProxy()).updateField(id, "branch_type", branch_type);
-    }
 }

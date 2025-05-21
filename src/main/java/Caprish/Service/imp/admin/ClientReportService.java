@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class ClientReportService extends MyObjectGenericService<ClientReport, ClientReportRepository> {
+public class ClientReportService extends MyObjectGenericService<ClientReport, ClientReportRepository, ClientReportService> {
     protected ClientReportService(ClientReportRepository childRepository) {
         super(childRepository);
     }
 
 }
+

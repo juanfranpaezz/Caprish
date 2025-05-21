@@ -8,13 +8,9 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class StockService extends MyObjectGenericService<Stock, StockRepository> {
+public class StockService extends MyObjectGenericService<Stock, StockRepository, StockService> {
     protected StockService(StockRepository childRepository) {
         super(childRepository);
     }
 
-
-    public void changeQuantity(Long id, int quantity) {
-        ((StockService) AopContext.currentProxy()).updateField(id, "quantity", quantity);
-    }
 }

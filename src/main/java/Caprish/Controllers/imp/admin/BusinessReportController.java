@@ -16,3 +16,4 @@ public class BusinessReportController extends MyObjectGenericController<Business
     }
 
 }
+

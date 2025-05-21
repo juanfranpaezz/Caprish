@@ -11,18 +11,12 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 @Service
-public class ProductService extends MyObjectGenericService<Product, ProductRepository> {
-
-    @Autowired
-    ProductRepository productRepository;
+public class ProductService extends MyObjectGenericService<Product, ProductRepository, ProductService> {
 
     protected ProductService(ProductRepository repository) {
         super(repository);
     }
 
-    public int changePrice(Long id, BigDecimal price) {
-        return ((ProductService) AopContext.currentProxy()).updateField(id, "price", price);
-    }
 
 
 }

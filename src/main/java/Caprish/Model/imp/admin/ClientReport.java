@@ -2,8 +2,8 @@ package Caprish.Model.imp.admin;
 
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.sales.Sale;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,15 +19,15 @@ import java.time.LocalDate;
 @Table(name="client_report")
 public class ClientReport extends MyObject {
 
-    @ManyToOne (optional = false)
+    @ManyToOne(optional = false)
+    @JsonBackReference
     @JoinColumn(name = "id_sale", nullable = false)
-    private Sale id_sale;
+    private Sale sale;
 
-    @Column (nullable = false)
-    private LocalDate report_date;
+    @Column(nullable = false)
+    private LocalDate reportDate;
 
-    @NotBlank(message = "El texto no puede estar vacío")
-    @Column (name = "TEXT")
-    private String report_data;
-
+    @Column(columnDefinition = "TEXT")
+    private String reportData;
 }
+

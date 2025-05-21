@@ -1,6 +1,8 @@
 package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObject;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,9 +20,9 @@ import java.math.BigDecimal;
 @Entity
 @Table(name="product")
 public class Product extends MyObject {
-
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = false,name="id_business")
+    @JsonBackReference
+    @JoinColumn(name="id_business")
     private Business business;
 
     @NotBlank(message = "El texto no puede estar vacío")
@@ -34,6 +38,7 @@ public class Product extends MyObject {
     @Column(nullable=false,precision = 20, scale = 10)
     private BigDecimal price;
 
-
-
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Stock> stock = new ArrayList<>();
 }

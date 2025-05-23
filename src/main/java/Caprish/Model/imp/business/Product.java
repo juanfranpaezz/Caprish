@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,4 +42,7 @@ public class Product extends MyObject {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Stock> stock = new ArrayList<>();
+    @Transient
+    private List<Image> imagenes = new ArrayList<>();
+
 }

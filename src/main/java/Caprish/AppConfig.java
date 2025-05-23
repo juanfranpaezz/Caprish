@@ -8,4 +8,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class AppConfig {
+
+
 }

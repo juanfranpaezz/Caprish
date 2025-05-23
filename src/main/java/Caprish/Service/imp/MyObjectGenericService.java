@@ -1,9 +1,5 @@
 package Caprish.Service.imp;
 
-import Caprish.Exception.EntityNotFoundCustomException;
-import Caprish.Exception.InvalidEntityException;
-import Caprish.Exception.InvalidIdException;
-import Caprish.Exception.InvalidUpdateFieldException;
 import Caprish.Model.BeanUtils;
 import Caprish.Model.imp.MyObject;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
@@ -47,16 +43,23 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
             throw new InvalidUpdateFieldException("El valor no puede ser null.");
         }
 
-
-        Field field;
-        try {
-            field = getEntityClass().getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e) {
-            throw new InvalidUpdateFieldException("El campo '" + fieldName + "' no existe en la entidad " + getEntityClass().getSimpleName());
+        if (!BeanUtils.getPropertyNames(getEntityClass()).contains(fieldName)) {
+            throw new IllegalArgumentException("Campo inválido: " + fieldName);
         }
 
-        if (value != null && !field.getType().isAssignableFrom(value.getClass())) {
-            throw new InvalidUpdateFieldException("El valor no es compatible con el tipo del campo.");
+
+        if (id == null) {
+            throw new InvalidUpdateFieldException("El ID es inválido.");        }
+
+        if (fieldName == null || fieldName.trim().isEmpty()) {
+            throw new InvalidUpdateFieldException("El nombre del campo es inválido.");
+        }
+
+        if (value == null) {
+            throw new InvalidUpdateFieldException("El valor no puede ser null.");
+        }
+        if (!BeanUtils.getPropertyNames(getEntityClass()).contains(fieldName)) {
+            throw new IllegalArgumentException("Campo inválido: " + fieldName);
         }
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -128,7 +131,6 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         }
         repository.deleteById(id);
     }
-
 
 
 }

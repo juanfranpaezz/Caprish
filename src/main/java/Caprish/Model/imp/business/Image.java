@@ -11,18 +11,20 @@ import java.util.Arrays;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "image")
 public class Image extends MyObject {
 
     private String nombre;
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB", nullable = false)
-    private byte[] datos;
+   @Column(nullable = false, columnDefinition = "TEXT")
+   private String url; // se guarda la url de donde esta guardada la imagen
 
     private String tipo; // e.g. "perfil", "producto", etc.
 
+    @Column(nullable = false)
     private Long referenciaId; // id del producto, usuario, etc.
 
+    @Column(nullable = false)
     private String entidad; // "Producto", "Usuario", etc.
 
 }

@@ -1,6 +1,7 @@
 package Caprish.Service.enums;
 
 import Caprish.Model.enums.CartType;
+import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Repository.enums.CartTypeRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,4 +10,5 @@ public class CartTypeService extends MyEnumGenericService<CartType, CartTypeRepo
     public CartTypeService(CartTypeRepository childRepository) {
         super(childRepository);
     }
+
 }

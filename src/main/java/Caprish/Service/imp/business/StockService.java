@@ -1,5 +1,6 @@
 package Caprish.Service.imp.business;
 
+import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Stock;
 import Caprish.Repository.interfaces.business.StockRepository;
 import Caprish.Service.imp.MyObjectGenericService;
@@ -13,4 +14,8 @@ public class StockService extends MyObjectGenericService<Stock, StockRepository,
         super(childRepository);
     }
 
+    @Override
+    protected void verifySpecificAttributes(Stock entity) {
+
+    }
 }

@@ -16,18 +16,16 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         super(service);
     }
 
-    @Autowired
-    private ProductService productService;
 //
 //    @PostMapping("/update")
 //    public ResponseEntity<Product> update(@RequestBody Product product) {
 //
 //    }
-
-    @GetMapping("/product/images/{id}/")
-    public ResponseEntity<Product> getProductWithImages(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.findByIdWithImages(id));
-    }
+//
+//    @GetMapping("/product/images/{id}/")
+//    public ResponseEntity<Product> getProductWithImages(@PathVariable Long id) {
+//        return ResponseEntity.ok(productService.findByIdWithImages(id));
+//    }
 
 
 }

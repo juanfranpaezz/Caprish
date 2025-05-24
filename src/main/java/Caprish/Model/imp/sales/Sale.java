@@ -25,16 +25,17 @@ import java.util.List;
 @Table(name="sale")
 public class Sale extends MyObject {
     @OneToOne(optional = false)
-    @JsonManagedReference
     @JoinColumn(name="id_cart")
     private Cart cart;
 
     @ManyToOne(optional = false)
     @JoinColumn(name="id_staff")
+    @JsonBackReference("sale-staff")
     private Staff staff;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_client", nullable = false)
+    @JsonBackReference("sale-client")
     private Client client;
 
     @Column(nullable = false)
@@ -42,5 +43,7 @@ public class Sale extends MyObject {
 
     @Column(nullable = false,precision = 20, scale = 10)
     private BigDecimal total_amount;
+
+
 
 }

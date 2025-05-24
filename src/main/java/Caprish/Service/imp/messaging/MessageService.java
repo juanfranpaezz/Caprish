@@ -1,5 +1,6 @@
 package Caprish.Service.imp.messaging;
 
+import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.messaging.Message;
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Repository.interfaces.messaging.MessageRepository;
@@ -13,4 +14,8 @@ public class MessageService extends MyObjectGenericService<Message, MessageRepos
         super(childRepository);
     }
 
+    @Override
+    protected void verifySpecificAttributes(Message entity) {
+
+    }
 }

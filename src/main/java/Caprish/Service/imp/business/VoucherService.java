@@ -1,5 +1,6 @@
 package Caprish.Service.imp.business;
 
+import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Voucher;
 import Caprish.Repository.interfaces.business.VoucherRepository;
 import Caprish.Service.imp.MyObjectGenericService;
@@ -16,5 +17,8 @@ public class VoucherService extends MyObjectGenericService<Voucher, VoucherRepos
         super(childRepository);
     }
 
+    @Override
+    protected void verifySpecificAttributes(Voucher entity) {
 
+    }
 }

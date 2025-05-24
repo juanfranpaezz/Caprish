@@ -1,8 +1,10 @@
 package Caprish.Controllers;
 
+import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.MyObject;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,23 +30,30 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public M create(@RequestBody M entity) {
-        return service.save(entity);
+
+    public ResponseEntity<String> create(@RequestBody M entity){
+        try{
+            if (entity == null) {
+                ResponseEntity.badRequest().build();
+            }
+            return ResponseEntity.ok(service.save(entity));
+        } catch (InvalidEntityException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<M> update(@PathVariable Long id, @RequestBody M entity) {
+    public ResponseEntity<String> update(@PathVariable Long id) {
         if (!service.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(service.save(entity));
+        return ResponseEntity.ok("guardado");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         if (!service.existsById(id)) {
-            return ResponseEntity.ok("Usuario no encontrado");
+            return ResponseEntity.badRequest().body("Usuario no encontrado");
         }
         service.deleteById(id);
         return ResponseEntity.ok("Usuario eliminado con exito");

@@ -9,4 +9,5 @@ public class BranchTypeService extends MyEnumGenericService<BranchType, BranchTy
     protected BranchTypeService(BranchTypeRepository childRepository) {
         super(childRepository);
     }
+
 }

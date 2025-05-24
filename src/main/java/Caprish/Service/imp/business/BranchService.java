@@ -1,5 +1,6 @@
 package Caprish.Service.imp.business;
 
+import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Branch;
 import Caprish.Repository.interfaces.business.BranchRepository;
 import Caprish.Service.imp.MyObjectGenericService;
@@ -14,4 +15,8 @@ public class BranchService extends MyObjectGenericService<Branch, BranchReposito
     }
 
 
+    @Override
+    protected void verifySpecificAttributes(Branch entity) {
+
+    }
 }

@@ -45,6 +45,6 @@ public class Cart extends MyObject {
     private CartStatus cart_status;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("item-cart")
     private List<Item> items = new ArrayList<>();
 }

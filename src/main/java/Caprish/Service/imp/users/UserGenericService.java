@@ -1,6 +1,8 @@
 package Caprish.Service.imp.users;
 
 import Caprish.Exception.UserException;
+import Caprish.Model.BeanUtils;
+import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.users.User;
 import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
@@ -15,40 +17,29 @@ public abstract class UserGenericService<M extends User, R extends UserGenericRe
         super(childRepository);
     }
 
-    protected void validateBeforeSave(M entity) {
+    @Override
+    protected void verifySpecificAttributes(M entity) {
+
     }
-
-    protected void postSave(M original, M persisted) {
-    }
-
-
-    public Optional<M> findByEmail(String email) {
-        return repository.findByEmail(email);
-    }
-
 
     public void register(M user) throws UserException {
         if (Optional.ofNullable(user).isEmpty()) {
             throw new UserException("El user no puede ser nulo");
         }
-        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {//MAIL
             throw new UserException("El email no puede ser nulo");
-        } else repository.save(user);
+        }
+        verifyPassword(user.getPassword_hash());
+        save(user);
     }
 
-    public boolean log(M user) throws UserException {
-        if (Optional.ofNullable(user).isEmpty()) {
-            throw new UserException("El user no puede ser nulo");
-        }
-        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
-            throw new UserException("El email no puede ser nulo");
-        }
+    public void log(M user) throws UserException {
         Optional<M> userOp = repository.findByEmail(user.getEmail());
-        if (userOp.isPresent()) {
-            if (userOp.get().equals(user)) {
-                return true;
-            } else throw new UserException("La contrasenia es incorrecta");
-        } else throw new UserException("El usuario no existe");
+        if (userOp.isEmpty()) { throw new UserException("El usuario no existe");
+        }
+        if(!user.getPassword_hash().equals(userOp.get().getPassword_hash())){
+            throw new UserException("La contraseña no es correcta");
+        }
     }
 
 
@@ -71,8 +62,8 @@ public abstract class UserGenericService<M extends User, R extends UserGenericRe
 
     public void verifyPassword(String password) throws UserException {
         if (password == null) throw new UserException("La contrasenia no puede ser nula");
-        if (password.length() < 8 || password.length() > 15) {
-
+        if (password.length() < 8 || password.length() > 20) {
+            throw new UserException("La contraseña debe tener minimo 8 caracteres y maximo 20");
         }
         String lowerCase = ".*[a-z].*";
         String upperCase = ".*[A-Z].*";

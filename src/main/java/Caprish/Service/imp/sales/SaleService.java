@@ -1,5 +1,6 @@
 package Caprish.Service.imp.sales;
 
+import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.sales.Sale;
 import Caprish.Repository.interfaces.sales.SaleRepository;
 import Caprish.Service.imp.MyObjectGenericService;
@@ -13,4 +14,8 @@ public class SaleService extends MyObjectGenericService<Sale, SaleRepository, Sa
         super(repository);
     }
 
+    @Override
+    protected void verifySpecificAttributes(Sale entity) {
+
+    }
 }

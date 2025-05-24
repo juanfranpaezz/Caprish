@@ -13,4 +13,11 @@ public class BusinessReportService extends MyObjectGenericService<BusinessReport
     protected BusinessReportService(BusinessReportRepository childRepository) {
         super(childRepository);
     }
+
+    @Override
+    protected void verifySpecificAttributes(BusinessReport entity) {
+
+    }
+
+
 }

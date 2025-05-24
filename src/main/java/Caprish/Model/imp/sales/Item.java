@@ -21,12 +21,12 @@ import java.util.List;
 @Table(name="item")
 public class Item extends MyObject {
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("item-cart")
     @JoinColumn(name="id_cart")
     private Cart cart;
 
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("item-product")
     @JoinColumn(name="id_product")
     private Product product;
 

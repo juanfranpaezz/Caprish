@@ -48,7 +48,7 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         return repository.existsById(id);
     }
 
-    public final M save(M entity) {
+    public M save(M entity) {
         return repository.save(entity);
     }
 

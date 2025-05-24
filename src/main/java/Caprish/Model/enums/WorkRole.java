@@ -14,11 +14,5 @@ import org.checkerframework.checker.units.qual.A;
 @Getter
 @Setter
 public class WorkRole extends MyEnum {
-    public WorkRole(String value) {
-        super(value);
-    }
-
-    public WorkRole() {
-    }
     //    EMPLOYEE, SUPERVISOR;
 }

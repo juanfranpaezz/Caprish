@@ -23,12 +23,11 @@ public class Branch extends MyObject {
         @JoinColumn(name = "id_business",nullable = false)
         private Business business;
 
-        @Column(unique=true,nullable = false)
-        @NotBlank(message="La direccion no puede estar vacia")
-        private String address;
+        @Embedded
+        private Address address;
 
         @ManyToOne(optional = false)
         @JoinColumn(name = "id_branch_type",nullable = false)
-        private BranchType barnch_type;
+        private BranchType branch_type;
 
 }

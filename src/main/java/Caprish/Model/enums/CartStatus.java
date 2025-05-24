@@ -12,12 +12,8 @@ import lombok.Setter;
 @Table(name="cart_status")
 @Getter
 @Setter
-public class CartStatus extends MyEnum {
-    public CartStatus(String value) {
-        super(value);
-    }
 
-    public CartStatus() {
-    }
+public class CartStatus extends MyEnum {
+
     //    OPEN, CONFIRMED;
 }

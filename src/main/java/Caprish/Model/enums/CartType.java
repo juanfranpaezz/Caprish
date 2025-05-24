@@ -13,11 +13,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CartType extends MyEnum {
-    public CartType(String value) {
-        super(value);
-    }
-
-    public CartType() {
-    }
     //    PURCHASE, SALE;
 }

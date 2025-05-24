@@ -12,11 +12,6 @@ import lombok.Setter;
 @Entity
 @Table(name="branch_type")
 public class BranchType extends MyEnum {
-    public BranchType(String value) {
-        super(value);
-    }
 
-    public BranchType() {
-    }
     //    SALES_POINT, WAREHOUSE
 }

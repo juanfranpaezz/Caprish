@@ -26,8 +26,8 @@ public class BeanUtils {
             if (value == null) {
                 throw new InvalidEntityException("El campo " + property + " no puede ser null en " + entity.getClass().getSimpleName());
             }
-            if (value instanceof Integer intValue) {
-                if (intValue < 0) {
+            if ((value instanceof Number intValue) ) {
+                if (intValue.doubleValue() < 0) {
                     throw new InvalidEntityException("El campo " + property + " no puede ser negativo en " + entity.getClass().getSimpleName());
                 }
             }

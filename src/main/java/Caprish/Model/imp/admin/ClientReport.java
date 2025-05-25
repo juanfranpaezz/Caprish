@@ -20,7 +20,7 @@ import java.time.LocalDate;
 public class ClientReport extends MyObject {
 
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("sale-client")
     @JoinColumn(name = "id_sale", nullable = false)
     private Sale sale;
 

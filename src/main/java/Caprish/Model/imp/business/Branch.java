@@ -25,7 +25,7 @@ import java.util.List;
 public class Branch extends MyObject {
 
         @ManyToOne(optional = false)
-        @JsonBackReference
+        @JsonBackReference("branch-business")
         @JoinColumn(name = "id_business", nullable = false)
         private Business business;
 
@@ -37,6 +37,6 @@ public class Branch extends MyObject {
         private BranchType branch_type;
 
         @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
-        @JsonManagedReference
+        @JsonManagedReference("stock-branch")
         private List<Stock> stock = new ArrayList<>();
 }

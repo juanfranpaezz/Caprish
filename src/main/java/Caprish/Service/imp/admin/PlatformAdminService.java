@@ -13,4 +13,8 @@ public class PlatformAdminService extends MyObjectGenericService<PlatformAdmin, 
         super(childRepository);
     }
 
+        @Override
+            protected void verifySpecificAttributes(PlatformAdmin entity) {
+
+            }
 }

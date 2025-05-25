@@ -18,8 +18,6 @@ import java.util.List;
 @Table(name="work_role")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class WorkRole extends MyEnum {
     @OneToMany(mappedBy = "work_role")
     private List<Staff> staff = new ArrayList<>();

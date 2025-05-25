@@ -18,8 +18,6 @@ import java.util.List;
 @Table(name="cart_status")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class CartStatus extends MyEnum {
     @OneToMany(mappedBy = "cart_status")
     private List<Cart> carts = new ArrayList<>();

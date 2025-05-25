@@ -16,8 +16,6 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name="branch_type")
 public class BranchType extends MyEnum {
 

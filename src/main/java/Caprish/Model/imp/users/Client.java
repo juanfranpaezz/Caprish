@@ -26,12 +26,16 @@ public class Client extends User {
     @Column(unique = true, nullable = false)
     private String tax;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @JsonManagedReference("chat-client")
     private List<Chat> chats = new ArrayList<>();
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @JsonManagedReference("sale-client")
     private List<Sale> sales = new ArrayList<>();
 
+
+    public Client(String email, String password_hash) {
+        super(email, password_hash);
+    }
 }

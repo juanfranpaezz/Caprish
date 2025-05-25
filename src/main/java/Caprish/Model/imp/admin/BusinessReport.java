@@ -21,7 +21,7 @@ import java.time.LocalDate;
 public class BusinessReport extends MyObject {
 
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("businessReport-business")
     @JoinColumn(name = "id_business", nullable = false)
     private Business business;
 

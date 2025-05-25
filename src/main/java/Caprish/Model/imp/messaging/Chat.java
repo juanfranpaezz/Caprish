@@ -23,17 +23,17 @@ import java.util.List;
        uniqueConstraints = @UniqueConstraint(columnNames = {"company_id","client_id"}))
 public class Chat extends MyObject {
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("chat-business")
     @JoinColumn(name="id_business")
     private Business business;
 
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("chat-client")
     @JoinColumn(name="id_client")
     private Client client;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("message-chat")
     private List<Message> messages = new ArrayList<>();
 }
 

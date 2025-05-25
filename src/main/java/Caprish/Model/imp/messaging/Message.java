@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Table(name="message")
 public class Message extends MyObject {
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("message-chat")
     @JoinColumn(name = "id_chat", nullable = false)
     private Chat chat;
 

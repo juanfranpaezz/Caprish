@@ -1,5 +1,8 @@
 package Caprish.Service.imp;
 
+import Caprish.Exception.EntityNotFoundCustomException;
+import Caprish.Exception.InvalidIdException;
+import Caprish.Exception.InvalidUpdateFieldException;
 import Caprish.Model.BeanUtils;
 import Caprish.Model.imp.MyObject;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
@@ -13,7 +16,6 @@ import org.springframework.aop.framework.AopContext;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.core.ResolvableType;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,39 +31,23 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         this.repository = childRepository;
     }
 
+    protected abstract void verifySpecificAttributes(M entity);
+
 
     @Transactional
     protected int updateField(Long id, String fieldName, Object value) {
         if (id == null) {
-            throw new InvalidUpdateFieldException("El ID es inválido.");        }
-
+            throw new InvalidUpdateFieldException("El ID es inválido.");
+        }
         if (fieldName == null || fieldName.trim().isEmpty()) {
             throw new InvalidUpdateFieldException("El nombre del campo es inválido.");
         }
-
-        if (value == null) {
-            throw new InvalidUpdateFieldException("El valor no puede ser null.");
-        }
-
-        if (!BeanUtils.getPropertyNames(getEntityClass()).contains(fieldName)) {
-            throw new IllegalArgumentException("Campo inválido: " + fieldName);
-        }
-
-
-        if (id == null) {
-            throw new InvalidUpdateFieldException("El ID es inválido.");        }
-
-        if (fieldName == null || fieldName.trim().isEmpty()) {
-            throw new InvalidUpdateFieldException("El nombre del campo es inválido.");
-        }
-
         if (value == null) {
             throw new InvalidUpdateFieldException("El valor no puede ser null.");
         }
         if (!BeanUtils.getPropertyNames(getEntityClass()).contains(fieldName)) {
             throw new IllegalArgumentException("Campo inválido: " + fieldName);
         }
-
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaUpdate<M> update = cb.createCriteriaUpdate(getEntityClass());
         Root<M> root = update.from(getEntityClass());
@@ -91,23 +77,12 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         return repository.existsById(id);
     }
 
-    public final M save(M entity) {
-        if (entity == null) {
-            throw new InvalidEntityException("La entidad no puede ser null");
-        }
-
-        if (entity.getId() == null) {
-            // Si el id es null entonces es una creacion, está bien que sea null
-            return repository.save(entity);
-        } else {
-            // Si el id no es null entonces es una actualización, y se debe validar que exista primero.
-            if (!repository.existsById(entity.getId())) {
-                throw new EntityNotFoundCustomException("No existe la entidad con ID: " + entity.getId());
-            }
-            return repository.save(entity);
-        }
+    public String save(M entity){
+        BeanUtils.verifyValues(entity);
+        verifySpecificAttributes(entity);
+        repository.save(entity);
+        return "Guardado con exito";
     }
-
 
 
     public Optional<M> findById(Long id) {

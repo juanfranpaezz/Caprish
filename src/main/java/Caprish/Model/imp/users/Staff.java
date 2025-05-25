@@ -25,7 +25,7 @@ import java.util.List;
 public class Staff extends User {
 
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("staff-business")
     @JoinColumn(name = "id_business", nullable = false)
     private Business business;
 
@@ -34,7 +34,10 @@ public class Staff extends User {
     private WorkRole work_role;
 
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("sale-staff")
     private List<Sale> sales = new ArrayList<>();
 
+    public Staff(String email, String password_hash) {
+        super(email, password_hash);
+    }
 }

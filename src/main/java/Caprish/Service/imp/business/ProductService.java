@@ -22,7 +22,7 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
 
 
     public Product findByIdWithImages(Long id) {
-        Product product = productRepository.findById(id).orElse(null);
+        Product product = repository.findById(id).orElse(null);
         if (product != null) {
             product.setImagenes(imageService.findByEntidadAndReferenciaId("Producto", product.getId()));
         }

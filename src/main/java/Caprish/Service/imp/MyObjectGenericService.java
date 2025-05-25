@@ -1,5 +1,9 @@
 package Caprish.Service.imp;
 
+import Caprish.Exception.EntityNotFoundCustomException;
+import Caprish.Exception.InvalidEntityException;
+import Caprish.Exception.InvalidIdException;
+import Caprish.Exception.InvalidUpdateFieldException;
 import Caprish.Model.BeanUtils;
 import Caprish.Model.imp.MyObject;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;

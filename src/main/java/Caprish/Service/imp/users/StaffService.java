@@ -14,12 +14,12 @@ public class StaffService extends UserGenericService<Staff, StaffRepository, Sta
     public StaffService(StaffRepository repo) {super(repo);}
 
     public void promoteStaff(Long id) {
-        Staff staff = repo.findById(id)
+        Staff staff = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Staff con ID " + id + " no encontrado"));
 
-        if (staff.getWork_role() == WorkRole.SUPERVISOR) {
-            throw new IllegalStateException("El staff ya es Supervisor");
-        }
+//        if (staff.getWork_role() == WorkRole.SUPERVISOR) {
+//            throw new IllegalStateException("El staff ya es Supervisor");
+//        }
 
         ((StaffService) AopContext.currentProxy()).updateField(id, "work_role", "Supervisor");
     }

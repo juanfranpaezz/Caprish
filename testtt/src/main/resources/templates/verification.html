@@ -1,0 +1,35 @@
+<!DOCTYPE html><!---preferiblemente no tocar nada de este html-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación de Cuenta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f3f3f3;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: auto;
+        }
+        .code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Hola <strong th:text="${username}"></strong></h2><!----sintaxis para poder modificar automaticamente desde codigo--->
+    <p>Tu código de verificación es:</p>
+    <p class="code">[[${token}]]</p><!----sintaxis para poder modificar automaticamente desde codigo--->
+    <p>Este código expirará en 5 minutos.</p>
+    <p>Gracias.</p>
+    <p>El equipo de soporte.</p>
+</div>
+</body>
+</html>

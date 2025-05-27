@@ -4,7 +4,6 @@ import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.MyObject;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +17,11 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
         this.service = childService;
     }
 
-    @GetMapping
+    public abstract ResponseEntity<String> createObject(@RequestBody M entity);
+
+
+
+        @GetMapping
     public List<M> findAll() {
         return service.findAll();
     }

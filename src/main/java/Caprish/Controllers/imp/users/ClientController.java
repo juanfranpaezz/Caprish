@@ -28,25 +28,5 @@ public class ClientController extends UserGenericController<Client, ClientReposi
         return ResponseEntity.ok(service.changeField(id, "phone", phone));
     }
 
-    @PostMapping("/log")
-    public ResponseEntity<String> logUser(@RequestBody Client user) {
-        try{
-            service.log(user);
-            return ResponseEntity.ok("Usuario logueado exitosamente");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 
-    @PostMapping("sign-up")
-    public ResponseEntity<String> createe(@RequestBody Client entity) {
-        if (entity == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        try {
-            return ResponseEntity.ok(service.save(entity));
-        } catch (InvalidEntityException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 }

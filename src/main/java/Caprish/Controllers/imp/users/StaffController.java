@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/staff")
+@RequestMapping("/employee")
 public class StaffController extends UserGenericController<Staff, StaffRepository, StaffService> {
 
     public StaffController(StaffService service) {

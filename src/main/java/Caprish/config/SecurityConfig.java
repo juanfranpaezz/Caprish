@@ -2,6 +2,8 @@ package Caprish.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,7 +19,6 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-
 public class SecurityConfig {
 
     @Bean
@@ -25,26 +26,53 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // rutas públicas, ni siquiera necesitan autenticarse
                         .requestMatchers("/api/publico").permitAll()
-                        .requestMatchers("/api/user").hasRole("USER")
-                        .requestMatchers("/api/admin").hasRole("ADMIN")
+
+                        // cualquier usuario autenticado con ROLE_USER o superior
+                        .requestMatchers("/api/user/**").hasRole("USER")
+
+                        // rutas exclusivas de CLIENT
+                        .requestMatchers("/api/client/**").hasRole("CLIENT")
+
+                        // rutas de EMPLOYEE y superiores (incluye BOSS y SUPERVISOR)
+                        .requestMatchers("/api/employee/**").hasRole("EMPLOYEE")
+
+                        // rutas de SUPERVISOR y superiores
+                        .requestMatchers("/api/supervisor/**").hasRole("SUPERVISOR")
+
+                        // rutas sólo para BOSS
+                        .requestMatchers("/api/boss/**").hasRole("BOSS")
+
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())   //Body: x-www-form-urlencoded username:admin password:admin123
+                .formLogin(Customizer.withDefaults())
                 .logout(Customizer.withDefaults());
 
         return http.build();
     }
 
 
-    // nos permite manejar usuarios desde el codigo Java
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        hierarchy.setHierarchy(
+                "ROLE_BOSS > ROLE_SUPERVISOR\n" +
+                        "ROLE_SUPERVISOR > ROLE_EMPLOYEE\n" +
+                        "ROLE_EMPLOYEE > ROLE_USER\n" +
+                        "ROLE_CLIENT > ROLE_USER"
+        );
+        return hierarchy;
+    }
+
+
+
     @Bean
     public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
     }
 
 
-    // Seleccion de encriptador
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

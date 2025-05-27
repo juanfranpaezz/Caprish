@@ -1,7 +1,7 @@
 package Caprish.Model.imp.users;
 
 import Caprish.Model.imp.messaging.Chat;
-import Caprish.Model.imp.sales.Sale;
+import Caprish.Model.imp.sales.Cart;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,8 +31,8 @@ public class Client extends User {
     private List<Chat> chats = new ArrayList<>();
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    @JsonManagedReference("sale-client")
-    private List<Sale> sales = new ArrayList<>();
+    @JsonManagedReference("cart-client")
+    private List<Cart> carts = new ArrayList<>();
 
 
     public Client(String email, String password_hash) {

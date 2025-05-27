@@ -37,6 +37,7 @@ public class ClientController extends UserGenericController<Client, ClientReposi
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @PostMapping("sign-up")
     public ResponseEntity<String> createe(@RequestBody Client entity) {
         if (entity == null) {

@@ -4,10 +4,11 @@ import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Stock;
 import Caprish.Repository.interfaces.business.StockRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 
-
+@Slf4j
 @Service
 public class StockService extends MyObjectGenericService<Stock, StockRepository, StockService> {
     protected StockService(StockRepository childRepository) {

@@ -1,7 +1,7 @@
 package Caprish.Model.imp.admin;
 
 import Caprish.Model.imp.MyObject;
-import Caprish.Model.imp.sales.Sale;
+import Caprish.Model.imp.sales.Cart;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,10 +19,9 @@ import java.time.LocalDate;
 @Table(name="client_report")
 public class ClientReport extends MyObject {
 
-    @ManyToOne(optional = false)
-    @JsonBackReference("sale-client")
-    @JoinColumn(name = "id_sale", nullable = false)
-    private Sale sale;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_cart", nullable = false)
+    private Cart cart;
 
     @Column(nullable = false)
     private LocalDate reportDate;

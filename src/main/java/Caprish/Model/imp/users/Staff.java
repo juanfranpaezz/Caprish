@@ -2,7 +2,7 @@ package Caprish.Model.imp.users;
 
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.enums.WorkRole;
-import Caprish.Model.imp.sales.Sale;
+import Caprish.Model.imp.sales.Cart;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -34,8 +34,8 @@ public class Staff extends User {
     private WorkRole work_role;
 
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("sale-staff")
-    private List<Sale> sales = new ArrayList<>();
+    @JsonManagedReference("cart-staff")
+    private List<Cart> carts = new ArrayList<>();
 
     public Staff(String email, String password_hash) {
         super(email, password_hash);

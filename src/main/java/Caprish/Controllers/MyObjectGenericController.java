@@ -19,33 +19,36 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
 
     public abstract ResponseEntity<String> createObject(@RequestBody M entity);
 
+    public abstract ResponseEntity<String> deleteObject(@PathVariable Long id);
+
+    public abstract ResponseEntity<String> updateObject(@PathVariable Long id);
+
+    public abstract ResponseEntity<M> findObjectById(@PathVariable Long id);
+
+    public abstract List<M> findAllObjects();
 
 
-        @GetMapping
+    public ResponseEntity<String> create(@RequestBody M entity) {
+        try {
+            if (entity == null) {
+                ResponseEntity.badRequest().build();
+            }
+            return ResponseEntity.ok(service.save(entity));
+        } catch (InvalidEntityException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     public List<M> findAll() {
         return service.findAll();
     }
 
-    @GetMapping("/{id}")
     public ResponseEntity<M> findById(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
-    public ResponseEntity<String> create(@RequestBody M entity){
-        try{
-            if (entity == null) {
-                ResponseEntity.badRequest().build();
-            }
-            return ResponseEntity.ok(service.save(entity));
-        } catch (InvalidEntityException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable Long id) {
         if (!service.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -53,7 +56,6 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
         return ResponseEntity.ok("guardado");
     }
 
-    @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         if (!service.existsById(id)) {
             return ResponseEntity.badRequest().body("Usuario no encontrado");

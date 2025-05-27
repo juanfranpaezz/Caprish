@@ -1,8 +1,12 @@
 package Caprish.Controllers.enums;
 
 import Caprish.Model.enums.BranchType;
+import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Repository.enums.BranchTypeRepository;
 import Caprish.Service.enums.BranchTypeService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,4 +16,7 @@ public class BranchTypeController extends MyEnumGenericController<BranchType, Br
     public BranchTypeController(BranchTypeService service) {
         super(service);
     }
+
+
+
 }

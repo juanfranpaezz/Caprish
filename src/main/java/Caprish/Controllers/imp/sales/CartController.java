@@ -6,10 +6,9 @@ import Caprish.Repository.interfaces.sales.CartRepository;
 import Caprish.Service.imp.sales.CartService;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -20,11 +19,35 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         super(service);
     }
 
-    @PostMapping("/createCart")
-    @Override
-    public ResponseEntity<String> createObject(@RequestBody Cart entity) {
-        return create(entity);
-    }
+    @PostMapping("/create")
+        @Override
+        public ResponseEntity<String> createObject(@RequestBody Cart entity) {
+            return create(entity);
+        }
+
+        @DeleteMapping("/delete/{id}")
+        @Override
+        public ResponseEntity<String> deleteObject(Long id) {
+            return delete(id);
+        }
+
+        @PutMapping("/update/{id}")
+        @Override
+        public ResponseEntity<String> updateObject(Long id) {
+            return update(id);
+        }
+
+        @GetMapping("/{id}")
+        @Override
+        public ResponseEntity<Cart> findObjectById(Long id) {
+            return findById(id);
+        }
+
+        @GetMapping("/all")
+        @Override
+        public List<Cart> findAllObjects() {
+            return findAll();
+        }
 
 
 }

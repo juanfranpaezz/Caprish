@@ -43,6 +43,7 @@
 //    }
 //
 //    public List<Image> findByEntidadAndReferenciaId(String entidad, Long referenciaId) {
+
 //        return imageRepository.findByEntidadAndReferenciaId(entidad, referenciaId);
 //    }
 //

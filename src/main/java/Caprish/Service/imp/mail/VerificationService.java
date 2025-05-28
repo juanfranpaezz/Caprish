@@ -1,7 +1,6 @@
-package com.example.email.service;
-import com.example.email.model.EmailToken;
-import com.example.email.repository.EmailTokenRepository;
-import com.example.email.util.ThymeleafTemplate;
+package Caprish.Service.imp.mail;
+import Caprish.Model.imp.mail.EmailToken;
+import Caprish.Repository.interfaces.mail.EmailTokenRepository;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Map;

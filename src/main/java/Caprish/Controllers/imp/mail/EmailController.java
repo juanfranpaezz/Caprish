@@ -1,10 +1,8 @@
-package com.example.email.controller;
+package Caprish.Controllers.imp.mail;
 
-import com.example.email.model.SentEmail;
-import com.example.email.service.GmailService;
-import com.example.email.service.MailService;
-import com.example.email.service.SentEmailService;
-import com.example.email.service.VerificationService;
+import Caprish.Model.imp.mail.SentEmail;
+import Caprish.Service.imp.mail.GmailService;
+import Caprish.Service.imp.mail.SentEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,19 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")// cambiar por caprish dsps, yo lo tengo asi pq ya guarde las requests del postman con esta direccion y me da paja cambiarlo jijox
+@RequestMapping("/api")
 public class EmailController {
-    // inyecciones
     @Autowired
-    private GmailService gmailService;
+    GmailService gmailService;
     @Autowired
-    private MailService mailService;
-    @Autowired
-    private VerificationService verificationService;
-    @Autowired
-    private SentEmailService sentEmailService;
-
-    // envio de mail
+    SentEmailService sentEmailService;
     @PostMapping("/send-email")
     public ResponseEntity<String> sendEmail(@RequestParam String to,
                                             @RequestParam String subject,
@@ -58,21 +49,5 @@ public class EmailController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(mails);
-    }
-    // registrar
-    @PostMapping("sign-up")
-    public ResponseEntity<String> checkEmail(@RequestParam String email, @RequestParam String password) throws Exception {
-        if (mailService.existsByMail(email)) {
-            return ResponseEntity.badRequest().body("Este correo ya está registrado.");
-        }
-        mailService.addMail(email, password);
-        verificationService.sendVerificationCode(email);
-        return ResponseEntity.ok("Email agregado correctamente. Por favor verifique su email con el token que le acabamos de enviar.");
-    }
-    // iniciar sesion
-    @PostMapping("login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
-        mailService.verifyLogin(email, password);
-        return ResponseEntity.ok("Los datos ingresados son correctos , bienvenido!");
     }
 }

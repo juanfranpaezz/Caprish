@@ -1,7 +1,8 @@
-package com.example.email.service;
+package Caprish.Service.imp.mail;
 
-import com.example.email.model.SentEmail;
-import com.example.email.repository.SentEmailRepository;
+
+import Caprish.Model.imp.mail.SentEmail;
+import Caprish.Repository.interfaces.mail.SentEmailRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,6 @@ public class SentEmailService {
         return sentEmailRepository.findAllByReceiverIgnoreCase(receiver);
     }
     public List<SentEmail> findAllBySender(String sender) {
-        return sentEmailRepository.findAllBySenderIgnoreCase(sender);
+        return sentEmailRepository.findAllBySender(sender);
     }
 }

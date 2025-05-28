@@ -1,7 +1,7 @@
-package com.example.email.service;
+package Caprish.Service.imp.mail;
 
-import com.example.email.model.SentEmail;
-import com.example.email.repository.SentEmailRepository;
+import Caprish.Model.imp.mail.SentEmail;
+import Caprish.Repository.interfaces.mail.SentEmailRepository;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -149,4 +149,5 @@ public class GmailService {
                 }
             }
         }
+
     }

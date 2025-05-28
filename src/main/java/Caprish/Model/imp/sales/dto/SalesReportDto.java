@@ -15,5 +15,6 @@ public class SalesReportDto {
     private Long saleId;
     private LocalDate saleDate;
     private BigDecimal totalAmount;
-    private String staffName;
+    private String staffFirstName;
+    private String staffLastName;
 }

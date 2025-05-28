@@ -12,8 +12,18 @@ import java.util.Optional;
 public interface SaleRepository extends MyObjectGenericRepository<Sale> {
     Optional<Sale> findByCartId(Long id);
 
-    @Query("SELECT new Caprish.Model.imp.sales.dto.SalesReportDto(s.id, s.sale_date, s.total_amount, CONCAT(st.first_name, ' ', st.last_name)) " +
-            "FROM Sale s LEFT JOIN s.staff st " +
-            "WHERE st.id = :staffId")
+    @Query("""
+    SELECT new Caprish.Model.imp.sales.dto.SalesReportDto(
+        s.id, s.sale_date, s.total_amount, st.first_name, st.last_name
+    )
+    FROM Sale s
+    JOIN s.staff st
+    WHERE st.business.id = (
+        SELECT st2.business.id
+        FROM Staff st2
+        WHERE st2.id = :staffId
+    )
+    ORDER BY s.sale_date DESC
+""")
     List<SalesReportDto> findVentasReporteByStaffId(@Param("staffId") Long staffId);
 }

@@ -35,7 +35,7 @@ public class Business extends MyObject {
 
     @Column(nullable = false)
     @NotBlank(message="El cuit no puede estar vacio")
-    private int tax;
+    private Integer tax;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

@@ -16,12 +16,12 @@ import lombok.Setter;
 @Table(name="stock")
 public class Stock extends MyObject {
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("stock-product")
     @JoinColumn(name="id_product")
     private Product product;
 
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("stock-branch")
     @JoinColumn(name="id_branch")
     private Branch branch;
 

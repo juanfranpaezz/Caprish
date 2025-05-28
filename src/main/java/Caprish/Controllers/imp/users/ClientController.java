@@ -1,11 +1,14 @@
 package Caprish.Controllers.imp.users;
 
+import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.users.ClientRepository;
 import Caprish.Service.imp.users.ClientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
 
+import java.util.List;
 
 
 @RestController
@@ -15,23 +18,34 @@ public class ClientController extends UserGenericController<Client, ClientReposi
     public ClientController(ClientService childService) {
         super(childService);
     }
+    @PostMapping("/create")
+        @Override
+        public ResponseEntity<String> createObject(@RequestBody Client entity) {
+            return create(entity);
+        }
 
+        @DeleteMapping("/delete/{id}")
+        @Override
+        public ResponseEntity<String> deleteObject(Long id) {
+            return delete(id);
+        }
 
-    @GetMapping("/searchPhone/{phone}")
-    public ResponseEntity<Client> findByPhone(@PathVariable Integer phone) {
-        return service.searchByPhone(phone)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+        @PutMapping("/update/{id}")
+        @Override
+        public ResponseEntity<String> updateObject(Long id) {
+            return update(id);
+        }
 
-    @PutMapping("/updatePhone/{id}/{phone}")
-    public ResponseEntity<Integer> update(@PathVariable Long id, @PathVariable Integer phone) {
-        return ResponseEntity.ok(service.changeField(id, "phone", phone));
-    }
+        @GetMapping("/{id}")
+        @Override
+        public ResponseEntity<Client> findObjectById(Long id) {
+            return findById(id);
+        }
 
-
-
+        @GetMapping("/all")
+        @Override
+        public List<Client> findAllObjects() {
+            return findAll();
+        }
 
 }
-
-

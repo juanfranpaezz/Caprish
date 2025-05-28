@@ -3,11 +3,13 @@ package Caprish.Service.imp.users;
 import Caprish.Exception.ClientException;
 import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.users.ClientRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ClientService
         extends UserGenericService<Client, ClientRepository, ClientService> {

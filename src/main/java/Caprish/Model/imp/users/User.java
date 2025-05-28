@@ -46,6 +46,11 @@ public abstract class User extends MyObject {
         return Objects.equals(email, user.email) && Objects.equals(password_hash, user.password_hash);
     }
 
+    public User(String email, String password_hash) {
+        this.email = email;
+        this.password_hash = password_hash;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(email, password_hash);

@@ -22,7 +22,7 @@ import java.util.List;
 @Table(name="product")
 public class Product extends MyObject {
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonBackReference("product-business")
     @JoinColumn(name="id_business")
     private Business business;
 
@@ -40,7 +40,7 @@ public class Product extends MyObject {
     private BigDecimal price;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("stock-product")
     private List<Stock> stock = new ArrayList<>();
     @Transient
     private List<Image> imagenes = new ArrayList<>();

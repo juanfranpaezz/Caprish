@@ -17,8 +17,6 @@ import java.util.List;
 @Table(name="cart_type")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class CartType extends MyEnum {
     @OneToMany(mappedBy = "cart_type")
     private List<Cart> carts = new ArrayList<>();

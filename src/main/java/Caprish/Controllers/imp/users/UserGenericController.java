@@ -35,5 +35,7 @@ public abstract class UserGenericController<M extends User, R extends UserGeneri
 //        return ResponseEntity.ok("Contrasenia cambiada exitosamente");
 //    }
 
+    
+
 }
 

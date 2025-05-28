@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class MyObjectGenericService<M extends MyObject, R extends MyObjectGenericRepository<M>> {
+public abstract class MyObjectGenericService<M extends MyObject, R extends MyObjectGenericRepository<M>,S extends MyObjectGenericService<M,R,S>>{
 
     @PersistenceContext
     protected EntityManager em;

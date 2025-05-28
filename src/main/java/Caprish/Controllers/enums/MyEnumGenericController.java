@@ -6,12 +6,10 @@ import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Repository.enums.MyEnumGenericRepository;
 import Caprish.Service.enums.MyEnumGenericService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@PreAuthorize("hasRole('ADMIN')")
 public abstract class MyEnumGenericController<M extends MyEnum, R extends MyEnumGenericRepository<M>, S extends MyEnumGenericService<M, R, S>> extends MyObjectGenericController<M, R, S> {
     public MyEnumGenericController(S childService) {
         super(childService);

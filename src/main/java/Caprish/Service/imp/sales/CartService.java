@@ -20,14 +20,13 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
         return repository.getCartViewsByBusinessId(idBusiness)
                 .stream()
                 .map(obj -> new CartViewDTO(
-                        ((Number) obj[0]).longValue(),       // idCart
-                        (String) obj[1],                     // clientName
-                        (String) obj[2],                     // cartType
-                        (String) obj[3],                     // cartStatus
-                        ((java.sql.Date) obj[4]).toLocalDate(), // saleDate
-                        (String) obj[5],                     // staffName
-                        ((Number) obj[6]).longValue(),       // idBusiness
-                        ((Number) obj[7]).doubleValue()      // totalAmount
+                        ((Number) obj[0]).longValue(),             // idCart
+                        (String) obj[1],                           // clientName (first + last)
+                        (String) obj[2],                           // cartType
+                        (String) obj[3],                           // cartStatus
+                        (String) obj[4],                           // staffName (first + last)
+                        ((Number) obj[5]).longValue(),             // idBusiness
+                        ((Number) obj[6]).doubleValue()            // totalAmount
                 ))
                 .collect(Collectors.toList());
     }

@@ -17,7 +17,6 @@ public class CartViewDTO {
     private String clientName;
     private String cartType;
     private String cartStatus;
-    private LocalDate saleDate;
     private String staffName;
     private Long idBusiness;
     private Double totalAmount;

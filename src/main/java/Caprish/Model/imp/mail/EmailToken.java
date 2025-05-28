@@ -1,15 +1,15 @@
 package Caprish.Model.imp.mail;
 
 import Caprish.Model.imp.MyObject;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -18,12 +18,23 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "email_token")//NO CAMBIAR, TABLA DE BDD QUE QUEDE ASI PORFA, TABLA QUE GUARDA LOS TOKENS!!
+@Table(name = "email_token")
 public class EmailToken extends MyObject {
 
+    @NotBlank
+    @Email
+    @Column(nullable = false, length = 255)
     private String email;
-    private String token;
-    private LocalDateTime expiration;
-    private boolean verified;
 
+    @NotBlank
+    @Column(nullable = false, length = 6)
+    private String token;
+
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Column(nullable = false)
+    private LocalDateTime expiration;
+
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean verified;
 }

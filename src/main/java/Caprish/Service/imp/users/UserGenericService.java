@@ -6,10 +6,12 @@ import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.users.User;
 import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
 
 import java.util.Optional;
 
+@Slf4j
 public abstract class UserGenericService<M extends User, R extends UserGenericRepository<M>, S extends UserGenericService<M,R,S>> extends MyObjectGenericService<M, R, S> {
 
 

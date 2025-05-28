@@ -6,8 +6,10 @@ import Caprish.Model.imp.sales.Cart;
 import Caprish.Repository.interfaces.messaging.ChatRepository;
 import Caprish.Repository.interfaces.sales.CartRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ChatService extends MyObjectGenericService<Chat, ChatRepository, ChatService> {
     protected ChatService(ChatRepository childRepository) {

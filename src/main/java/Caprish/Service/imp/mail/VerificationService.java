@@ -9,6 +9,7 @@ import java.util.Random;
 @Service
 public class VerificationService {
 
+
     private final EmailTokenRepository repo;
     private final GmailService gmailService;
 

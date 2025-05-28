@@ -31,4 +31,15 @@ public class SentEmail extends MyObject {
     private boolean success;
 
     private String errorMessage;
+
+    public SentEmail(String receiver, String sender, String subject, String content,LocalDateTime sentAt) {
+        this.receiver = receiver;
+        this.sender = sender;
+        this.subject = subject;
+        this.content = content;
+        this.success = false;
+        this.errorMessage = "";
+    }
+
+
 }

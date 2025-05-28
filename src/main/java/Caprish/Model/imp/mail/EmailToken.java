@@ -1,5 +1,6 @@
 package Caprish.Model.imp.mail;
 
+import Caprish.Model.imp.MyObject;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "email_token")//NO CAMBIAR, TABLA DE BDD QUE QUEDE ASI PORFA, TABLA QUE GUARDA LOS TOKENS!!
-public class EmailToken {
+public class EmailToken extends MyObject {
 
     private String email;
     private String token;

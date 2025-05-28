@@ -4,46 +4,40 @@ import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
+import java.util.Set;
 
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 @MappedSuperclass
-@AllArgsConstructor
-public abstract class User extends MyObject {
+public class User extends MyObject {
 
-    @Column(unique=true, columnDefinition = "text")
-    @NotBlank(message = "El email no puede estar vacío")
-    @Email(message = "El email no es válido")
-    private String email;
-
-    @Column(name = "password_hash", columnDefinition = "text")
-    @NotBlank(message = "La contraseña no puede estar vacia.")
-    private String password_hash;
-
-    @Column(columnDefinition = "text",nullable = false)
-    @NotBlank(message = "El nombre no puede estar vacío")
+    @Column(columnDefinition = "text", nullable = false)
     private String first_name;
 
-    @Column(columnDefinition = "text",nullable = false)
-    @NotBlank(message = "El apellido no puede estar vacío")
+    @Column(columnDefinition = "text", nullable = false)
     private String last_name;
 
-    public String getCompleteName(){
-        return first_name + " " + last_name;
-    }
+    @Column(columnDefinition = "text", nullable = false, unique = true)
+    @Email
+    private String email;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-        return Objects.equals(email, user.email) && Objects.equals(password_hash, user.password_hash);
+    @Column(columnDefinition = "text", nullable = false)
+    private String password_hash;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+
+
+    public String getCompleteName() {
+        return first_name + " " + last_name;
     }
 
     public User(String email, String password_hash) {
@@ -52,7 +46,14 @@ public abstract class User extends MyObject {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(email, user.email);
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(email, password_hash);
+        return Objects.hash(email);
     }
 }

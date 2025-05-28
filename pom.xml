@@ -20,10 +20,6 @@
 	</properties>
 
 	<dependencies>
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>&ndash;&gt;-->
-<!--			<artifactId>spring-boot-starter-security</artifactId>&ndash;&gt;-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

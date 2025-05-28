@@ -9,4 +9,6 @@ import java.util.Optional;
 @NoRepositoryBean
 public interface UserGenericRepository<M extends User> extends MyObjectGenericRepository<M> {
     Optional<M> findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

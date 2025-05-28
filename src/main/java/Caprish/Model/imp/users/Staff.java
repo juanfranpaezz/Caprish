@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import java.util.ArrayList;
 import java.util.List;
 
-@EntityScan(basePackages = "Caprish.Model.imp.business")
 @Entity
 @Table(name = "staff")
 @NoArgsConstructor
@@ -26,18 +25,17 @@ public class Staff extends User {
 
     @ManyToOne(optional = false)
     @JsonBackReference("staff-business")
-    @JoinColumn(name = "id_business", nullable = false)
     private Business business;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_work_role", nullable = false)
+    @JoinColumn(name = "id_work_role",nullable = false)
     private WorkRole work_role;
 
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("cart-staff")
     private List<Cart> carts = new ArrayList<>();
 
-    public Staff(String email, String password_hash) {
-        super(email, password_hash);
+    public Staff(String email, String passwordHash) {
+        super(email, passwordHash);
     }
 }

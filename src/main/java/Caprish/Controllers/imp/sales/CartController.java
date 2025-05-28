@@ -2,6 +2,7 @@ package Caprish.Controllers.imp.sales;
 
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Model.imp.sales.Cart;
+import Caprish.Model.imp.sales.dto.CartViewDTO;
 import Caprish.Repository.interfaces.sales.CartRepository;
 import Caprish.Service.imp.sales.CartService;
 import jakarta.annotation.security.PermitAll;
@@ -48,6 +49,11 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         public List<Cart> findAllObjects() {
             return findAll();
         }
+
+    @GetMapping("/view/my-sales")
+    public ResponseEntity<List<CartViewDTO>> getMySales(@RequestParam Long idBusiness) {
+        return ResponseEntity.ok(service.getCartViewsByBusiness(idBusiness));
+    }
 
 
 }

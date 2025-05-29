@@ -1,5 +1,6 @@
 package Caprish.Service.imp.business;
 
+import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Address;
 import Caprish.Model.imp.business.Branch;
 import Caprish.Repository.interfaces.business.BranchRepository;
@@ -19,6 +20,11 @@ public class BranchService extends MyObjectGenericService<Branch, BranchReposito
         this.geocodingService = geocodingService;
     }
 
+
+    @Override
+    protected void verifySpecificAttributes(MyObject entity) {
+
+    }
 
     @Override
     public Branch save(Branch branch) {

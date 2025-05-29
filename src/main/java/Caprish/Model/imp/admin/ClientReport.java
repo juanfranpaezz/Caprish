@@ -19,6 +19,11 @@ import java.time.LocalDate;
 @Table(name="client_report")
 public class ClientReport extends MyObject {
 
+    @Column (nullable = false)
+    private LocalDate report_date;
+
+    @Column (name = "TEXT")
+    private String report_data;
     @OneToOne(optional = false)
     @JoinColumn(name = "id_cart", nullable = false)
     private Cart cart;

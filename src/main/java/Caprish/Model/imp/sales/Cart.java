@@ -23,6 +23,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Cart extends MyObject {
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_cart_type", nullable = false)
     private CartType cart_type;
@@ -31,6 +32,8 @@ public class Cart extends MyObject {
     @JsonBackReference("cart-client")
     @JoinColumn(name = "id_client",nullable = false)
     private Client client;
+
+
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_cart_status",nullable = false)

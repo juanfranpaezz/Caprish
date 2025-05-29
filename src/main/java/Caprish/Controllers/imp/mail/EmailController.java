@@ -25,43 +25,43 @@ public class EmailController {
         this.gmailService = gmailService;
         this.sentEmailService = sentEmailService;
     }
-
-    @PostMapping("/send-email")
-    public ResponseEntity<String> sendEmail(@RequestParam String to,
-                                            @RequestParam String subject,
-                                            @RequestParam String name,
-                                            @RequestPart(required = false) MultipartFile file) {
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String userEmail = auth.getName(); // obtener email del usuario logueado
-
-            gmailService.sendEmailWithName(userEmail, to, subject, name, file);
-            return ResponseEntity.ok("Correo enviado con exito");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
-        }
-    }
-
-    //listado de mails mandados
-    @GetMapping(path = "/view-mails-sended", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SentEmail>> viewMailsSended() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = auth.getName();// obtener email del usuario logueado
-        List<SentEmail> mails = sentEmailService.findAllBySender(userEmail.trim().toLowerCase());
-        if (mails.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(mails);
-    }
-    //listado de mails recibidos
-    @GetMapping(path = "/view-mails-received", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SentEmail>> viewMailsReceived() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();// obtener email del usuario logueado
-        List<SentEmail> mails = sentEmailService.findAllByReceiver(email);
-        if (mails.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(mails);
-    }
+//esto en vacaciones de invierno vaaaaaaaaaaa
+//    @PostMapping("/send-email")
+//    public ResponseEntity<String> sendEmail(@RequestParam String to,
+//                                            @RequestParam String subject,
+//                                            @RequestParam String name,
+//                                            @RequestPart(required = false) MultipartFile file) {
+//        try {
+//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            String userEmail = auth.getName(); // obtener email del usuario logueado
+//
+//            gmailService.sendEmailWithName(userEmail, to, subject, name, file);
+//            return ResponseEntity.ok("Correo enviado con exito");
+//        } catch (Exception e) {
+//            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+//        }
+//    }
+//
+//    //listado de mails mandados
+//    @GetMapping(path = "/view-mails-sended", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<SentEmail>> viewMailsSended() {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = auth.getName();// obtener email del usuario logueado
+//        List<SentEmail> mails = sentEmailService.findAllBySender(userEmail.trim().toLowerCase());
+//        if (mails.isEmpty()) {
+//            return ResponseEntity.noContent().build();
+//        }
+//        return ResponseEntity.ok(mails);
+//    }
+//    //listado de mails recibidos
+//    @GetMapping(path = "/view-mails-received", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<SentEmail>> viewMailsReceived() {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String email = auth.getName();// obtener email del usuario logueado
+//        List<SentEmail> mails = sentEmailService.findAllByReceiver(email);
+//        if (mails.isEmpty()) {
+//            return ResponseEntity.noContent().build();
+//        }
+//        return ResponseEntity.ok(mails);
+//    }
 }

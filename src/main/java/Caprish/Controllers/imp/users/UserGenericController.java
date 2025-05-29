@@ -1,6 +1,7 @@
 package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
+import Caprish.Controllers.imp.mail.VerificationController;
 import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.users.User;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 public abstract class UserGenericController<M extends User, R extends UserGenericRepository<M>, S extends UserGenericService<M, R, S>> extends MyObjectGenericController<M, R, S> {
 
+    @Autowired
+    VerificationController verificationController;
+
     public UserGenericController(S childService) {
         super(childService);
     }
-
 
     @PermitAll
     @PostMapping("/log")
@@ -34,10 +37,15 @@ public abstract class UserGenericController<M extends User, R extends UserGeneri
     @PostMapping("/sign-up")
     @Override
     public ResponseEntity<String> createObject(@RequestBody M entity) {
-        return create(entity);
+        ResponseEntity<String> message2;
+        try {
+            message2= verificationController.sendEmailWithToken();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        ResponseEntity<String> message = create(entity);
+        return ResponseEntity.ok(message.getBody() + " " + message2.getBody()) ;
     }
-
-    
 
 }
 

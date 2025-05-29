@@ -19,6 +19,7 @@ public class VerificationService {
         this.repo = repo;
         this.gmailService = gmailService;
     }
+
     //generador de token
     public void sendVerificationCode(String email) throws Exception {
         String token = String.format("%06d", new Random().nextInt(900_000) + 100_000);
@@ -31,16 +32,12 @@ public class VerificationService {
         et.setExpiration(LocalDateTime.now().plusMinutes(5));
         et.setVerified(false);
         repo.save(et);
-        Map<String,Object> vars = Map.of("token", token,"username", nombre);
+        Map<String, Object> vars = Map.of("token", token, "username", nombre);
         String html = ThymeleafTemplate.processTemplate("verification", vars);
-        gmailService.sendEmail("nmeacuerdo1@gmail.com",email,
+        gmailService.sendEmail("nmeacuerdo1@gmail.com", email,
                 "Verificación de cuenta",
                 html,
-                null );
-    }
-    public String getAuthenticatedUserEmail() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getName(); // Devuelve el email si lo configuraste como username
+                null);
     }
 
     //validador de token

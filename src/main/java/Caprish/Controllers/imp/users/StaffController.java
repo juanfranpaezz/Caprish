@@ -1,8 +1,10 @@
 package Caprish.Controllers.imp.users;
 
+import Caprish.Controllers.imp.mail.VerificationController;
 import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.users.StaffRepository;
 import Caprish.Service.imp.users.StaffService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

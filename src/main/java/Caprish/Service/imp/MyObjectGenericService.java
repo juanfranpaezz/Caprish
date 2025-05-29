@@ -83,7 +83,7 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         BeanUtils.verifyValues(entity);
         verifySpecificAttributes(entity);
         repository.save(entity);
-        return "Guardado con exito";
+        return entity.getClass() + "Guardado con exito";
     }
 
 

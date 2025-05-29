@@ -33,7 +33,7 @@ import com.google.api.client.util.Base64;
 @Service
 public class GmailService {
 
-    private static final String APPLICATION_NAME = "Gmail API Java";
+    private static final String APPLICATION_NAME = "Gmail API Java"; // dsps chequear
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens"; // tokens/{userEmail} folder for each user
     private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_SEND);
@@ -45,23 +45,26 @@ public class GmailService {
     }
 
     // Enviar email con nombre, necesita el email del usuario que envía (userEmail)
-    public void sendEmailWithName(String userEmail, String to, String subject, String name, MultipartFile file) throws Exception {
-        String htmlBody = generateHtmlContent(name);
-        sendEmail(userEmail, to, subject, htmlBody, file);
-    }
+//    public void sendEmailWithName(String userEmail, String to, String subject, String name, MultipartFile file) throws Exception {
+//        String htmlBody = generateHtmlContent(name);
+//        sendEmail(userEmail, to, subject, htmlBody, file);
+//    }
+// ESTO PARA INVIERNO
 
-    public static String generateHtmlContent(String name) {
-        TemplateEngine templateEngine = new TemplateEngine();
-        Context context = new Context();
-        context.setVariable("name", name);
+//    public static String generateHtmlContent(String name) {
+//        TemplateEngine templateEngine = new TemplateEngine();
+//        Context context = new Context();
+//        context.setVariable("name", name);
+//
+//        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+//        templateResolver.setPrefix("templates/");
+//        templateResolver.setSuffix(".html");
+//        templateEngine.setTemplateResolver(templateResolver);
+//
+//        return templateEngine.process("emailTemplate", context);
+//    }
+// ESTO VA PARA INVIERNO
 
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("templates/");
-        templateResolver.setSuffix(".html");
-        templateEngine.setTemplateResolver(templateResolver);
-
-        return templateEngine.process("emailTemplate", context);
-    }
 
     public void sendEmail(String userEmail, String to, String subject, String htmlContent, MultipartFile file) throws Exception {
         File tempFile = null;

@@ -37,5 +37,7 @@ public abstract class UserGenericController<M extends User, R extends UserGeneri
         return create(entity);
     }
 
+    
+
 }
 

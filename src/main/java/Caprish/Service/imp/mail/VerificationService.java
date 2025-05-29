@@ -1,7 +1,9 @@
-package com.example.email.service;
-import com.example.email.model.EmailToken;
-import com.example.email.repository.EmailTokenRepository;
-import com.example.email.util.ThymeleafTemplate;
+package Caprish.Service.imp.mail;
+import Caprish.Model.imp.mail.EmailToken;
+import Caprish.Model.imp.mail.ThymeleafTemplate;
+import Caprish.Repository.interfaces.mail.EmailTokenRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -31,11 +33,16 @@ public class VerificationService {
         repo.save(et);
         Map<String,Object> vars = Map.of("token", token,"username", nombre);
         String html = ThymeleafTemplate.processTemplate("verification", vars);
-        gmailService.sendEmail(email,
+        gmailService.sendEmail("nmeacuerdo1@gmail.com",email,
                 "Verificación de cuenta",
                 html,
                 null );
     }
+    public String getAuthenticatedUserEmail() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName(); // Devuelve el email si lo configuraste como username
+    }
+
     //validador de token
     public boolean verifyCode(String email, String code) {
         return repo.findByEmailAndToken(email, code)

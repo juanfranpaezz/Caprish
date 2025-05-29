@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación de cuenta</title>
+</head>
+<body>
+<h2>Hola, <span th:text="${username}">usuario</span> 👋</h2>
+<p>Tu código de verificación es:</p>
+<h1 style="color: #000000" th:text="${token}">123456</h1>
+<p>Este código expira en 5 minutos.</p>
+<p>Si no solicitaste este código, ignorá este mensaje.</p>
+</body>
+</html>

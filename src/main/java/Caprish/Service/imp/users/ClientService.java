@@ -20,12 +20,12 @@ public class ClientService
     }
 
 
-    public Client searchByPhone(Integer phone) {
+    public Optional<Client> searchByPhone(Integer phone) {
         Optional<Client> client = repository.findByPhone(phone);
         if (client.isEmpty() || client.get().getId() == null) {
             throw new ClientException("No existe ningun cliente con ese numero de telefono.");
         }else{
-            return client.get();
+            return Optional.of(client.get());
         }
     }
 

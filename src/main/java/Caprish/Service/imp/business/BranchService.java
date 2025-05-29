@@ -4,6 +4,7 @@ import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Address;
 import Caprish.Model.imp.business.Branch;
 import Caprish.Repository.interfaces.business.BranchRepository;
+import Caprish.Service.enums.BranchTypeService;
 import Caprish.Service.imp.MyObjectGenericService;
 import Caprish.Service.others.GoogleGeocodingService;
 import org.springframework.aop.framework.AopContext;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class BranchService extends MyObjectGenericService<Branch, BranchRepository> {
+public class BranchService extends MyObjectGenericService<Branch, BranchRepository, BranchService> {
 
     private final GoogleGeocodingService geocodingService;
 
@@ -20,9 +21,8 @@ public class BranchService extends MyObjectGenericService<Branch, BranchReposito
         this.geocodingService = geocodingService;
     }
 
-
     @Override
-    protected void verifySpecificAttributes(MyObject entity) {
+    protected void verifySpecificAttributes(Branch entity) {
 
     }
 

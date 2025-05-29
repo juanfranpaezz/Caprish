@@ -33,7 +33,7 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
             if (entity == null) {
                 ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(service.save(entity));
+            return ResponseEntity.ok(String.valueOf(service.save(entity)));
         } catch (InvalidEntityException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

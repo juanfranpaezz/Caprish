@@ -1,5 +1,6 @@
 package Caprish.Service.imp.business;
 
+import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.business.Product;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import Caprish.Repository.interfaces.business.ProductRepository;
@@ -25,7 +26,41 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
     @Override
     protected void verifySpecificAttributes(Product entity) {
 
+        // Validar longitud del nombre (por ejemplo, entre 3 y 100 caracteres)
+        if (entity.getName().length() < 3 || entity.getName().length() > 100) {
+            throw new InvalidEntityException("El nombre del producto debe tener entre 3 y 100 caracteres.");
+        }
+
+        // Validar unicidad del nombre dentro del negocio
+        boolean nombreDuplicado = repository
+                .findByNombreAndBusinessId(entity.getName(), entity.getBusiness().getId())
+                .stream()
+                .anyMatch(existing -> !existing.getId().equals(entity.getId())); // ignoramos el mismo si es actualización
+
+        if (nombreDuplicado) {
+            throw new InvalidEntityException("Ya existe un producto con ese nombre en el negocio.");
+        }
+
+        // Validar precio mayor a cero
+        if (entity.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidEntityException("El precio debe ser mayor a cero.");
+        }
+
+        // Validar existencia del negocio asociado  REVISAR ESTO
+        if (entity.getBusiness() == null || entity.getBusiness().getId() == null) {
+            throw new InvalidEntityException("El producto debe estar asociado a un negocio válido.");
+        }
+
+        // validar que el stock no sea negativo
+        if (entity.getStock() != null) {
+            entity.getStock().forEach(s -> {
+                if (s.getQuantity() < 0) {
+                    throw new InvalidEntityException("El stock no puede tener cantidades negativas.");
+                }
+            });
+        }
     }
+
 
 
     public Product findByIdWithImages(Long id) {

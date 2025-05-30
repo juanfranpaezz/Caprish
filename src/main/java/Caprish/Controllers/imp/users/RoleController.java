@@ -6,6 +6,7 @@ import Caprish.Model.imp.users.Role;
 import Caprish.Repository.interfaces.users.RoleRepository;
 import Caprish.Service.imp.users.RoleService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class RoleController extends MyObjectGenericController<Role, RoleReposito
 
     @DeleteMapping("/delete/{id}")
     @Override
-    public ResponseEntity<String> deleteObject(Long id) {
+    public ResponseEntity<String> deleteObject(@Valid @PathVariable Long id) {
         return delete(id);
     }
 

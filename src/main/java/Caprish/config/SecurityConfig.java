@@ -86,27 +86,4 @@ public class SecurityConfig {
         );
         return hierarchy;
     }
-
-
-
-    @Bean
-    public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
-    }
-
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        var user = User.withUsername("caprish")
-                .password("11234")
-                .roles("ADMIN", "USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
 }

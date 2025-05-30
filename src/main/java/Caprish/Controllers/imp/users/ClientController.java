@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/client")
 public class ClientController extends UserGenericController<Client, ClientRepository, ClientService> {

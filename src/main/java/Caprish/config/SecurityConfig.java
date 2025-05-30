@@ -19,33 +19,44 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+// habilita @PermitAll, @RolesAllowed, @DenyAll
+@EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // si tu front está en otro puerto
+                .cors(cors -> cors.disable())
+                // para APIs REST normalmente deshabilitamos CSRF
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // rutas públicas (Swagger / docs)
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
+                        // tu endpoint público de mensajes
+                        .requestMatchers("/message/view/**").permitAll()
+                        .requestMatchers("/product/all").permitAll()
+                        // cualquier otro requiere auth
                         .anyRequest().authenticated()
                 )
+                // habilita Basic Auth y Form Login
                 .httpBasic(withDefaults())
                 .formLogin(withDefaults())
-                .logout(withDefaults());
+                .logout(withDefaults())
+        ;
 
         return http.build();
     }
 
     @Bean
     public JdbcUserDetailsManager userDetailsService(DataSource dataSource) {
-        var manager = new JdbcUserDetailsManager(dataSource);
-        manager.setUsersByUsernameQuery(
+        var mgr = new JdbcUserDetailsManager(dataSource);
+        mgr.setUsersByUsernameQuery(
                 "SELECT email AS username, password_hash AS password, TRUE AS enabled " +
                         "FROM ( " +
                         "  SELECT email, password_hash FROM staff " +
@@ -53,9 +64,9 @@ public class SecurityConfig {
                         "  SELECT email, password_hash FROM client " +
                         "  UNION ALL " +
                         "  SELECT email, password_hash FROM platform_admin " +
-                        ") u WHERE u.email = ?"
+                        ") AS u WHERE u.email = ?"
         );
-        manager.setAuthoritiesByUsernameQuery(
+        mgr.setAuthoritiesByUsernameQuery(
                 "SELECT u.email AS username, r.name AS authority " +
                         "FROM ( " +
                         "  SELECT email, role_id FROM staff " +
@@ -63,15 +74,16 @@ public class SecurityConfig {
                         "  SELECT email, role_id FROM client " +
                         "  UNION ALL " +
                         "  SELECT email, role_id FROM platform_admin " +
-                        ") u " +
+                        ") AS u " +
                         "JOIN role r ON u.role_id = r.id " +
                         "WHERE u.email = ?"
         );
-        return manager;
+        return mgr;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // BCrypt con strength por defecto (10)
         return new BCryptPasswordEncoder();
     }
 

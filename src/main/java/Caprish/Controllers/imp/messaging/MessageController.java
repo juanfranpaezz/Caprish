@@ -18,7 +18,6 @@ import java.util.List;
 @PermitAll
 @RestController
 @RequestMapping("/message")
-@CrossOrigin(origins = "http://localhost:3000")
 public class MessageController extends MyObjectGenericController<Message, MessageRepository, MessageService> {
 
     public MessageController(MessageService service) {

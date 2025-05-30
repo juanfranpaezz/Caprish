@@ -34,8 +34,15 @@ public class Branch extends MyObject {
         private Address address;
 
         @ManyToOne(optional = false)
-        @JoinColumn(name = "id_branch_type", nullable = false)
+        @JoinColumn(
+                name = "id_branch_type",
+                referencedColumnName = "id",
+                nullable = false,
+                columnDefinition = "VARCHAR(255)"
+        )
+        @JsonIgnoreProperties
         private BranchType branch_type;
+
 
         @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
         @JsonManagedReference("stock-branch")

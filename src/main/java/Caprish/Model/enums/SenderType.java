@@ -2,6 +2,8 @@ package Caprish.Model.enums;
 
 
 import Caprish.Model.imp.messaging.Message;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -17,7 +19,7 @@ import java.util.List;
 @Table(name="sender_type")
 public class SenderType extends MyEnum {
 
-    @OneToMany(mappedBy = "sender_type")
+    @OneToMany(mappedBy = "sender_type", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
     //    CLIENT / STAFF / ADMIN
 }

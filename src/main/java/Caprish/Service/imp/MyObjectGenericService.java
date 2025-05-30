@@ -93,7 +93,6 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
     }
 
     public List<M> findAll() {
-
         return repository.findAll();
     }
 

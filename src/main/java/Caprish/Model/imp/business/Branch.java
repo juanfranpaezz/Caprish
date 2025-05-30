@@ -3,6 +3,7 @@ package Caprish.Model.imp.business;
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.enums.BranchType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

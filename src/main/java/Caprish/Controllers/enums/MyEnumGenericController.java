@@ -13,9 +13,12 @@ import java.util.List;
 
 public abstract class MyEnumGenericController<M extends MyEnum, R extends MyEnumGenericRepository<M>, S extends MyEnumGenericService<M, R, S>> {
     protected final S service;
+
     protected MyEnumGenericController(S childService) {
         this.service = childService;
+
     }
+}
 
 /*
     @GetMapping
@@ -72,6 +75,4 @@ public abstract class MyEnumGenericController<M extends MyEnum, R extends MyEnum
         public List<M> findAllObjects() {
             return findAll();
         }
-
-
-}
+*/

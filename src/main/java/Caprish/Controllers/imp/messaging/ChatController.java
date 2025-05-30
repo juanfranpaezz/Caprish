@@ -42,10 +42,6 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
             return findById(id);
         }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Chat> findById(@PathVariable Long id) {
-        return super.findById(id);
-    }
 
         @GetMapping("/all")
         @Override

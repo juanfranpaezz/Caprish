@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 
 @Configuration
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 public class MethodSecurityConfig {
 
     private final RoleHierarchy roleHierarchy;
@@ -24,6 +24,5 @@ public class MethodSecurityConfig {
         handler.setRoleHierarchy(roleHierarchy);
         return handler;
     }
-
 
 }

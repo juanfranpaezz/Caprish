@@ -29,10 +29,10 @@ public class Message extends MyObject {
 
 
     @ManyToOne(optional = false)
-
     @JoinColumn(name = "id_sender_type", nullable = false)
-    @JsonIgnoreProperties("messages")
+    @JsonIgnoreProperties("messages")  // ignora la lista de mensajes dentro de sender_type
     private SenderType sender_type;
+
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;

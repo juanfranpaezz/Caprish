@@ -28,4 +28,9 @@ public class MessageController extends MyObjectGenericController<Message, Messag
     public ResponseEntity<List<Message>> findByChat(@PathVariable Long id) {
         return ResponseEntity.ok(service.findByChatId(id));
     }
+
+    @GetMapping("/viewB/{id}")
+    public ResponseEntity<List<Message>> findByChatB(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findByChatId(id));
+    }
 }

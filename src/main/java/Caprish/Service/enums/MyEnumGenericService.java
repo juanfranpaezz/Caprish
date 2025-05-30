@@ -1,24 +1,22 @@
 package Caprish.Service.enums;
 
 import Caprish.Model.enums.MyEnum;
-import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Repository.enums.MyEnumGenericRepository;
-import Caprish.Service.imp.MyObjectGenericService;
-import org.springframework.aop.framework.AopContext;
+
 import java.util.Optional;
 
 
-public abstract class MyEnumGenericService<M extends MyEnum, R extends MyEnumGenericRepository<M>, S extends MyEnumGenericService<M,R,S>> extends MyObjectGenericService<M, R, S> {
+public abstract class MyEnumGenericService<M extends MyEnum, R extends MyEnumGenericRepository<M>, S extends MyEnumGenericService<M,R,S>> {
+
+    protected final R repository;
+
 
     protected MyEnumGenericService(R childRepository) {
-        super(childRepository);
+        this.repository = childRepository;
     }
 
-    public Optional<M> findByValue(String email) {
-        return repository.findByValue(email);
+    public Optional<M> findById(String value) {
+        return repository.findById(value);
     }
-    @Override
-    protected void verifySpecificAttributes(M entity) {
 
-    }
 }

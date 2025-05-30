@@ -18,16 +18,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         super(service);
     }
 
-//
-//    @PostMapping("/update")
-//    public ResponseEntity<Product> update(@RequestBody Product product) {
-//
-//    }
-
-//    @GetMapping("/product/images/{id}/")
-//    public ResponseEntity<Product> getProductWithImages(@PathVariable Long id) {
-//        return ResponseEntity.ok(service.findByIdWithImages(id));
-//    }
 
     @GetMapping("/all")
     public List<Product> findAll() {

@@ -19,6 +19,7 @@ public class BeanUtils {
                 .collect(Collectors.toList());
     }
 
+
     public static <M extends MyObject> void verifyValues(M entity) {
         BeanWrapper wrapper = new BeanWrapperImpl(entity);
         for (String property : BeanUtils.getPropertyNames(entity.getClass())) {

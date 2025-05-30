@@ -4,6 +4,7 @@ import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.users.ClientRepository;
 import Caprish.Service.imp.users.ClientService;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -42,9 +43,14 @@ public class ClientController extends UserGenericController<Client, ClientReposi
             return findById(id);
         }
 
+    @Override
+    public List<Client> findAllObjects() {
+        return List.of();
+    }
+
+    @PermitAll
         @GetMapping("/all")
-        @Override
-        public List<Client> findAllObjects() {
+        public List<Client> findAllObjectss() {
             return findAll();
         }
 

@@ -5,8 +5,6 @@ import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.enums.WorkRoleRepository;
 import Caprish.Service.enums.WorkRoleService;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

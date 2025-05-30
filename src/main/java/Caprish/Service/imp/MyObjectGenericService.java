@@ -5,6 +5,7 @@ import Caprish.Exception.InvalidIdException;
 import Caprish.Exception.InvalidUpdateFieldException;
 import Caprish.Model.BeanUtils;
 import Caprish.Model.imp.MyObject;
+import Caprish.Model.imp.business.Branch;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,6 +13,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.core.ResolvableType;
@@ -19,6 +21,7 @@ import org.springframework.core.ResolvableType;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public abstract class MyObjectGenericService<M extends MyObject, R extends MyObjectGenericRepository<M>, S extends MyObjectGenericService<M,R,S>> {
 
     @PersistenceContext
@@ -77,11 +80,10 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         return repository.existsById(id);
     }
 
-    public String save(M entity){
+    public M save(M entity){
         BeanUtils.verifyValues(entity);
         verifySpecificAttributes(entity);
-        repository.save(entity);
-        return "Guardado con exito";
+        return repository.save(entity);
     }
 
 

@@ -29,8 +29,8 @@ public class Branch extends MyObject {
         @JoinColumn(name = "id_business", nullable = false)
         private Business business;
 
-        @Column(unique=true, nullable=false)
-        private String address;
+        @Embedded
+        private Address address;
 
         @ManyToOne(optional = false)
         @JoinColumn(name = "id_branch_type", nullable = false)

@@ -1,7 +1,5 @@
 package Caprish.Model.imp.sales;
 import Caprish.Model.imp.MyObject;
-import Caprish.Model.imp.business.Product;
-import Caprish.Model.imp.business.Voucher;
 import Caprish.Model.enums.CartStatus;
 import Caprish.Model.enums.CartType;
 import Caprish.Model.imp.users.Client;
@@ -14,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,21 +23,17 @@ import java.util.List;
 @Getter
 @Setter
 public class Cart extends MyObject {
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_cart_type", nullable = false)
     private CartType cart_type;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
+    @JsonBackReference("cart-client")
     @JoinColumn(name = "id_client",nullable = false)
     private Client client;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cart_x_voucher",
-            joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "voucher_id")
-    )
-    private List<Voucher> vouchers;
+
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_cart_status",nullable = false)
@@ -47,4 +42,13 @@ public class Cart extends MyObject {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("item-cart")
     private List<Item> items = new ArrayList<>();
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name="id_staff")
+    @JsonBackReference("cart-staff")
+    private Staff staff;
+
+    @Column(nullable = false)
+    private LocalDate sale_date;
+
 }

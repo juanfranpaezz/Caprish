@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/client")
@@ -16,36 +18,34 @@ public class ClientController extends UserGenericController<Client, ClientReposi
     public ClientController(ClientService childService) {
         super(childService);
     }
-
-
-    @GetMapping("/searchPhone/{phone}")
-    public ResponseEntity<Client> findByPhone(@PathVariable Integer phone) {
-        return  ResponseEntity.ok(service.searchByPhone(phone));
-    }
-
-    @PutMapping("/updatePhone/{id}/{phone}")
-    public ResponseEntity<Integer> update(@PathVariable Long id, @PathVariable Integer phone) {
-        return ResponseEntity.ok(service.changeField(id, "phone", phone));
-    }
-
-    @PostMapping("/log")
-    public ResponseEntity<String> logUser(@RequestBody Client user) {
-        try{
-            service.log(user);
-            return ResponseEntity.ok("Usuario logueado exitosamente");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    @PostMapping("/create")
+        @Override
+        public ResponseEntity<String> createObject(@RequestBody Client entity) {
+            return create(entity);
         }
-    }
-    @PostMapping("sign-up")
-    public ResponseEntity<String> createe(@RequestBody Client entity) {
-        if (entity == null) {
-            return ResponseEntity.badRequest().build();
+
+        @DeleteMapping("/delete/{id}")
+        @Override
+        public ResponseEntity<String> deleteObject(Long id) {
+            return delete(id);
         }
-        try {
-            return ResponseEntity.ok(service.save(entity));
-        } catch (InvalidEntityException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+
+        @PutMapping("/update/{id}")
+        @Override
+        public ResponseEntity<String> updateObject(Long id) {
+            return update(id);
         }
-    }
+
+        @GetMapping("/{id}")
+        @Override
+        public ResponseEntity<Client> findObjectById(Long id) {
+            return findById(id);
+        }
+
+        @GetMapping("/all")
+        @Override
+        public List<Client> findAllObjects() {
+            return findAll();
+        }
+
 }

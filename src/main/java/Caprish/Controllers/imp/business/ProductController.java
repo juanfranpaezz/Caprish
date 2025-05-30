@@ -1,6 +1,7 @@
 package Caprish.Controllers.imp.business;
 
 import Caprish.Controllers.MyObjectGenericController;
+import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Product;
 import Caprish.Repository.interfaces.business.ProductRepository;
 import Caprish.Service.imp.business.ProductService;
@@ -23,6 +24,36 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     public List<Product> findAll() {
         return service.findAll();
     }
+
+    @PostMapping("/create")
+        @Override
+        public ResponseEntity<String> createObject(@RequestBody Product entity) {
+            return create(entity);
+        }
+
+        @DeleteMapping("/delete/{id}")
+        @Override
+        public ResponseEntity<String> deleteObject(Long id) {
+            return delete(id);
+        }
+
+        @PutMapping("/update/{id}")
+        @Override
+        public ResponseEntity<String> updateObject(Long id) {
+            return update(id);
+        }
+
+        @GetMapping("/{id}")
+        @Override
+        public ResponseEntity<Product> findObjectById(Long id) {
+            return findById(id);
+        }
+
+        @GetMapping("/all")
+        @Override
+        public List<Product> findAllObjects() {
+            return findAll();
+        }
 
 
 

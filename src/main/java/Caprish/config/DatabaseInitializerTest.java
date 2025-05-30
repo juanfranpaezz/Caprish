@@ -1,5 +1,5 @@
+// src/main/java/Caprish/config/DataSeeder.java
 package Caprish.config;
-
 
 import Caprish.Model.imp.users.PlatformAdmin;
 import Caprish.Model.imp.users.Role;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-public class DatabaseInitializer {
+public class DatabaseInitializerTest {
 
     @Bean
     public CommandLineRunner seedAdmin(PlatformAdminRepository adminRepo,

@@ -7,8 +7,10 @@ import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.admin.ClientReportRepository;
 import Caprish.Service.imp.admin.ClientReportService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @PreAuthorize("hasRole('USER')")
 @RequestMapping("/client_report")
+@Validated
 public class ClientReportController extends MyObjectGenericController<ClientReport, ClientReportRepository, ClientReportService> {
 
     public ClientReportController(ClientReportService service) {
@@ -25,13 +28,13 @@ public class ClientReportController extends MyObjectGenericController<ClientRepo
         @PreAuthorize("hasRole('EMPLOYEE')")
         @PostMapping("/create")
             @Override
-            public ResponseEntity<String> createObject(@RequestBody ClientReport entity) {
+            public ResponseEntity<String> createObject(@Valid @RequestBody ClientReport entity) {
                 return create(entity);
             }
 
             @DeleteMapping("/delete/{id}")
             @Override
-            public ResponseEntity<String> deleteObject(@Valid @PathVariable Long id) {
+            public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
                 return delete(id);
             }
 
@@ -39,7 +42,7 @@ public class ClientReportController extends MyObjectGenericController<ClientRepo
 
             @GetMapping("/{id}")
             @Override
-            public ResponseEntity<ClientReport> findObjectById(@Valid @PathVariable Long id) {
+            public ResponseEntity<ClientReport> findObjectById(@Positive @PathVariable Long id) {
                 return findById(id);
             }
 

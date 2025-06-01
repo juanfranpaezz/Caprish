@@ -6,6 +6,7 @@ import Caprish.Repository.interfaces.sales.CartRepository;
 import Caprish.Service.imp.sales.CartService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +25,14 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
         @Override
-        public ResponseEntity<String> createObject(@RequestBody Cart entity) {
+        public ResponseEntity<String> createObject(@Valid @RequestBody Cart entity) {
             return create(entity);
         }
 
         @PreAuthorize("hasRole('EMPLOYEE')")
         @DeleteMapping("/delete/{id}")
         @Override
-        public ResponseEntity<String> deleteObject(@Valid @PathVariable Long id) {
+        public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
             return delete(id);
         }
 
@@ -45,7 +46,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         @PreAuthorize("hasRole('EMPLOYEE')")
         @GetMapping("/{id}")
         @Override
-        public ResponseEntity<Cart> findObjectById(@Valid @PathVariable Long id) {
+        public ResponseEntity<Cart> findObjectById(@Positive @PathVariable Long id) {
             return findById(id);
         }
 

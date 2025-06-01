@@ -6,8 +6,10 @@ import Caprish.Repository.interfaces.admin.BusinessReportRepository;
 import Caprish.Service.imp.admin.BusinessReportService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/business_report")
+@Validated
 public class BusinessReportController extends MyObjectGenericController<BusinessReport, BusinessReportRepository, BusinessReportService> {
 
     public BusinessReportController(BusinessReportService service) {
@@ -24,14 +27,14 @@ public class BusinessReportController extends MyObjectGenericController<Business
 
     @PostMapping("/create")
         @Override
-        public ResponseEntity<String> createObject(@RequestBody BusinessReport entity) {
+        public ResponseEntity<String> createObject(@Valid @RequestBody BusinessReport entity) {
             return create(entity);
         }
 
 
         @DeleteMapping("/delete/{id}")
         @Override
-        public ResponseEntity<String> deleteObject(@Valid @PathVariable  Long id) {
+        public ResponseEntity<String> deleteObject(@Positive @PathVariable  Long id) {
             return delete(id);
         }
 
@@ -40,7 +43,7 @@ public class BusinessReportController extends MyObjectGenericController<Business
 
         @GetMapping("/{id}")
         @Override
-        public ResponseEntity<BusinessReport> findObjectById(@Valid @PathVariable Long id) {
+        public ResponseEntity<BusinessReport> findObjectById(@Positive @PathVariable Long id) {
             return findById(id);
         }
 

@@ -6,8 +6,10 @@ import Caprish.Model.imp.business.Business;
 import Caprish.Repository.interfaces.business.BusinessRepository;
 import Caprish.Service.imp.business.BusinessService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @PreAuthorize("hasRole('BOSS')")
 @RequestMapping("/business")
+@Validated
 public class BusinessController extends MyObjectGenericController<Business, BusinessRepository, BusinessService> {
 
     public BusinessController(BusinessService service) {
@@ -24,14 +27,14 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     @PreAuthorize("hasRole('BOSS')")
     @PostMapping("/create")
     @Override
-    public ResponseEntity<String> createObject(@RequestBody Business entity) {
+    public ResponseEntity<String> createObject(@Valid @RequestBody Business entity) {
         return create(entity);
     }
 
     @PreAuthorize("hasRole('BOSS')")
     @DeleteMapping("/delete/{id}")
     @Override
-    public ResponseEntity<String> deleteObject(@Valid @PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
         return delete(id);
     }
 
@@ -45,7 +48,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<Business> findObjectById(@Valid @PathVariable Long id) {
+    public ResponseEntity<Business> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
     }
 

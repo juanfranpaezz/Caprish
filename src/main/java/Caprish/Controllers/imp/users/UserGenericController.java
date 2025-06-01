@@ -8,8 +8,12 @@ import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.UserGenericService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 public abstract class UserGenericController<M extends User, R extends UserGenericRepository<M>, S extends UserGenericService<M, R, S>> extends MyObjectGenericController<M, R, S> {
@@ -21,7 +25,8 @@ public abstract class UserGenericController<M extends User, R extends UserGeneri
 
     @PermitAll
     @PostMapping("/log")
-    public ResponseEntity<String> logUser(@RequestBody M user) {
+    @Validated
+    public ResponseEntity<String> logUser(@Valid @RequestBody M user) {
         try{
             service.log(user);
             return ResponseEntity.ok("Usuario logueado exitosamente");
@@ -30,10 +35,36 @@ public abstract class UserGenericController<M extends User, R extends UserGeneri
         }
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/updateEmail/{id}/{email}")
+             public ResponseEntity<String> updateEmail(@PathVariable @Positive Long id, @PathVariable String email) {
+                 return update(id, "email", email);
+             }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/updateFirstName/{id}/{firstName}")
+             public ResponseEntity<String> updateFirstName(@PathVariable @Positive Long id, @PathVariable String firstName) {
+                 return update(id, "first_name", firstName);
+             }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/updateLastName/{id}/{lastName}")
+             public ResponseEntity<String> updateLastName(@PathVariable @Positive Long id, @PathVariable String lastName) {
+                 return update(id, "last_name", lastName);
+             }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/updatePasswordHash/{id}/{passwordHash}")
+             public ResponseEntity<String> updatePasswordHash(@PathVariable @Positive Long id, @PathVariable String passwordHash) {
+                 return update(id, "password_hash", passwordHash);
+             }
+
+
     @PermitAll
     @PostMapping("/sign-up")
     @Override
-    public ResponseEntity<String> createObject(@RequestBody M entity) {
+    @Validated
+    public ResponseEntity<String> createObject(@Valid @RequestBody M entity) {
         return create(entity);
     }
 

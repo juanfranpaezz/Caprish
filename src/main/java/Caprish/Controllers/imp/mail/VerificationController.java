@@ -14,13 +14,6 @@ public class VerificationController {
         this.verificationService = verificationService;
     }
 
-    public ResponseEntity<String> sendEmailWithToken() throws Exception {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = auth.getName();// El email del usuario autenticado
-        verificationService.sendVerificationCode(userEmail);
-        return ResponseEntity.ok("Correo con token enviado correctamente");
-    }
-
     @PermitAll
     @PostMapping("/verify-token")
     public ResponseEntity<String> verifyToken(@RequestParam String code) {

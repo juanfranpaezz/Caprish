@@ -1,30 +1,30 @@
-package Caprish.Controllers.imp.mail;
-
-import Caprish.Model.imp.mail.SentEmail;
-import Caprish.Service.imp.mail.GmailService;
-import Caprish.Service.imp.mail.VerificationService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import Caprish.Service.imp.mail.SentEmailService;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-
-@RestController
-@RequestMapping("/api")
-public class EmailController {
-    final
-    GmailService gmailService;
-    final
-    SentEmailService sentEmailService;
-
-    public EmailController(GmailService gmailService, SentEmailService sentEmailService, VerificationService verificationService) {
-        this.gmailService = gmailService;
-        this.sentEmailService = sentEmailService;
-    }
+//package Caprish.Controllers.imp.mail;
+//
+//import Caprish.Model.imp.mail.SentEmail;
+//import Caprish.Service.imp.mail.GmailService;
+//import Caprish.Service.imp.mail.VerificationService;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import Caprish.Service.imp.mail.SentEmailService;
+//import org.springframework.http.MediaType;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.multipart.MultipartFile;
+//
+//import java.util.List;
+//
+//@RestController
+//@RequestMapping("/api")
+//public class EmailController {
+//    final
+//    GmailService gmailService;
+//    final
+//    SentEmailService sentEmailService;
+//
+//    public EmailController(GmailService gmailService, SentEmailService sentEmailService, VerificationService verificationService) {
+//        this.gmailService = gmailService;
+//        this.sentEmailService = sentEmailService;
+//    }
 //esto en vacaciones de invierno vaaaaaaaaaaa
 //    @PostMapping("/send-email")
 //    public ResponseEntity<String> sendEmail(@RequestParam String to,
@@ -64,4 +64,4 @@ public class EmailController {
 //        }
 //        return ResponseEntity.ok(mails);
 //    }
-}
+//}

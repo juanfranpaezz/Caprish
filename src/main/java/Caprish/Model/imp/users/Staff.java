@@ -1,5 +1,6 @@
 package Caprish.Model.imp.users;
 
+import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.enums.WorkRole;
 import Caprish.Model.imp.sales.Cart;
@@ -21,7 +22,11 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Staff extends User {
+public class Staff extends MyObject {
+
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_user", nullable = false)
+    private User user;
 
     @ManyToOne(optional = false)
     @JsonBackReference("staff-business")
@@ -35,7 +40,4 @@ public class Staff extends User {
     @JsonManagedReference("cart-staff")
     private List<Cart> carts = new ArrayList<>();
 
-    public Staff(String email, String passwordHash) {
-        super(email, passwordHash);
-    }
 }

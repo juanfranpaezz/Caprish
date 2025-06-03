@@ -33,12 +33,6 @@ public class RoleController extends MyObjectGenericController<Role, RoleReposito
         return delete(id);
     }
 
-    @PutMapping("/update/{id}")
-    @Override
-    public ResponseEntity<String> updateObject(Long id) {
-        return update(id);
-    }
-
     @GetMapping("/{id}")
     @Override
     public ResponseEntity<Role> findObjectById(Long id) {

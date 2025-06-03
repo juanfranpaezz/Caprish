@@ -3,18 +3,17 @@ package Caprish.Model.imp.users;
 import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.Objects;
-import java.util.Set;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@MappedSuperclass
+@Entity
+@Table(name = "user")
 public class User extends MyObject {
 
     @Column(columnDefinition = "text", nullable = false)
@@ -25,13 +24,16 @@ public class User extends MyObject {
 
     @Column(columnDefinition = "text", nullable = false, unique = true)
     @Email
-    private String email;
+    private String username;
 
     @Column(columnDefinition = "text", nullable = false)
     private String password_hash;
 
+    @Column(nullable = false)
+    private boolean enabled = true;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "id_role")
     private Role role;
 
 
@@ -40,8 +42,8 @@ public class User extends MyObject {
         return first_name + " " + last_name;
     }
 
-    public User(String email, String password_hash) {
-        this.email = email;
+    public User(String username, String password_hash) {
+        this.username = username;
         this.password_hash = password_hash;
     }
 
@@ -49,11 +51,11 @@ public class User extends MyObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return Objects.equals(email, user.email);
+        return Objects.equals(username, user.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(username);
     }
 }

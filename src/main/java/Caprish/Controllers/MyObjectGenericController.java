@@ -22,8 +22,6 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
 
     public abstract ResponseEntity<String> deleteObject(@PathVariable Long id);
 
-    public abstract ResponseEntity<String> updateObject(@PathVariable Long id);
-
     public abstract ResponseEntity<M> findObjectById(@PathVariable Long id);
 
     public abstract List<M> findAllObjects();

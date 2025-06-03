@@ -31,11 +31,6 @@ public class ClientReportController extends MyObjectGenericController<ClientRepo
                 return delete(id);
             }
 
-            @PutMapping("/update/{id}")
-            @Override
-            public ResponseEntity<String> updateObject(Long id) {
-                return update(id);
-            }
 
             @GetMapping("/{id}")
             @Override

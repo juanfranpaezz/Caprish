@@ -33,11 +33,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
             return delete(id);
         }
 
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(Long id) {
-            return update(id);
-        }
 
     @PermitAll
     @GetMapping("/{id}")

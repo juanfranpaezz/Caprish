@@ -1,5 +1,6 @@
 package Caprish.Controllers.imp.users;
 
+import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.users.ClientRepository;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client")
-public class ClientController extends UserGenericController<Client, ClientRepository, ClientService> {
+public class ClientController extends MyObjectGenericController<Client, ClientRepository, ClientService> {
 
     public ClientController(ClientService childService) {
         super(childService);
@@ -28,12 +29,6 @@ public class ClientController extends UserGenericController<Client, ClientReposi
         @Override
         public ResponseEntity<String> deleteObject(Long id) {
             return delete(id);
-        }
-
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(Long id) {
-            return update(id);
         }
 
         @GetMapping("/{id}")

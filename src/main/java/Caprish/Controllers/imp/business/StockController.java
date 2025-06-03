@@ -31,11 +31,6 @@ public class StockController extends MyObjectGenericController<Stock, StockRepos
             return delete(id);
         }
 
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(Long id) {
-            return update(id);
-        }
 
         @GetMapping("/{id}")
         @Override

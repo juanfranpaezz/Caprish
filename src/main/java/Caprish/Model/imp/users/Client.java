@@ -1,5 +1,6 @@
 package Caprish.Model.imp.users;
 
+import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.messaging.Chat;
 import Caprish.Model.imp.sales.Cart;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -18,7 +19,10 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Client extends User {
+public class Client extends MyObject {
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_user", nullable = false)
+    private User user;
 
     @Column(unique = true, nullable = false)
     private Integer phone;
@@ -35,7 +39,4 @@ public class Client extends User {
     private List<Cart> carts = new ArrayList<>();
 
 
-    public Client(String email, String password_hash) {
-        super(email, password_hash);
-    }
 }

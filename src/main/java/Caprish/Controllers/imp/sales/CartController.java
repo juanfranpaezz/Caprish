@@ -31,12 +31,6 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
             return delete(id);
         }
 
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(Long id) {
-            return update(id);
-        }
-
         @GetMapping("/{id}")
         @Override
         public ResponseEntity<Cart> findObjectById(Long id) {

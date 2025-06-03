@@ -1,5 +1,6 @@
 package Caprish.Controllers.imp.users;
 
+import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.users.StaffRepository;
 import Caprish.Service.imp.users.StaffService;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
-public class StaffController extends UserGenericController<Staff, StaffRepository, StaffService> {
+public class StaffController extends MyObjectGenericController<Staff, StaffRepository, StaffService> {
 
     public StaffController(StaffService service) {
         super(service);
@@ -28,11 +29,6 @@ public class StaffController extends UserGenericController<Staff, StaffRepositor
                 return delete(id);
             }
 
-            @PutMapping("/update/{id}")
-            @Override
-            public ResponseEntity<String> updateObject(Long id) {
-                return update(id);
-            }
 
             @GetMapping("/{id}")
             @Override

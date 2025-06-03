@@ -31,11 +31,6 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
             return delete(id);
         }
 
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(Long id) {
-            return update(id);
-        }
 
         @Override
         public ResponseEntity<Chat> findObjectById(Long id) {

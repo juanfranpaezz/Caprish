@@ -78,26 +78,15 @@ public class SecurityConfig {
     public JdbcUserDetailsManager userDetailsService(DataSource dataSource) {
         var mgr = new JdbcUserDetailsManager(dataSource);
         mgr.setUsersByUsernameQuery(
-                "SELECT email AS username, password_hash AS password, TRUE AS enabled " +
-                        "FROM ( " +
-                        "  SELECT email, password_hash FROM staff " +
-                        "  UNION ALL " +
-                        "  SELECT email, password_hash FROM client " +
-                        "  UNION ALL " +
-                        "  SELECT email, password_hash FROM platform_admin " +
-                        ") AS u WHERE u.email = ?"
+                "SELECT username, password_hash, enabled FROM users WHERE username = ?"
         );
         mgr.setAuthoritiesByUsernameQuery(
                 "SELECT u.email AS username, r.name AS authority " +
                         "FROM ( " +
-                        "  SELECT email, role_id FROM staff " +
-                        "  UNION ALL " +
-                        "  SELECT email, role_id FROM client " +
-                        "  UNION ALL " +
-                        "  SELECT email, role_id FROM platform_admin " +
+                        "  SELECT username, id_role FROM user " +
                         ") AS u " +
-                        "JOIN role r ON u.role_id = r.id " +
-                        "WHERE u.email = ?"
+                        "JOIN role r ON u.id_role = r.id " +
+                        "WHERE u.username = ?"
         );
         return mgr;
     }

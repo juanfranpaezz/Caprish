@@ -1,42 +1,34 @@
 package Caprish.Service.imp.users;
 
 import Caprish.Exception.UserException;
-import Caprish.Model.BeanUtils;
-import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.users.User;
 import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.framework.AopContext;
 
 import java.util.Optional;
 
 @Slf4j
-public abstract class UserGenericService<M extends User, R extends UserGenericRepository<M>, S extends UserGenericService<M,R,S>> extends MyObjectGenericService<M, R, S> {
+public class UserGenericService extends MyObjectGenericService<User, UserGenericRepository, UserGenericService> {
 
 
-    protected UserGenericService(R childRepository) {
+    protected UserGenericService(UserGenericRepository childRepository) {
         super(childRepository);
     }
 
-    @Override
-    protected void verifySpecificAttributes(M entity) {
-
-    }
-
-    public void register(M user) throws UserException {
+    public void register(User user) throws UserException {
         if (Optional.ofNullable(user).isEmpty()) {
             throw new UserException("El user no puede ser nulo");
         }
-        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {//MAIL
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {//MAIL
             throw new UserException("El email no puede ser nulo");
         }
         verifyPassword(user.getPassword_hash());
         save(user);
     }
 
-    public void log(M user) throws UserException {
-        Optional<M> userOp = repository.findByEmail(user.getEmail());
+    public void log(User user) throws UserException {
+        Optional<User> userOp = repository.findByUsername(user.getUsername());
         if (userOp.isEmpty()) { throw new UserException("El usuario no existe");
         }
         if(!user.getPassword_hash().equals(userOp.get().getPassword_hash())){
@@ -45,19 +37,19 @@ public abstract class UserGenericService<M extends User, R extends UserGenericRe
     }
 
 
-    public void deleteMyOwn(M user) throws UserException {
-        Optional<M> userOp = repository.findByEmail(user.getEmail());
+    public void deleteMyOwn(User user) throws UserException {
+        Optional<User> userOp = repository.findByUsername(user.getUsername());
         if (userOp.isPresent()) {
             if (userOp.get().equals(user)) repository.deleteById(user.getId());
             else throw new UserException("La contrasenia es incorrecta");
         } else throw new UserException("El usuario no existe");
     }
 
-    private void delete(M user) throws UserException {
+    private void delete(User user) throws UserException {
         if (Optional.ofNullable(user).isEmpty()) throw new UserException("El user no puede ser nulo");
-        else if (user.getEmail() == null || user.getEmail().trim().isEmpty())
+        else if (user.getUsername() == null || user.getUsername().trim().isEmpty())
             throw new UserException("El email no puede ser nulo");
-        else if (repository.findByEmail(user.getEmail()).isEmpty()) throw new UserException("El usuario no existe");
+        else if (repository.findByUsername(user.getUsername()).isEmpty()) throw new UserException("El usuario no existe");
         else repository.deleteById(user.getId());
     }
 
@@ -81,25 +73,8 @@ public abstract class UserGenericService<M extends User, R extends UserGenericRe
         }
     }
 
+    @Override
+    protected void verifySpecificAttributes(User entity) {
 
-
-    /*    public final T save(T entity) {
-        validateBeforeSave(entity);
-        T saved = userRepository.save(entity);
-        postSave(entity, saved);
-        return saved;
     }
-
-    public Optional<T> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public List<T> findAll() {
-        return userRepository.findAll();
-    }
-
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
-    }
-*/
 }

@@ -15,7 +15,6 @@ import java.util.List;
 
 import java.util.List;
 
-@PermitAll
 @RestController
 @RequestMapping("/message")
 public class MessageController extends MyObjectGenericController<Message, MessageRepository, MessageService> {
@@ -24,7 +23,6 @@ public class MessageController extends MyObjectGenericController<Message, Messag
         super(service);
     }
 
-    @PermitAll
     @PostMapping("/post")
     public ResponseEntity<Message> createA(@RequestBody Message msg) {
         return ResponseEntity.ok(service.saveA(msg));
@@ -41,7 +39,6 @@ public class MessageController extends MyObjectGenericController<Message, Messag
         return ResponseEntity.ok(service.findByChatId(id));
     }
 
-    @PermitAll
     @PostMapping
         @Override
         public ResponseEntity<String> createObject(@RequestBody Message entity) {
@@ -52,12 +49,6 @@ public class MessageController extends MyObjectGenericController<Message, Messag
         @Override
         public ResponseEntity<String> deleteObject(Long id) {
             return delete(id);
-        }
-
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(Long id) {
-            return update(id);
         }
 
         @GetMapping("/{id}")

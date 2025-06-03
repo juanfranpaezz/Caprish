@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/chat")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ChatController extends MyObjectGenericController<Chat, ChatRepository, ChatService> {
 
     public ChatController(ChatService service) {
@@ -36,11 +37,11 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
             return update(id);
         }
 
-        @GetMapping("/{id}")
         @Override
         public ResponseEntity<Chat> findObjectById(Long id) {
             return findById(id);
         }
+
 
         @GetMapping("/all")
         @Override
@@ -49,4 +50,11 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
         }
 
 
+    /** Si quieres exponer también mensajes embebidos:
+     *  GET /api/chat/1
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Chat> findById(@PathVariable Long id) {
+        return super.findById(id);
+    }
 }

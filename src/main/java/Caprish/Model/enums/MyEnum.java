@@ -1,22 +1,20 @@
 package Caprish.Model.enums;
 
-import Caprish.Model.imp.MyObject;
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@MappedSuperclass
 @Getter
 @Setter
 @AllArgsConstructor
-@MappedSuperclass
 @NoArgsConstructor
-public abstract class MyEnum extends MyObject {
-    @NotBlank(message = "El valor no puede estar vacío")
-    @Column(nullable = false, unique = true)
-    protected String value;
-
+public abstract class MyEnum {
+    @Id
+    @Column(name = "id", length = 255, nullable = false)
+    protected String id;
 }

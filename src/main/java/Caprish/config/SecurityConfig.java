@@ -1,68 +1,95 @@
 package Caprish.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.sql.DataSource;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+// habilita @PermitAll, @RolesAllowed, @DenyAll
+@EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
-
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // si tu front está en otro puerto
+                .cors(cors -> cors.disable())
+                // para APIs REST normalmente deshabilitamos CSRF
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // rutas públicas, ni siquiera necesitan autenticarse
-                        .requestMatchers("/api/publico").permitAll()
-
-                        // cualquier usuario autenticado con ROLE_USER o superior
-                        .requestMatchers("/api/user/**").hasRole("USER")
-
-                        // rutas exclusivas de CLIENT
-                        .requestMatchers("/api/client/**").hasRole("CLIENT")
-
-                        // rutas de EMPLOYEE y superiores (incluye BOSS y SUPERVISOR)
-                        .requestMatchers("/api/employee/**").hasRole("EMPLOYEE")
-
-                        // rutas de SUPERVISOR y superiores
-                        .requestMatchers("/api/supervisor/**").hasRole("SUPERVISOR")
-
-                        // rutas sólo para BOSS
-                        .requestMatchers("/api/boss/**").hasRole("BOSS")
-
+                        // rutas públicas (Swagger / docs)
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
+                        // tu endpoint público de mensajes
+                        .requestMatchers("/message/view/**").permitAll()
+                        .requestMatchers("/product/all").permitAll()
+                        // cualquier otro requiere auth
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults());
+                // habilita Basic Auth y Form Login
+                .httpBasic(withDefaults())
+                .formLogin(withDefaults())
+                .logout(withDefaults())
+        ;
 
         return http.build();
     }
 
+    @Bean
+    public JdbcUserDetailsManager userDetailsService(DataSource dataSource) {
+        var mgr = new JdbcUserDetailsManager(dataSource);
+        mgr.setUsersByUsernameQuery(
+                "SELECT email AS username, password_hash AS password, TRUE AS enabled " +
+                        "FROM ( " +
+                        "  SELECT email, password_hash FROM staff " +
+                        "  UNION ALL " +
+                        "  SELECT email, password_hash FROM client " +
+                        "  UNION ALL " +
+                        "  SELECT email, password_hash FROM platform_admin " +
+                        ") AS u WHERE u.email = ?"
+        );
+        mgr.setAuthoritiesByUsernameQuery(
+                "SELECT u.email AS username, r.name AS authority " +
+                        "FROM ( " +
+                        "  SELECT email, role_id FROM staff " +
+                        "  UNION ALL " +
+                        "  SELECT email, role_id FROM client " +
+                        "  UNION ALL " +
+                        "  SELECT email, role_id FROM platform_admin " +
+                        ") AS u " +
+                        "JOIN role r ON u.role_id = r.id " +
+                        "WHERE u.email = ?"
+        );
+        return mgr;
+    }
 
-
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        // BCrypt con strength por defecto (10)
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        var hierarchy = new RoleHierarchyImpl();
         hierarchy.setHierarchy(
                 "ROLE_BOSS > ROLE_SUPERVISOR\n" +
                         "ROLE_SUPERVISOR > ROLE_EMPLOYEE\n" +
@@ -70,28 +97,5 @@ public class SecurityConfig {
                         "ROLE_CLIENT > ROLE_USER"
         );
         return hierarchy;
-    }
-
-
-
-    @Bean
-    public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
-    }
-
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        var user = User.withUsername("caprish")
-                .password("11234")
-                .roles("ADMIN", "USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
     }
 }

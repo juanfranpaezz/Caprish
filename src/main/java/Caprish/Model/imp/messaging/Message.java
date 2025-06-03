@@ -1,7 +1,11 @@
 package Caprish.Model.imp.messaging;
 
+import Caprish.Model.enums.BranchType;
+import Caprish.Model.enums.SenderType;
 import Caprish.Model.imp.MyObject;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,12 +27,21 @@ public class Message extends MyObject {
     @JoinColumn(name = "id_chat", nullable = false)
     private Chat chat;
 
-    @Column(name = "id_sender", nullable = false)
-    private Long senderId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_sender_type", nullable = false)
+    @JsonIgnoreProperties("messages")  // ignora la lista de mensajes dentro de sender_type
+    private SenderType sender_type;
+
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Column(nullable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime sent_at = LocalDateTime.now();}
+    private LocalDateTime sent_at = LocalDateTime.now();
+
+
+
+
+}

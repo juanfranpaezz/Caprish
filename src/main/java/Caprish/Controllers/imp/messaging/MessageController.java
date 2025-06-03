@@ -5,12 +5,17 @@ import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.messaging.Message;
 import Caprish.Repository.interfaces.messaging.MessageRepository;
 import Caprish.Service.imp.messaging.MessageService;
+import jakarta.annotation.security.PermitAll;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import java.util.List;
 
+@PermitAll
 @RestController
 @RequestMapping("/message")
 public class MessageController extends MyObjectGenericController<Message, MessageRepository, MessageService> {
@@ -19,7 +24,25 @@ public class MessageController extends MyObjectGenericController<Message, Messag
         super(service);
     }
 
-    @PostMapping("/create")
+    @PermitAll
+    @PostMapping("/post")
+    public ResponseEntity<Message> createA(@RequestBody Message msg) {
+        return ResponseEntity.ok(service.saveA(msg));
+    }
+
+    @PermitAll
+    @GetMapping("/view/{id}")
+    public ResponseEntity<List<Message>> findByChat(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findByChatId(id));
+    }
+
+    @GetMapping("/viewB/{id}")
+    public ResponseEntity<List<Message>> findByChatB(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findByChatId(id));
+    }
+
+    @PermitAll
+    @PostMapping
         @Override
         public ResponseEntity<String> createObject(@RequestBody Message entity) {
             return create(entity);

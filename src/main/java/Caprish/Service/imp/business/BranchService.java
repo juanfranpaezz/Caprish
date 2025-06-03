@@ -8,11 +8,13 @@ import Caprish.Service.enums.BranchTypeService;
 import Caprish.Service.imp.MyObjectGenericService;
 import Caprish.Service.others.GoogleGeocodingService;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class BranchService extends MyObjectGenericService<Branch, BranchRepository, BranchService> {
+
 
     private final GoogleGeocodingService geocodingService;
 

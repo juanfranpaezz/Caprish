@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/client")
 @Validated

@@ -3,6 +3,7 @@ package Caprish.Model.imp.business;
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.enums.BranchType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -29,12 +30,19 @@ public class Branch extends MyObject {
         @JoinColumn(name = "id_business", nullable = false)
         private Business business;
 
-        @Column(unique=true, nullable=false)
-        private String address;
+        @Embedded
+        private Address address;
 
         @ManyToOne(optional = false)
-        @JoinColumn(name = "id_branch_type", nullable = false)
+        @JoinColumn(
+                name = "id_branch_type",
+                referencedColumnName = "id",
+                nullable = false,
+                columnDefinition = "VARCHAR(255)"
+        )
+        @JsonIgnoreProperties
         private BranchType branch_type;
+
 
         @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
         @JsonManagedReference("stock-branch")

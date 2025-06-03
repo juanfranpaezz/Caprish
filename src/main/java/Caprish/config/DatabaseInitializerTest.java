@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-public class DatabaseInitializer {
+public class DatabaseInitializerTest {
 
     @Bean
     public CommandLineRunner seedAdmin(PlatformAdminRepository adminRepo,
@@ -46,4 +46,3 @@ public class DatabaseInitializer {
         };
     }
 }
-

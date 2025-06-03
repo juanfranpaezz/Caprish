@@ -26,14 +26,19 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+// habilita @PermitAll, @RolesAllowed, @DenyAll
+@EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // si tu front está en otro puerto
+                .cors(cors -> cors.disable())
+                // para APIs REST normalmente deshabilitamos CSRF
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // rutas públicas (Swagger / docs)
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",

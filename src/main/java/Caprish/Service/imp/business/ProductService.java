@@ -15,8 +15,8 @@ import java.math.BigDecimal;
 @Service
 public class ProductService extends MyObjectGenericService<Product, ProductRepository, ProductService> {
 
-//    @Autowired
-//    private ImageService imageService;
+    @Autowired
+    private ImageService imageService;
 
     protected ProductService(ProductRepository repository) {
         super(repository);
@@ -28,11 +28,11 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
     }
 
 
-//    public Product findByIdWithImages(Long id) {
-//        Product product = productRepository.findById(id).orElse(null);
-//        if (product != null) {
-//            product.setImagenes(imageService.findByEntidadAndReferenciaId("Producto", product.getId()));
-//        }
-//        return product;
-//    }
+    public Product findByIdWithImages(Long id) {
+        Product product = repository.findById(id).orElse(null);
+        if (product != null) {
+            product.setImagenes(imageService.findByEntidadAndReferenciaId("Producto", product.getId()));
+        }
+        return product;
+    }
 }

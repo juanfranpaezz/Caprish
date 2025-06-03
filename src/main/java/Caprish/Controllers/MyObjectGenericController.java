@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 public abstract class MyObjectGenericController<M extends MyObject, R extends MyObjectGenericRepository<M>, S extends MyObjectGenericService<M, R, S>> {
 
     protected final S service;
@@ -31,7 +32,7 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
             if (entity == null) {
                 ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(service.save(entity));
+            return ResponseEntity.ok(String.valueOf(service.save(entity)));
         } catch (InvalidEntityException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

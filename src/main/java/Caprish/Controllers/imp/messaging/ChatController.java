@@ -23,7 +23,6 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
         super(service);
     }
 
-
     @PostMapping("/create")
     @Override
     public ResponseEntity<String> createObject(@Valid @RequestBody Chat entity) {

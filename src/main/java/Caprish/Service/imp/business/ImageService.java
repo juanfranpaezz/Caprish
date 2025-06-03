@@ -42,16 +42,29 @@ public class ImageService {
 
 
     public Image saveImage(MultipartFile file, String entidad, Long referenciaId, String nombre, String tipo) throws IOException {
-        if (file.isEmpty()) {
-            throw new IOException("El archivo esta vacio");
+        if (file==null || file.isEmpty()) {
+            throw new IllegalArgumentException("El archivo esta vacio");
         }
+        String ext = getFileExtension(file.getOriginalFilename()).toLowerCase();
+        if (!List.of(".jpg",".png").contains(ext)) {
+            throw new IllegalArgumentException("Tipo de archivo no permitido. Solo se permiten imágenes.");
+        }
+
+        if (entidad == null || entidad.isBlank()) {
+            throw new IllegalArgumentException("La entidad no puede estar vacía.");
+        }
+
+        if (referenciaId == null || referenciaId <= 0) {
+            throw new IllegalArgumentException("La referencia debe ser un ID válido.");
+        }
+
+
         Path uploadPath= Paths.get(uploadDir);
         if(!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
         //generamos el nombre
-        String ext= getFileExtension(file.getOriginalFilename());
         String fileName = UUID.randomUUID().toString() + ext;
         Path filePath = uploadPath.resolve(fileName);
 

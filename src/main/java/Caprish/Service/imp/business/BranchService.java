@@ -24,6 +24,22 @@ public class BranchService extends MyObjectGenericService<Branch, BranchReposito
     @Override
     protected void verifySpecificAttributes(Branch entity) {
 
+        if (entity.getBusiness() == null || entity.getBusiness().getId() == null) {
+            throw new IllegalArgumentException("La sucursal debe estar asociada a un negocio existente.");
+        }
+
+        if (entity.getBranch_type() == null) {
+            throw new IllegalArgumentException("La sucursal debe tener un tipo definido.");
+        }
+
+        Address address = entity.getAddress();
+        if (address == null ||
+                address.getDireccion() == null || address.getDireccion().isBlank() ||
+                address.getLocalidad() == null || address.getLocalidad().isBlank() ||
+                address.getProvincia() == null || address.getProvincia().isBlank() ||
+                address.getPais() == null || address.getPais().isBlank()) {
+            throw new IllegalArgumentException("Todos los campos de dirección deben estar completos.");
+        }
     }
 
     @Override

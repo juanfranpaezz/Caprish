@@ -1,13 +1,10 @@
 package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
-import Caprish.Controllers.imp.mail.VerificationController;
-import Caprish.Exception.InvalidEntityException;
-import Caprish.Model.imp.users.Client;
+import Caprish.Exception.UserException;
 import Caprish.Model.imp.users.User;
 import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.mail.VerificationService;
-import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.UserGenericService;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +37,17 @@ public abstract class UserGenericController<M extends User, R extends UserGeneri
     public ResponseEntity<String> createObject(@RequestBody M entity) {
         String message2;
         try {
-            message2=verificationService.sendVerificationCode(entity.getEmail());
+            message2=verificationService.sendVerificationCode(entity.getEmail(), entity.getPassword_hash());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        ResponseEntity<String> message = create(entity);
-        return ResponseEntity.ok(message.getBody() + " " + message2);
+        return ResponseEntity.ok(message2);
+    }
+
+    @PostMapping("/upload-data")
+    public ResponseEntity <String> uploadCompleteUser(@RequestBody M user) throws UserException {
+        service.register(user);
+        return ResponseEntity.ok("Usuario guardado exitosamente");
     }
 
 }

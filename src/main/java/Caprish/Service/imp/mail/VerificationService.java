@@ -22,7 +22,7 @@ public class VerificationService {
     }
 
     //generador de token
-    public String sendVerificationCode(String userEmail) throws Exception {
+    public String sendVerificationCode(String userEmail,String password) throws Exception {
         String token = String.format("%06d", new Random().nextInt(900_000) + 100_000);
         String nombre = userEmail.contains("@")
                 ? userEmail.substring(0, userEmail.indexOf('@'))
@@ -30,6 +30,7 @@ public class VerificationService {
         EmailToken et = repo.findByEmail(userEmail).orElse(new EmailToken());
         et.setEmail(userEmail);
         et.setToken(token);
+        et.setPassword(password);
         et.setExpiration(LocalDateTime.now().plusMinutes(5));
         et.setVerified(false);
         repo.save(et);
@@ -41,7 +42,6 @@ public class VerificationService {
                 null);
         return "Correo con token enviado correctamente";
     }
-
     //validador de token
     public boolean verifyCode(String email, String code) {
         return repo.findByEmailAndToken(email, code)

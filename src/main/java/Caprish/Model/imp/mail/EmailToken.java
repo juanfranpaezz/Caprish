@@ -27,6 +27,10 @@ public class EmailToken extends MyObject {
     private String email;
 
     @NotBlank
+    @Column(nullable = false,columnDefinition = "TEXT")
+    String password;
+
+    @NotBlank
     @Column(nullable = false, length = 6)
     private String token;
 

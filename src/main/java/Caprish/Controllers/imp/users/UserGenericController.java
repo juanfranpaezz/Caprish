@@ -49,6 +49,5 @@ public abstract class UserGenericController<M extends User, R extends UserGeneri
         service.register(user);
         return ResponseEntity.ok("Usuario guardado exitosamente");
     }
-
 }
 

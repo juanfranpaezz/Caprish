@@ -1,7 +1,5 @@
 
 package Caprish.Controllers.imp.mail;
-
-import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Model.imp.users.User;
 import Caprish.Repository.interfaces.users.UserGenericRepository;
 import Caprish.Service.imp.mail.VerificationService;

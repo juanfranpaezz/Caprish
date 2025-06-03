@@ -31,10 +31,9 @@ public class GmailService {
     private static final String TOKENS_DIRECTORY_PATH = "tokens"; // tokens/{userEmail} folder for each user
     private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_SEND);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+        public GmailService(){
 
-    public GmailService(GmailService gmailService) {
-    }
-
+        }
     // Enviar email con nombre, necesita el email del usuario que envía (userEmail)
 //    public void sendEmailWithName(String userEmail, String to, String subject, String name, MultipartFile file) throws Exception {
 //        String htmlBody = generateHtmlContent(name);

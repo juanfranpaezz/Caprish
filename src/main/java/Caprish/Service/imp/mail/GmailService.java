@@ -1,7 +1,5 @@
 package Caprish.Service.imp.mail;
 
-import Caprish.Model.imp.mail.SentEmail;
-import Caprish.Repository.interfaces.mail.SentEmailRepository;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -15,17 +13,12 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.Message;
-import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.*;
 import com.google.api.client.util.Base64;
 
@@ -38,10 +31,8 @@ public class GmailService {
     private static final String TOKENS_DIRECTORY_PATH = "tokens"; // tokens/{userEmail} folder for each user
     private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_SEND);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
-    private final SentEmailRepository sentEmailRepository;
 
-    public GmailService(SentEmailRepository sentEmailRepository) {
-        this.sentEmailRepository = sentEmailRepository;
+    public GmailService(GmailService gmailService) {
     }
 
     // Enviar email con nombre, necesita el email del usuario que envía (userEmail)
@@ -89,11 +80,6 @@ public class GmailService {
             message.setRaw(encodedEmail);
             service.users().messages().send("me", message).execute();
 
-            String mensajePlano = Jsoup.parse(htmlContent).text();
-            if (!subject.equalsIgnoreCase("Verificación de cuenta")) {
-                SentEmail log = new SentEmail(to, userEmail, subject, mensajePlano, LocalDateTime.now());
-                sentEmailRepository.save(log);
-            }
         } finally {
             if (tempFile != null && tempFile.exists()) {
                 tempFile.delete();

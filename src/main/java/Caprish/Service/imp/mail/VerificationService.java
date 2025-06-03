@@ -36,7 +36,7 @@ public class VerificationService {
         repo.save(et);
         Map<String, Object> vars = Map.of("token", token, "username", nombre);
         String html = ThymeleafTemplate.processTemplate("verification", vars);
-        gmailService.sendEmail("carpsishcommerce@gmail.com", userEmail,
+        gmailService.sendEmail("carprishcommerce@gmail.com", userEmail,
                 "Verificación de cuenta",
                 html,
                 null);

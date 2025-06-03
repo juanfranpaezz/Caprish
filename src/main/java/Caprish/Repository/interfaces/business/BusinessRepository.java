@@ -6,4 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 public interface BusinessRepository extends MyObjectGenericRepository<Business> {
+
+    boolean existsByBussinessName(String bussinessName);
+    boolean existsByTax(int tax);
 }

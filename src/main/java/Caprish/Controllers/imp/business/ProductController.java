@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('USER')")
 @RequestMapping("/product")
 @Validated
 public class ProductController extends MyObjectGenericController<Product, ProductRepository, ProductService> {
@@ -25,41 +24,58 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         super(service);
     }
 
-    @PreAuthorize("hasRole('SUPERVISOR')")
     @PostMapping("/create")
-        @Override
-        public ResponseEntity<String> createObject(@Valid @RequestBody Product entity) {
-            return create(entity);
-        }
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Product entity) {
+        return create(entity);
+    }
 
-        @PreAuthorize("hasRole('SUPERVISOR')")
-        @DeleteMapping("/delete/{id}")
-        @Override
-        public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-            return delete(id);
-        }
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        return delete(id);
+    }
 
-        /*@PreAuthorize("hasRole('SUPERVISOR')")
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(@Valid @PathVariable Long id) {
-            return update(id);
-        }*/
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<Product> findObjectById(@Positive @PathVariable Long id) {
+        return findById(id);
+    }
 
-        @PreAuthorize("hasRole('USER')")
-        @GetMapping("/{id}")
-        @Override
-        public ResponseEntity<Product> findObjectById(@Positive @PathVariable Long id) {
-            return findById(id);
-        }
+    @PutMapping("/updateBusinessId/{id}/{businessId}")
+    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
+                                                   @PathVariable @Positive Long businessId) {
+        return update(id, "business_id", businessId);
+    }
 
-        @PreAuthorize("hasRole('USER')")
-        @GetMapping("/all")
-        @Override
-        public List<Product> findAllObjects() {
-            return findAll();
-        }
+    @PutMapping("/updateName/{id}/{name}")
+    public ResponseEntity<String> updateName(@PathVariable @Positive Long id,
+                                             @PathVariable String name) {
+        return update(id, "name", name);
+    }
 
+    @PutMapping("/updateBarCode/{id}/{barCode}")
+    public ResponseEntity<String> updateBarCode(@PathVariable @Positive Long id,
+                                                @PathVariable Double barCode) {
+        return update(id, "bar_code", barCode);
+    }
 
+    @PutMapping("/updateDescription/{id}/{description}")
+    public ResponseEntity<String> updateDescription(@PathVariable @Positive Long id,
+                                                    @PathVariable String description) {
+        return update(id, "description", description);
+    }
+
+    @PutMapping("/updatePrice/{id}/{price}")
+    public ResponseEntity<String> updatePrice(@PathVariable @Positive Long id,
+                                              @PathVariable Double price) {
+        return update(id, "price", price);
+    }
+
+    @GetMapping("/all")
+    @Override
+    public List<Product> findAllObjects() {
+        return findAll();
+    }
 
 }

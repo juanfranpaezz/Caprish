@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('SUPERVISOR')")
 @RequestMapping("/branch")
 @Validated
 public class BranchController extends MyObjectGenericController<Branch, BranchRepository, BranchService> {
@@ -24,40 +23,46 @@ public class BranchController extends MyObjectGenericController<Branch, BranchRe
         super(service);
     }
 
-    @PreAuthorize("hasRole('BOSS')")
-     @PostMapping("/create")
-         @Override
-         public ResponseEntity<String> createObject(@Valid @RequestBody Branch entity) {
-             return create(entity);
-         }
+    @PostMapping("/create")
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Branch entity) {
+        return create(entity);
+    }
 
-         @PreAuthorize("hasRole('BOSS')")
-         @DeleteMapping("/delete/{id}")
-         @Override
-         public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-             return delete(id);
-         }
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        return delete(id);
+    }
 
-         @PreAuthorize("hasRole('BOSS')")
-         @PutMapping("/updateAddress/{id}/{address}")
-                  public ResponseEntity<String> updateAddress(@PathVariable @Positive Long id, @PathVariable String address) {
-                      return update(id, "address", address);
-                  }
+    @PutMapping("/updateBusinessId/{id}/{businessId}")
+    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
+                                                   @PathVariable @Positive Long businessId) {
+        return update(id, "business_id", businessId);
+    }
 
+    @PutMapping("/updateAddress/{id}/{address}")
+    public ResponseEntity<String> updateAddress(@PathVariable @Positive Long id,
+                                                @PathVariable String address) {
+        return update(id, "address", address);
+    }
 
-         @PreAuthorize("hasRole('SUPERVISOR')")
-         @GetMapping("/{id}")
-         @Override
-         public ResponseEntity<Branch> findObjectById(@Positive @PathVariable Long id) {
-             return findById(id);
-         }
+    @PutMapping("/updateBranchType/{id}/{type}")
+    public ResponseEntity<String> updateBranchType(@PathVariable @Positive Long id,
+                                                   @PathVariable String type) {
+        return update(id, "branch_type", type);
+    }
 
-         @PreAuthorize("hasRole('SUPERVISOR')")
-         @GetMapping("/all")
-         @Override
-         public List<Branch> findAllObjects() {
-             return findAll();
-         }
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<Branch> findObjectById(@Positive @PathVariable Long id) {
+        return findById(id);
+    }
 
+    @GetMapping("/all")
+    @Override
+    public List<Branch> findAllObjects() {
+        return findAll();
+    }
 
 }

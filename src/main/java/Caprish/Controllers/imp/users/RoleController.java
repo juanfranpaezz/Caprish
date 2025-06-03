@@ -17,7 +17,6 @@ import java.util.List;
 
 
 @RestController
-@PreAuthorize("hasRole('EMPLOYEE')")
 @RequestMapping("/role")
 @Validated
 public class RoleController extends MyObjectGenericController<Role, RoleRepository, RoleService> {
@@ -26,36 +25,35 @@ public class RoleController extends MyObjectGenericController<Role, RoleReposito
         super(service);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     @Override
     public ResponseEntity<String> createObject(@Valid @RequestBody Role entity) {
         return create(entity);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     @Override
     public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
         return delete(id);
     }
 
-
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     @Override
     public ResponseEntity<Role> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/updateName/{id}/{name}")
+    public ResponseEntity<String> updateName(@PathVariable @Positive Long id,
+                                             @PathVariable String name) {
+        return update(id, "name", name);
+    }
+
     @Override
     public List<Role> findAllObjects() {
         return List.of();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PermitAll
     @GetMapping("/all")
     public List<Role> findAllObjectss() {
         return findAll();

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('BOSS')")
 @RequestMapping("/business")
 @Validated
 public class BusinessController extends MyObjectGenericController<Business, BusinessRepository, BusinessService> {
@@ -24,35 +23,48 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         super(service);
     }
 
-    @PreAuthorize("hasRole('BOSS')")
     @PostMapping("/create")
     @Override
     public ResponseEntity<String> createObject(@Valid @RequestBody Business entity) {
         return create(entity);
     }
 
-    @PreAuthorize("hasRole('BOSS')")
     @DeleteMapping("/delete/{id}")
     @Override
     public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
         return delete(id);
     }
 
-   /* @PreAuthorize("hasRole('BOSS')")
-    @PutMapping("/update/{id}")
-    @Override
-    public ResponseEntity<String> updateObject(@Valid @PathVariable Long id) {
-        return update(id);
-    }*/
-
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     @Override
     public ResponseEntity<Business> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/updateBusinessName/{id}/{name}")
+    public ResponseEntity<String> updateBusinessName(@PathVariable @Positive Long id,
+                                                     @PathVariable String name) {
+        return update(id, "bussiness_name", name);
+    }
+
+    @PutMapping("/updateDescription/{id}/{description}")
+    public ResponseEntity<String> updateDescription(@PathVariable @Positive Long id,
+                                                    @PathVariable String description) {
+        return update(id, "description", description);
+    }
+
+    @PutMapping("/updateSlogan/{id}/{slogan}")
+    public ResponseEntity<String> updateSlogan(@PathVariable @Positive Long id,
+                                               @PathVariable String slogan) {
+        return update(id, "slogan", slogan);
+    }
+
+    @PutMapping("/updateTax/{id}/{tax}")
+    public ResponseEntity<String> updateTax(@PathVariable @Positive Long id,
+                                            @PathVariable int tax) {
+        return update(id, "tax", tax);
+    }
+
     @GetMapping("/all")
     @Override
     public List<Business> findAllObjects() {

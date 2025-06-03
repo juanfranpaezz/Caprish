@@ -17,7 +17,6 @@ import java.util.List;
 
 
 @RestController
-@PreAuthorize("hasRole('USER')")
 @RequestMapping("/client")
 @Validated
 public class ClientController extends UserGenericController<Client, ClientRepository, ClientService> {
@@ -25,39 +24,36 @@ public class ClientController extends UserGenericController<Client, ClientReposi
     public ClientController(ClientService childService) {
         super(childService);
     }
-    @PermitAll
+
     @PostMapping("/create")
-        @Override
-        public ResponseEntity<String> createObject(@Valid @RequestBody Client entity) {
-            return create(entity);
-        }
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Client entity) {
+        return create(entity);
+    }
 
-        @PreAuthorize("hasRole('ADMIN')")
-        @DeleteMapping("/delete/{id}")
-        @Override
-        public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-            return delete(id);
-        }
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        return delete(id);
+    }
 
-        @PreAuthorize("hasRole('CLIENT')")
-            @PutMapping("/updatePhone/{id}/{phone}")
-                public ResponseEntity<String> updatePhone(@PathVariable @Positive Long id, @PathVariable String phone) {
-                    return update(id, "phone", phone);
-        }
+    @PutMapping("/updatePhone/{id}/{phone}")
+    public ResponseEntity<String> updatePhone(@PathVariable @Positive Long id,
+                                              @PathVariable Integer phone) {
+        return update(id, "phone", phone);
+    }
 
-        @PreAuthorize("hasRole('CLIENT')")
-            @PutMapping("/updateTax/{id}/{tax}")
-                    public ResponseEntity<String> updateTax(@PathVariable @Positive Long id, @PathVariable Long tax) {
-                        return update(id, "tax", tax);
-                    }
+    @PutMapping("/updateTax/{id}/{tax}")
+    public ResponseEntity<String> updateTax(@PathVariable @Positive Long id,
+                                            @PathVariable String tax) {
+        return update(id, "tax", tax);
+    }
 
-
-        @PreAuthorize("hasRole('CLIENT')")
-        @GetMapping("/{id}")
-        @Override
-        public ResponseEntity<Client> findObjectById(@Positive @PathVariable Long id) {
-            return findById(id);
-        }
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<Client> findObjectById(@Positive @PathVariable Long id) {
+        return findById(id);
+    }
 
     @Override
     public List<Client> findAllObjects() {
@@ -65,9 +61,9 @@ public class ClientController extends UserGenericController<Client, ClientReposi
     }
 
     @PermitAll
-        @GetMapping("/all")
-        public List<Client> findAllObjectss() {
-            return findAll();
-        }
+    @GetMapping("/all")
+    public List<Client> findAllObjectss() {
+        return findAll();
+    }
 
 }

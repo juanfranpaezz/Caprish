@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('USER')")
 @RequestMapping("/chat")
 @Validated
 public class ChatController extends MyObjectGenericController<Chat, ChatRepository, ChatService> {
@@ -24,40 +23,40 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
         super(service);
     }
 
-    @PreAuthorize("hasRole('USER')")
+
     @PostMapping("/create")
-        @Override
-        public ResponseEntity<String> createObject(@Valid @RequestBody Chat entity) {
-            return create(entity);
-        }
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Chat entity) {
+        return create(entity);
+    }
 
-        @PreAuthorize("hasRole('USER')")
-        @DeleteMapping("/delete/{id}")
-        @Override
-        public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-            return delete(id);
-        }
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        return delete(id);
+    }
 
-        /*@PreAuthorize("hasRole('USER')")
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(@Valid @PathVariable Long id) {
-            return update(id);
-        }*/
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<Chat> findObjectById(@Positive @PathVariable Long id) {
+        return findById(id);
+    }
 
-        @PreAuthorize("hasRole('USER')")
-        @GetMapping("/{id}")
-        @Override
-        public ResponseEntity<Chat> findObjectById(@Positive @PathVariable Long id) {
-            return findById(id);
-        }
+    @PutMapping("/updateBusinessId/{id}/{businessId}")
+    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
+                                                   @PathVariable @Positive Long businessId) {
+        return update(id, "business_id", businessId);
+    }
 
-        @PreAuthorize("hasRole('USER')")
-        @GetMapping("/all")
-        @Override
-        public List<Chat> findAllObjects() {
-            return findAll();
-        }
+    @PutMapping("/updateClientId/{id}/{clientId}")
+    public ResponseEntity<String> updateClientId(@PathVariable @Positive Long id,
+                                                 @PathVariable @Positive Long clientId) {
+        return update(id, "client_id", clientId);
+    }
 
-
+    @GetMapping("/all")
+    @Override
+    public List<Chat> findAllObjects() {
+        return findAll();
+    }
 }

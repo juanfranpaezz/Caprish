@@ -7,55 +7,76 @@ import Caprish.Service.imp.sales.CartService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
 @RestController
-@PreAuthorize("hasRole('USER')")
 @RequestMapping("/cart")
 public class CartController extends MyObjectGenericController<Cart, CartRepository, CartService> {
 
     public CartController(CartService service) {
         super(service);
     }
-    @PreAuthorize("hasRole('USER')")
+
     @PostMapping("/create")
-        @Override
-        public ResponseEntity<String> createObject(@Valid @RequestBody Cart entity) {
-            return create(entity);
-        }
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Cart entity) {
+        return create(entity);
+    }
 
-        @PreAuthorize("hasRole('EMPLOYEE')")
-        @DeleteMapping("/delete/{id}")
-        @Override
-        public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-            return delete(id);
-        }
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        return delete(id);
+    }
 
-        /*@PreAuthorize("hasRole('EMPLOYEE')")
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(@Valid @PathVariable Long id) {
-            return update(id);
-        }*/
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<Cart> findObjectById(@Positive @PathVariable Long id) {
+        return findById(id);
+    }
 
-        @PreAuthorize("hasRole('EMPLOYEE')")
-        @GetMapping("/{id}")
-        @Override
-        public ResponseEntity<Cart> findObjectById(@Positive @PathVariable Long id) {
-            return findById(id);
-        }
+    @PutMapping("/updateCartType/{id}/{type}")
+    public ResponseEntity<String> updateCartType(@PathVariable @Positive Long id,
+                                                 @PathVariable String type) {
+        return update(id, "cart_type", type);
+    }
 
-        @PreAuthorize("hasRole('EMPLOYEE')")
-        @GetMapping("/all")
-        @Override
-        public List<Cart> findAllObjects() {
-            return findAll();
-        }
+    @PutMapping("/updateClientId/{id}/{clientId}")
+    public ResponseEntity<String> updateClientId(@PathVariable @Positive Long id,
+                                                 @PathVariable @Positive Long clientId) {
+        return update(id, "client_id", clientId);
+    }
+
+    @PutMapping("/updateCartStatus/{id}/{status}")
+    public ResponseEntity<String> updateCartStatus(@PathVariable @Positive Long id,
+                                                   @PathVariable String status) {
+        return update(id, "cart_status", status);
+    }
+
+    @PutMapping("/updateStaffId/{id}/{staffId}")
+    public ResponseEntity<String> updateStaffId(@PathVariable @Positive Long id,
+                                                @PathVariable @Positive Long staffId) {
+        return update(id, "staff_id", staffId);
+    }
+
+    @PutMapping("/updateSaleDate/{id}/{date}")
+    public ResponseEntity<String> updateSaleDate(@PathVariable @Positive Long id,
+                                                 @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return update(id, "sale_date", date);
+    }
+
+    @GetMapping("/all")
+    @Override
+    public List<Cart> findAllObjects() {
+        return findAll();
+    }
 
 
 }

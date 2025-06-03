@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/business_report")
 @Validated
 public class BusinessReportController extends MyObjectGenericController<BusinessReport, BusinessReportRepository, BusinessReportService> {
@@ -24,22 +23,17 @@ public class BusinessReportController extends MyObjectGenericController<Business
         super(service);
     }
 
-
     @PostMapping("/create")
         @Override
         public ResponseEntity<String> createObject(@Valid @RequestBody BusinessReport entity) {
             return create(entity);
         }
 
-
         @DeleteMapping("/delete/{id}")
         @Override
         public ResponseEntity<String> deleteObject(@Positive @PathVariable  Long id) {
             return delete(id);
         }
-
-
-
 
         @GetMapping("/{id}")
         @Override

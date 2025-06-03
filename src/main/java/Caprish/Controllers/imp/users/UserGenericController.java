@@ -22,8 +22,6 @@ public abstract class UserGenericController<M extends User, R extends UserGeneri
         super(childService);
     }
 
-
-    @PermitAll
     @PostMapping("/log")
     @Validated
     public ResponseEntity<String> logUser(@Valid @RequestBody M user) {
@@ -35,32 +33,36 @@ public abstract class UserGenericController<M extends User, R extends UserGeneri
         }
     }
 
-    @PreAuthorize("hasRole('USER')")
-    @PutMapping("/updateEmail/{id}/{email}")
-             public ResponseEntity<String> updateEmail(@PathVariable @Positive Long id, @PathVariable String email) {
-                 return update(id, "email", email);
-             }
-
-    @PreAuthorize("hasRole('USER')")
     @PutMapping("/updateFirstName/{id}/{firstName}")
-             public ResponseEntity<String> updateFirstName(@PathVariable @Positive Long id, @PathVariable String firstName) {
-                 return update(id, "first_name", firstName);
-             }
+    public ResponseEntity<String> updateFirstName(@PathVariable @Positive Long id,
+                                                  @PathVariable String firstName) {
+        return update(id, "first_name", firstName);
+    }
 
-    @PreAuthorize("hasRole('USER')")
     @PutMapping("/updateLastName/{id}/{lastName}")
-             public ResponseEntity<String> updateLastName(@PathVariable @Positive Long id, @PathVariable String lastName) {
-                 return update(id, "last_name", lastName);
-             }
+    public ResponseEntity<String> updateLastName(@PathVariable @Positive Long id,
+                                                 @PathVariable String lastName) {
+        return update(id, "last_name", lastName);
+    }
 
-    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/updateEmail/{id}/{email}")
+    public ResponseEntity<String> updateEmail(@PathVariable @Positive Long id,
+                                              @PathVariable String email) {
+        return update(id, "email", email);
+    }
+
     @PutMapping("/updatePasswordHash/{id}/{passwordHash}")
-             public ResponseEntity<String> updatePasswordHash(@PathVariable @Positive Long id, @PathVariable String passwordHash) {
-                 return update(id, "password_hash", passwordHash);
-             }
+    public ResponseEntity<String> updatePasswordHash(@PathVariable @Positive Long id,
+                                                     @PathVariable String passwordHash) {
+        return update(id, "password_hash", passwordHash);
+    }
 
+    @PutMapping("/updateRoleId/{id}/{roleId}")
+    public ResponseEntity<String> updateRoleId(@PathVariable @Positive Long id,
+                                               @PathVariable @Positive Long roleId) {
+        return update(id, "role_id", roleId);
+    }
 
-    @PermitAll
     @PostMapping("/sign-up")
     @Override
     @Validated

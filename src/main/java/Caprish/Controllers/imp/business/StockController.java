@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('SUPERVISOR')")
 @RequestMapping("/stock")
 @Validated
 public class StockController extends MyObjectGenericController<Stock, StockRepository, StockService> {
@@ -24,39 +23,46 @@ public class StockController extends MyObjectGenericController<Stock, StockRepos
         super(service);
     }
 
-    @PreAuthorize("hasRole('SUPERVISOR')")
     @PostMapping("/create")
-        @Override
-        public ResponseEntity<String> createObject(@Valid @RequestBody Stock entity) {
-            return create(entity);
-        }
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Stock entity) {
+        return create(entity);
+    }
 
-        @PreAuthorize("hasRole('SUPERVISOR')")
-        @DeleteMapping("/delete/{id}")
-        @Override
-        public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-            return delete(id);
-        }
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        return delete(id);
+    }
 
-        /*@PreAuthorize("hasRole('SUPERVISOR')")
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(@Valid @PathVariable Long id) {
-            return update(id);
-        }*/
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<Stock> findObjectById(@Positive @PathVariable Long id) {
+        return findById(id);
+    }
 
-        @PreAuthorize("hasRole('SUPERVISOR')")
-        @GetMapping("/{id}")
-        @Override
-        public ResponseEntity<Stock> findObjectById(@Positive @PathVariable Long id) {
-            return findById(id);
-        }
+    @PutMapping("/updateProductId/{id}/{productId}")
+    public ResponseEntity<String> updateProductId(@PathVariable @Positive Long id,
+                                                  @PathVariable @Positive Long productId) {
+        return update(id, "product_id", productId);
+    }
 
-        @PreAuthorize("hasRole('SUPERVISOR')")
-        @GetMapping("/all")
-        @Override
-        public List<Stock> findAllObjects() {
-            return findAll();
-        }
+    @PutMapping("/updateBranchId/{id}/{branchId}")
+    public ResponseEntity<String> updateBranchId(@PathVariable @Positive Long id,
+                                                 @PathVariable @Positive Long branchId) {
+        return update(id, "branch_id", branchId);
+    }
+
+    @PutMapping("/updateQuantity/{id}/{quantity}")
+    public ResponseEntity<String> updateQuantity(@PathVariable @Positive Long id,
+                                                 @PathVariable int quantity) {
+        return update(id, "quantity", quantity);
+    }
+
+    @GetMapping("/all")
+    @Override
+    public List<Stock> findAllObjects() {
+        return findAll();
+    }
 
 }

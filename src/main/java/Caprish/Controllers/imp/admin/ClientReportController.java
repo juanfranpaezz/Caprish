@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('USER')")
 @RequestMapping("/client_report")
 @Validated
 public class ClientReportController extends MyObjectGenericController<ClientReport, ClientReportRepository, ClientReportService> {
@@ -25,7 +24,6 @@ public class ClientReportController extends MyObjectGenericController<ClientRepo
         super(service);
     }
 
-        @PreAuthorize("hasRole('EMPLOYEE')")
         @PostMapping("/create")
             @Override
             public ResponseEntity<String> createObject(@Valid @RequestBody ClientReport entity) {
@@ -37,8 +35,6 @@ public class ClientReportController extends MyObjectGenericController<ClientRepo
             public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
                 return delete(id);
             }
-
-
 
             @GetMapping("/{id}")
             @Override

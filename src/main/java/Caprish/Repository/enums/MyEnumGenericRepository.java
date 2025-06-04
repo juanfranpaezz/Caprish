@@ -9,4 +9,5 @@ import java.util.Optional;
 @NoRepositoryBean
 public interface MyEnumGenericRepository<M extends MyEnum> extends JpaRepository<M, Long> {
     Optional<M> findById(String email);
+    boolean existsById(String id);
 }

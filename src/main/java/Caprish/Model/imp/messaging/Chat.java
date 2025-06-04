@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "chat",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"company_id","client_id"}))
+       uniqueConstraints = @UniqueConstraint(columnNames = {"id_business","id_client"}))
 public class Chat extends MyObject {
     @ManyToOne(optional = false)
     @JsonBackReference("chat-business")

@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +24,15 @@ import java.util.List;
 public class Staff extends MyObject {
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "id_user", nullable = false)
-    private User user;
+    @JoinColumn(name = "id_credential", nullable = false, unique = true)
+    private Credential credential;
 
     @ManyToOne(optional = false)
     @JsonBackReference("staff-business")
     private Business business;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_work_role",nullable = false)
+    @JoinColumn(name = "id_work_role", nullable = false)
     private WorkRole work_role;
 
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)

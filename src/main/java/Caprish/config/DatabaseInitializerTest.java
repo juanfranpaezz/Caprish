@@ -1,51 +1,52 @@
 package Caprish.config;
-
-import Caprish.Model.imp.users.PlatformAdmin;
-import Caprish.Model.imp.users.Role;
-import Caprish.Model.imp.users.User;
-import Caprish.Repository.interfaces.users.PlatformAdminRepository;
-import Caprish.Repository.interfaces.users.RoleRepository;
-import Caprish.Repository.interfaces.users.UserGenericRepository;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import Caprish.Model.enums.Role;
+import Caprish.Model.imp.users.Credential;
+import Caprish.Repository.enums.RoleRepository;
+import Caprish.Repository.interfaces.users.CredentialRepository;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class DatabaseInitializerTest {
+    @Autowired private CredentialRepository credentialRepository;
+    @Autowired private RoleRepository roleRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
 
-    @Bean
-    public CommandLineRunner seedAdmin(UserGenericRepository userGenericRepository,
-                                       PlatformAdminRepository adminRepository,
-                                       RoleRepository roleRepo,
-                                       PasswordEncoder encoder) {
-        return args -> {
-            // 1) Preload roles
-            String[] roleNames = {
-                    "ROLE_ADMIN", "ROLE_BOSS", "ROLE_SUPERVISOR",
-                    "ROLE_EMPLOYEE", "ROLE_CLIENT", "ROLE_USER"
-            };
-            for (String rn : roleNames) {
-                roleRepo.findByName(rn)
-                        .orElseGet(() -> roleRepo.save(new Role(rn)));
-            }
 
-            String email = "admin@caprish.com";
-            if (!userGenericRepository.existsByUsername(email)) {
-                // Asegurate de que exista el role ADMIN
-                Role adminRole = roleRepo.findByName("ROLE_ADMIN")
-                        .orElseGet(() -> roleRepo.save(new Role("ROLE_ADMIN")));
 
-                User a = new User();
-                a.setUsername(email);
-                a.setPassword_hash(encoder.encode("Secret123!"));
-                a.setRole(adminRole);
-                a.setEnabled(true);
-                a.setFirst_name("Fran");
-                a.setLast_name("Paez");
-                adminRepository.save(new PlatformAdmin(userGenericRepository.save(a)));
-                System.out.println("Admin seed creado: " + email);
-            }
-        };
+    @PostConstruct
+    public void init() {
+        createRoleIfNotExists("ROLE_ADMIN");
+        createRoleIfNotExists("ROLE_USER");
+        createRoleIfNotExists("ROLE_BOSS");
+        createRoleIfNotExists("ROLE_CLIENT");
+        createRoleIfNotExists("ROLE_SUPERVISOR");
+        createRoleIfNotExists("ROLE_EMPLOYEE");
+
+
+        // Ahora podés crear usuarios sin error
+        Role adminRole = roleRepository.findById("ROLE_ADMIN")
+                .orElseThrow(() -> new RuntimeException("Role ADMIN not found in DB"));
+
+        Credential admin = new Credential();
+        admin.setFirst_name("aa");
+        admin.setLast_name("bb");
+        admin.setEnabled(true);
+        admin.setUsername("admin@gmail.com");
+        admin.setPassword(passwordEncoder.encode("1234"));
+        admin.setRole(adminRole);
+
+        credentialRepository.save(admin);
     }
+
+    private void createRoleIfNotExists(String id) {
+        if (!roleRepository.existsById(id)) {
+            Role role = new Role();
+            role.setId(id);
+            roleRepository.save(role);
+        }
+    }
+
 }

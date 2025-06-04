@@ -28,7 +28,6 @@ public class MessageController extends MyObjectGenericController<Message, Messag
         return ResponseEntity.ok(service.saveA(msg));
     }
 
-    @PermitAll
     @GetMapping("/view/{id}")
     public ResponseEntity<List<Message>> findByChat(@PathVariable Long id) {
         return ResponseEntity.ok(service.findByChatId(id));

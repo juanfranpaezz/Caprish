@@ -10,13 +10,6 @@ import lombok.*;
 @Entity
 @Table(name = "platform_admin")
 @Getter @Setter
-@NoArgsConstructor
 public class PlatformAdmin extends MyObject {
-    @OneToOne(optional = false)
-    @JoinColumn(name = "id_user", nullable = false)
-    private User user;
 
-    public PlatformAdmin(User user) {
-        this.user = user;
-    }
 }

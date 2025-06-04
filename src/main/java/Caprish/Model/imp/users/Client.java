@@ -20,9 +20,10 @@ import java.util.List;
 @Getter
 @Setter
 public class Client extends MyObject {
+
     @OneToOne(optional = false)
-    @JoinColumn(name = "id_user", nullable = false)
-    private User user;
+    @JoinColumn(name = "id_credential", nullable = false, unique = true)
+    private Credential credential;
 
     @Column(unique = true, nullable = false)
     private Integer phone;
@@ -37,6 +38,4 @@ public class Client extends MyObject {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     @JsonManagedReference("cart-client")
     private List<Cart> carts = new ArrayList<>();
-
-
 }

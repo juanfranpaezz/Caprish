@@ -81,7 +81,7 @@ public class SecurityConfig {
                 "SELECT username, password_hash, enabled FROM users WHERE username = ?"
         );
         mgr.setAuthoritiesByUsernameQuery(
-                "SELECT u.email AS username, r.name AS authority " +
+                "SELECT u.username AS username, r.name AS authority " +
                         "FROM ( " +
                         "  SELECT username, id_role FROM user " +
                         ") AS u " +

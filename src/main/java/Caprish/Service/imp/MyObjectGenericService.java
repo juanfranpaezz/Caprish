@@ -48,9 +48,6 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         if (value == null) {
             throw new InvalidUpdateFieldException("El valor no puede ser null.");
         }
-        if (!BeanUtils.getPropertyNames(getEntityClass()).contains(fieldName)) {
-            throw new IllegalArgumentException("Campo inválido: " + fieldName);
-        }
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaUpdate<M> update = cb.createCriteriaUpdate(getEntityClass());
         Root<M> root = update.from(getEntityClass());

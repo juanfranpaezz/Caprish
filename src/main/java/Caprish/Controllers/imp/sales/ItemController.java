@@ -18,6 +18,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
     public ItemController(ItemService service) {
         super(service);
     }
+
     @PostMapping("/create")
     @Override
     public ResponseEntity<String> createObject(@Valid @RequestBody Item entity) {

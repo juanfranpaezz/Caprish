@@ -5,14 +5,18 @@ import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.messaging.Chat;
 import Caprish.Repository.interfaces.messaging.ChatRepository;
 import Caprish.Service.imp.messaging.ChatService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/chat")
-@CrossOrigin(origins = "http://localhost:3000")
+@Validated
 public class ChatController extends MyObjectGenericController<Chat, ChatRepository, ChatService> {
 
     public ChatController(ChatService service) {
@@ -20,41 +24,38 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
     }
 
     @PostMapping("/create")
-        @Override
-        public ResponseEntity<String> createObject(@RequestBody Chat entity) {
-            return create(entity);
-        }
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Chat entity) {
+        return create(entity);
+    }
 
-        @DeleteMapping("/delete/{id}")
-        @Override
-        public ResponseEntity<String> deleteObject(Long id) {
-            return delete(id);
-        }
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        return delete(id);
+    }
 
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(Long id) {
-            return update(id);
-        }
-
-        @Override
-        public ResponseEntity<Chat> findObjectById(Long id) {
-            return findById(id);
-        }
-
-
-        @GetMapping("/all")
-        @Override
-        public List<Chat> findAllObjects() {
-            return findAll();
-        }
-
-
-    /** Si quieres exponer también mensajes embebidos:
-     *  GET /api/chat/1
-     */
     @GetMapping("/{id}")
-    public ResponseEntity<Chat> findById(@PathVariable Long id) {
-        return super.findById(id);
+    @Override
+    public ResponseEntity<Chat> findObjectById(@Positive @PathVariable Long id) {
+        return findById(id);
+    }
+
+    @PutMapping("/updateBusinessId/{id}/{businessId}")
+    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
+                                                   @PathVariable @Positive Long businessId) {
+        return update(id, "business_id", businessId);
+    }
+
+    @PutMapping("/updateClientId/{id}/{clientId}")
+    public ResponseEntity<String> updateClientId(@PathVariable @Positive Long id,
+                                                 @PathVariable @Positive Long clientId) {
+        return update(id, "client_id", clientId);
+    }
+
+    @GetMapping("/all")
+    @Override
+    public List<Chat> findAllObjects() {
+        return findAll();
     }
 }

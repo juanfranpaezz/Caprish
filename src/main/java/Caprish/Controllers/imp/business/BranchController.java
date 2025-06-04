@@ -5,48 +5,64 @@ import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Branch;
 import Caprish.Repository.interfaces.business.BranchRepository;
 import Caprish.Service.imp.business.BranchService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/branch")
+@Validated
 public class BranchController extends MyObjectGenericController<Branch, BranchRepository, BranchService> {
 
     public BranchController(BranchService service) {
         super(service);
     }
 
-     @PostMapping("/create")
-         @Override
-         public ResponseEntity<String> createObject(@RequestBody Branch entity) {
-             return create(entity);
-         }
+    @PostMapping("/create")
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Branch entity) {
+        return create(entity);
+    }
 
-         @DeleteMapping("/delete/{id}")
-         @Override
-         public ResponseEntity<String> deleteObject(Long id) {
-             return delete(id);
-         }
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        return delete(id);
+    }
 
-         @PutMapping("/update/{id}")
-         @Override
-         public ResponseEntity<String> updateObject(Long id) {
-             return update(id);
-         }
+    @PutMapping("/updateBusinessId/{id}/{businessId}")
+    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
+                                                   @PathVariable @Positive Long businessId) {
+        return update(id, "business_id", businessId);
+    }
 
-         @GetMapping("/{id}")
-         @Override
-         public ResponseEntity<Branch> findObjectById(Long id) {
-             return findById(id);
-         }
+    @PutMapping("/updateAddress/{id}/{address}")
+    public ResponseEntity<String> updateAddress(@PathVariable @Positive Long id,
+                                                @PathVariable String address) {
+        return update(id, "address", address);
+    }
 
-         @GetMapping("/all")
-         @Override
-         public List<Branch> findAllObjects() {
-             return findAll();
-         }
+    @PutMapping("/updateBranchType/{id}/{type}")
+    public ResponseEntity<String> updateBranchType(@PathVariable @Positive Long id,
+                                                   @PathVariable String type) {
+        return update(id, "branch_type", type);
+    }
 
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<Branch> findObjectById(@Positive @PathVariable Long id) {
+        return findById(id);
+    }
+
+    @GetMapping("/all")
+    @Override
+    public List<Branch> findAllObjects() {
+        return findAll();
+    }
 
 }

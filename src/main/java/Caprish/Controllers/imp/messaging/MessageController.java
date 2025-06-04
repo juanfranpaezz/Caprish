@@ -6,72 +6,71 @@ import Caprish.Model.imp.messaging.Message;
 import Caprish.Repository.interfaces.messaging.MessageRepository;
 import Caprish.Service.imp.messaging.MessageService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import java.util.List;
 
-@PermitAll
 @RestController
 @RequestMapping("/message")
+@Validated
 public class MessageController extends MyObjectGenericController<Message, MessageRepository, MessageService> {
 
     public MessageController(MessageService service) {
         super(service);
     }
 
-    @PermitAll
-    @PostMapping("/post")
-    public ResponseEntity<Message> createA(@RequestBody Message msg) {
-        return ResponseEntity.ok(service.saveA(msg));
+    @PostMapping("/create")
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Message entity) {
+        return create(entity);
     }
 
-    @PermitAll
-    @GetMapping("/view/{id}")
-    public ResponseEntity<List<Message>> findByChat(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findByChatId(id));
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
+        return delete(id);
     }
 
-    @GetMapping("/viewB/{id}")
-    public ResponseEntity<List<Message>> findByChatB(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findByChatId(id));
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<Message> findObjectById(@PathVariable Long id) {
+        return findById(id);
     }
 
-    @PermitAll
-    @PostMapping
-        @Override
-        public ResponseEntity<String> createObject(@RequestBody Message entity) {
-            return create(entity);
-        }
+    @PutMapping("/updateChatId/{id}/{chatId}")
+    public ResponseEntity<String> updateChatId(@PathVariable @Positive Long id,
+                                               @PathVariable @Positive Long chatId) {
+        return update(id, "chat_id", chatId);
+    }
 
-        @DeleteMapping("/delete/{id}")
-        @Override
-        public ResponseEntity<String> deleteObject(Long id) {
-            return delete(id);
-        }
+    @PutMapping("/updateSenderId/{id}/{senderId}")
+    public ResponseEntity<String> updateSenderId(@PathVariable @Positive Long id,
+                                                 @PathVariable @Positive Long senderId) {
+        return update(id, "sender_id", senderId);
+    }
 
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(Long id) {
-            return update(id);
-        }
+    @PutMapping("/updateContent/{id}/{content}")
+    public ResponseEntity<String> updateContent(@PathVariable @Positive Long id,
+                                                @PathVariable String content) {
+        return update(id, "content", content);
+    }
 
-        @GetMapping("/{id}")
-        @Override
-        public ResponseEntity<Message> findObjectById(Long id) {
-            return findById(id);
-        }
+    @PutMapping("/updateSentAt/{id}/{timestamp}")
+    public ResponseEntity<String> updateSentAt(@PathVariable @Positive Long id,
+                                               @PathVariable String timestamp) {
+        return update(id, "sent_at", timestamp);
+    }
 
-        @GetMapping("/all")
-        @Override
-        public List<Message> findAllObjects() {
-            return findAll();
-        }
-
-
+    @GetMapping("/all")
+    @Override
+    public List<Message> findAllObjects() {
+        return findAll();
+    }
 
 }

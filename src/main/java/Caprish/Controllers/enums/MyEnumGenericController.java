@@ -58,11 +58,7 @@ public abstract class MyEnumGenericController<M extends MyEnum, R extends MyEnum
             return delete(id);
         }
 
-        @PutMapping("/update/{id}")
-        @Override
-        public ResponseEntity<String> updateObject(Long id) {
-            return update(id);
-        }
+
 
         @GetMapping("/{id}")
         @Override

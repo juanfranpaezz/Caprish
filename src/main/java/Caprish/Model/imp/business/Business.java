@@ -3,7 +3,6 @@ package Caprish.Model.imp.business;
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.messaging.Chat;
-import Caprish.Model.imp.messaging.Message;
 import Caprish.Model.imp.users.Staff;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -25,7 +24,7 @@ import java.util.List;
 @Table(name="business")
 public class Business extends MyObject {
     @Column(unique=true,columnDefinition="TEXT",nullable=false)
-    private String bussiness_name;
+    private String businessName;
 
     @Column(nullable=false,columnDefinition = "TEXT")
     private String description;

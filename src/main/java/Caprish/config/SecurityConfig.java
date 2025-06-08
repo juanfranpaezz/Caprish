@@ -50,20 +50,132 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Permito llamar libremente a /auth/login para obtener el JWT
                         .requestMatchers("/auth/login").permitAll()
-
-                        // Endpoint público sin auth
-                        .requestMatchers("/product/all", "/api/publico").permitAll()
-
-                        // Swagger (público)
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**")
-                        .permitAll()
-
-                        // Rutas que requieren rol específico:
-                        .requestMatchers("/api/user/**").hasRole("USER")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/message/view/**").hasRole("ADMIN")
-
-                        // Cualquier otra petición requiere autenticado
+//                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**")
+//                        .permitAll()
+//                        .requestMatchers("/message/all").hasRole("ADMIN")
+//                        .requestMatchers("/message/create").hasRole("USER")
+//                        .requestMatchers("/message/delete/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/message/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/message/updateChatId/{id}/{chatId}").hasRole("ADMIN")
+//                        .requestMatchers("/message/updateSenderId/{id}/{senderId}").hasRole("ADMIN")
+//                        .requestMatchers("/message/updateContent/{id}/{content}").hasRole("ADMIN")
+//                        .requestMatchers("/message/updateSentAt/{id}/{timestamp}").hasRole("ADMIN")
+//                        .requestMatchers("/message/all").hasRole("USER")
+//
+//                        /* STAFF (employee) */
+//                        .requestMatchers("/employee").hasRole("ADMIN")
+//                        .requestMatchers("/employee/create").hasRole("ADMIN")
+//                        .requestMatchers("/employee/delete/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/employee/updateBusinessId/{id}/{businessId}").hasRole("ADMIN")
+//                        .requestMatchers("/employee/updateWorkRole/{id}/{workRole}").hasRole("ADMIN")
+//                        .requestMatchers("/employee/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/employee/all").hasRole("ADMIN")
+//
+//                        /* USER-GENERIC */
+//                        .requestMatchers("/user/log").hasRole("USER")
+//                        .requestMatchers("/user/updateFirstName/{id}/{firstName}").hasRole("USER")
+//                        .requestMatchers("/user/updateLastName/{id}/{lastName}").hasRole("USER")
+//                        .requestMatchers("/user/updateEmail/{id}/{email}").hasRole("USER")
+//                        .requestMatchers("/user/updatePasswordHash/{id}/{passwordHash}").hasRole("USER")
+//                        .requestMatchers("/user/updateRoleId/{id}/{roleId}").hasRole("BOSS")
+//                        .requestMatchers("/user/sign-up").hasRole("USER")
+//
+//                        /* CLIENT */
+//                        .requestMatchers("/client/create").hasRole("USER")
+//                        .requestMatchers("/client/delete/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/client/updatePhone/{id}/{phone}").hasRole("CLIENT")
+//                        .requestMatchers("/client/updateTax/{id}/{tax}").hasRole("CLIENT")
+//                        .requestMatchers("/client/{id}").hasRole("CLIENT")
+//                        .requestMatchers("/client/all").hasRole("ADMIN")
+//
+//                        /* ROLE */
+//                        .requestMatchers("/role").hasRole("ADMIN")
+//                        .requestMatchers("/role/create").hasRole("ADMIN")
+//                        .requestMatchers("/role/delete/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/role/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/role/updateName/{id}/{name}").hasRole("ADMIN")
+//                        .requestMatchers("/role/all").hasRole("ADMIN")
+//
+//                        /* ITEM (cart_item) */
+//                        .requestMatchers("/cart_item/create").hasRole("CLIENT")
+//                        .requestMatchers("/cart_item/delete/{id}").hasRole("CLIENT")
+//                        .requestMatchers("/cart_item/{id}").hasRole("CLIENT")
+//                        .requestMatchers("/cart_item/updateCartId/{id}/{cartId}").hasRole("CLIENT")
+//                        .requestMatchers("/cart_item/updateProductId/{id}/{productId}").hasRole("CLIENT")
+//                        .requestMatchers("/cart_item/updateQuantity/{id}/{quantity}").hasRole("CLIENT")
+//                        .requestMatchers("/cart_item/all").hasRole("CLIENT")
+//
+//                        /* CART */
+//                        .requestMatchers("/cart/create").hasRole("CLIENT")
+//                        .requestMatchers("/cart/delete/{id}").hasRole("CLIENT")
+//                        .requestMatchers("/cart/{id}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/cart/updateCartType/{id}/{type}").hasRole("USER")
+//                        .requestMatchers("/cart/updateClientId/{id}/{clientId}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/cart/updateCartStatus/{id}/{status}").hasRole("SUPERVISOR")
+//                        .requestMatchers("/cart/updateStaffId/{id}/{staffId}").hasRole("SUPERVISOR")
+//                        .requestMatchers("/cart/updateSaleDate/{id}/{date}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/cart/all").hasRole("EMPLOYEE")
+//
+//                        /* CHAT */
+//                        .requestMatchers("/chat").hasRole("ADMIN")
+//                        .requestMatchers("/chat/create").hasRole("ADMIN")
+//                        .requestMatchers("/chat/delete/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/chat/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/chat/updateBusinessId/{id}/{businessId}").hasRole("ADMIN")
+//                        .requestMatchers("/chat/updateClientId/{id}/{clientId}").hasRole("ADMIN")
+//                        .requestMatchers("/chat/all").hasRole("ADMIN")
+//
+//                        /* STOCK */
+//                        .requestMatchers("/stock/create").hasRole("EMPLOYEE")
+//                        .requestMatchers("/stock/delete/{id}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/stock/{id}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/stock/updateProductId/{id}/{productId}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/stock/updateBranchId/{id}/{branchId}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/stock/updateQuantity/{id}/{quantity}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/stock/all").hasRole("EMPLOYEE")
+//
+//                        /* PRODUCT */
+//                        .requestMatchers("/product/create").hasRole("EMPLOYEE")
+//                        .requestMatchers("/product/delete/{id}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/product/{id}").hasRole("CLIENT")
+//                        .requestMatchers("/product/updateBusinessId/{id}/{businessId}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/product/updateName/{id}/{name}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/product/updateBarCode/{id}/{barCode}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/product/updateDescription/{id}/{description}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/product/updatePrice/{id}/{price}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/product/all").hasRole("CLIENT")
+//
+//                        /* BUSINESS */
+//                        .requestMatchers("/business/create").hasRole("BOSS")
+//                        .requestMatchers("/business/delete/{id}").hasRole("BOSS")
+//                        .requestMatchers("/business/{id}").hasRole("BOSS")
+//                        .requestMatchers("/business/updateBusinessName/{id}/{name}").hasRole("BOSS")
+//                        .requestMatchers("/business/updateDescription/{id}/{description}").hasRole("BOSS")
+//                        .requestMatchers("/business/updateSlogan/{id}/{slogan}").hasRole("BOSS")
+//                        .requestMatchers("/business/updateTax/{id}/{tax}").hasRole("BOSS")
+//                        .requestMatchers("/business/all").hasRole("BOSS")
+//
+//                        /* BRANCH */
+//                        .requestMatchers("/branch/create").hasRole("BOSS")
+//                        .requestMatchers("/branch/delete/{id}").hasRole("BOSS")
+//                        .requestMatchers("/branch/updateBusinessId/{id}/{businessId}").hasRole("ADMIN")
+//                        .requestMatchers("/branch/updateAddress/{id}/{address}").hasRole("BOSS")
+//                        .requestMatchers("/branch/updateBranchType/{id}/{type}").hasRole("BOSS")
+//                        .requestMatchers("/branch/{id}").hasRole("BOSS")
+//                        .requestMatchers("/branch/all").hasRole("BOSS")
+//
+//                        /* CLIENT_REPORT */
+//                        .requestMatchers("/client_report/create").hasRole("CLIENT")
+//                        .requestMatchers("/client_report/delete/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/client_report/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/client_report/all").hasRole("ADMIN")
+//
+//                        /* BUSINESS_REPORT */
+//                        .requestMatchers("/business_report/create").hasRole("EMPLOYEE")
+//                        .requestMatchers("/business_report/delete/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/business_report/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/business_report/all").hasRole("ADMIN")
+//
                         .anyRequest().authenticated()
                 )
 

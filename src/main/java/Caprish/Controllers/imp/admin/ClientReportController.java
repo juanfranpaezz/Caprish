@@ -7,12 +7,14 @@ import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.admin.ClientReportRepository;
 import Caprish.Service.imp.admin.ClientReportService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/client_report")
+@Validated
 public class ClientReportController extends MyObjectGenericController<ClientReport, ClientReportRepository, ClientReportService> {
 
     public ClientReportController(ClientReportService service) {

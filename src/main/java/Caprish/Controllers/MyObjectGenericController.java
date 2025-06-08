@@ -11,7 +11,6 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 public abstract class MyObjectGenericController<M extends MyObject, R extends MyObjectGenericRepository<M>, S extends MyObjectGenericService<M, R, S>> {
-
     protected final S service;
 
     protected MyObjectGenericController(S childService) {
@@ -27,7 +26,7 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
     public abstract List<M> findAllObjects();
 
 
-    public ResponseEntity<String> create(@RequestBody M entity) {
+    public ResponseEntity<String> create(M entity) {
         try {
             if (entity == null) {
                 ResponseEntity.badRequest().build();
@@ -42,20 +41,21 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
         return service.findAll();
     }
 
-    public ResponseEntity<M> findById(@PathVariable Long id) {
+    public ResponseEntity<M> findById(Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<String> update(@PathVariable Long id) {
+    public ResponseEntity<String> update(Long id, String fieldName, Object objectValue) {
         if (!service.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok("guardado");
+        service.changeField(id, fieldName, objectValue);
+        return ResponseEntity.ok("Update successful");
     }
 
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(Long id) {
         if (!service.existsById(id)) {
             return ResponseEntity.badRequest().body("Usuario no encontrado");
         }

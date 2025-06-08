@@ -5,12 +5,14 @@ import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Repository.interfaces.admin.BusinessReportRepository;
 import Caprish.Service.imp.admin.BusinessReportService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/business_report")
+@Validated
 public class BusinessReportController extends MyObjectGenericController<BusinessReport, BusinessReportRepository, BusinessReportService> {
 
     public BusinessReportController(BusinessReportService service) {

@@ -1,6 +1,7 @@
 package Caprish.Service.imp.users;
 
 
+import Caprish.Exception.UserException;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.MyObjectGenericService;

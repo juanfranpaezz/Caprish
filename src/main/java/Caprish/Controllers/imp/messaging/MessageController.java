@@ -23,45 +23,52 @@ public class MessageController extends MyObjectGenericController<Message, Messag
         super(service);
     }
 
-    @PostMapping("/post")
-    public ResponseEntity<Message> createA(@RequestBody Message msg) {
-        return ResponseEntity.ok(service.saveA(msg));
+    @PostMapping("/create")
+    @Override
+    public ResponseEntity<String> createObject(@Valid @RequestBody Message entity) {
+        return create(entity);
     }
 
-    @GetMapping("/view/{id}")
-    public ResponseEntity<List<Message>> findByChat(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findByChatId(id));
+    @DeleteMapping("/delete/{id}")
+    @Override
+    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
+        return delete(id);
     }
 
-    @GetMapping("/viewB/{id}")
-    public ResponseEntity<List<Message>> findByChatB(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findByChatId(id));
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<Message> findObjectById(@PathVariable Long id) {
+        return findById(id);
     }
 
-    @PostMapping
-        @Override
-        public ResponseEntity<String> createObject(@RequestBody Message entity) {
-            return create(entity);
-        }
+    @PutMapping("/updateChatId/{id}/{chatId}")
+    public ResponseEntity<String> updateChatId(@PathVariable @Positive Long id,
+                                               @PathVariable @Positive Long chatId) {
+        return update(id, "chat_id", chatId);
+    }
 
-        @DeleteMapping("/delete/{id}")
-        @Override
-        public ResponseEntity<String> deleteObject(Long id) {
-            return delete(id);
-        }
+    @PutMapping("/updateSenderId/{id}/{senderId}")
+    public ResponseEntity<String> updateSenderId(@PathVariable @Positive Long id,
+                                                 @PathVariable @Positive Long senderId) {
+        return update(id, "sender_id", senderId);
+    }
 
-        @GetMapping("/{id}")
-        @Override
-        public ResponseEntity<Message> findObjectById(Long id) {
-            return findById(id);
-        }
+    @PutMapping("/updateContent/{id}/{content}")
+    public ResponseEntity<String> updateContent(@PathVariable @Positive Long id,
+                                                @PathVariable String content) {
+        return update(id, "content", content);
+    }
 
-        @GetMapping("/all")
-        @Override
-        public List<Message> findAllObjects() {
-            return findAll();
-        }
+    @PutMapping("/updateSentAt/{id}/{timestamp}")
+    public ResponseEntity<String> updateSentAt(@PathVariable @Positive Long id,
+                                               @PathVariable String timestamp) {
+        return update(id, "sent_at", timestamp);
+    }
 
-
+    @GetMapping("/all")
+    @Override
+    public List<Message> findAllObjects() {
+        return findAll();
+    }
 
 }

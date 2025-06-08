@@ -23,7 +23,7 @@ public class MessageController extends MyObjectGenericController<Message, Messag
 
     @PostMapping("/create")
     @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Message entity) {
+    public ResponseEntity<String> createObject(@RequestBody Message entity) {
         return create(entity);
     }
 
@@ -65,7 +65,7 @@ public class MessageController extends MyObjectGenericController<Message, Messag
 
     @GetMapping("/all")
     @Override
-    public List<Message> findAllObjects() {
+    public ResponseEntity<List<Message>> findAllObjects() {
         return findAll();
     }
 

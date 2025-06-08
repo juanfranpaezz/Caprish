@@ -26,19 +26,19 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
 
     @PostMapping("/create")
     @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Item entity) {
+    public ResponseEntity<String> createObject(@RequestBody Item entity) {
         return create(entity);
     }
 
     @DeleteMapping("/delete/{id}")
     @Override
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
         return delete(id);
     }
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<Item> findObjectById(@Positive @PathVariable Long id) {
+    public ResponseEntity<Item> findObjectById(@PathVariable Long id) {
         return findById(id);
     }
 
@@ -62,7 +62,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
 
     @GetMapping("/all")
     @Override
-    public List<Item> findAllObjects() {
+    public ResponseEntity<List<Item>> findAllObjects() {
         return findAll();
     }
 

@@ -23,19 +23,19 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
     }
     @PostMapping("/create")
     @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Chat entity) {
+    public ResponseEntity<String> createObject(@RequestBody Chat entity) {
         return create(entity);
     }
 
     @DeleteMapping("/delete/{id}")
     @Override
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
         return delete(id);
     }
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<Chat> findObjectById(@Positive @PathVariable Long id) {
+    public ResponseEntity<Chat> findObjectById(@PathVariable Long id) {
         return findById(id);
     }
 
@@ -51,9 +51,10 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
         return update(id, "client_id", clientId);
     }
 
+
     @GetMapping("/all")
     @Override
-    public List<Chat> findAllObjects() {
+    public ResponseEntity<List<Chat>> findAllObjects() {
         return findAll();
     }
 }

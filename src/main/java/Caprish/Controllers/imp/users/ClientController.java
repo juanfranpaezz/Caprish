@@ -25,13 +25,13 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     }
     @PostMapping("/create")
     @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Client entity) {
+    public ResponseEntity<String> createObject(@RequestBody Client entity) {
         return create(entity);
     }
 
     @DeleteMapping("/delete/{id}")
     @Override
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
         return delete(id);
     }
 
@@ -49,18 +49,14 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<Client> findObjectById(@Positive @PathVariable Long id) {
+    public ResponseEntity<Client> findObjectById(@PathVariable Long id) {
         return findById(id);
     }
 
-    @Override
-    public List<Client> findAllObjects() {
-        return List.of();
-    }
 
-    @PermitAll
     @GetMapping("/all")
-    public List<Client> findAllObjectss() {
+    @Override
+    public ResponseEntity<List<Client>> findAllObjects() {
         return findAll();
     }
 

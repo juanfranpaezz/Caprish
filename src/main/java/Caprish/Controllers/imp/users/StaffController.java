@@ -23,13 +23,13 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
 
     @PostMapping("/create")
     @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Staff entity) {
+    public ResponseEntity<String> createObject(@RequestBody Staff entity) {
         return create(entity);
     }
 
     @DeleteMapping("/delete/{id}")
     @Override
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
         return delete(id);
     }
 
@@ -45,13 +45,13 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<Staff> findObjectById(@Positive @PathVariable Long id) {
+    public ResponseEntity<Staff> findObjectById(@PathVariable Long id) {
         return findById(id);
     }
 
     @GetMapping("/all")
     @Override
-    public List<Staff> findAllObjects() {
+    public ResponseEntity<List<Staff>> findAllObjects() {
         return findAll();
     }
 

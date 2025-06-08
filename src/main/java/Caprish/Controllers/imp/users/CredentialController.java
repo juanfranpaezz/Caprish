@@ -54,25 +54,25 @@ public class CredentialController extends MyObjectGenericController<Credential, 
 
     @PostMapping("/create")
     @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Credential entity) {
+    public ResponseEntity<String> createObject(@RequestBody Credential entity) {
         return create(entity);
     }
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<Credential> findObjectById(@Positive @PathVariable Long id) {
+    public ResponseEntity<Credential> findObjectById(@PathVariable Long id) {
         return findById(id);
     }
 
     @GetMapping("/all")
     @Override
-    public List<Credential> findAllObjects() {
+    public ResponseEntity<List<Credential>> findAllObjects() {
         return findAll();
     }
 
     @DeleteMapping("/delete/{id}")
     @Override
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
         return delete(id);
     }
 

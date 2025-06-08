@@ -27,19 +27,19 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
 
     @PostMapping("/create")
     @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Cart entity) {
+    public ResponseEntity<String> createObject(@RequestBody Cart entity) {
         return create(entity);
     }
 
     @DeleteMapping("/delete/{id}")
     @Override
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
         return delete(id);
     }
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<Cart> findObjectById(@Positive @PathVariable Long id) {
+    public ResponseEntity<Cart> findObjectById(@PathVariable Long id) {
         return findById(id);
     }
 
@@ -75,7 +75,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
 
     @GetMapping("/all")
     @Override
-    public List<Cart> findAllObjects() {
+    public ResponseEntity<List<Cart>> findAllObjects() {
         return findAll();
     }
 

@@ -54,13 +54,13 @@ public class BranchController extends MyObjectGenericController<Branch, BranchRe
 
          @GetMapping("/{id}")
          @Override
-         public ResponseEntity<Branch> findObjectById(Long id) {
+         public ResponseEntity<Branch> findObjectById(@PathVariable Long id) {
              return findById(id);
          }
 
          @GetMapping("/all")
          @Override
-         public List<Branch> findAllObjects() {
+         public ResponseEntity<List<Branch>> findAllObjects() {
              return findAll();
          }
 

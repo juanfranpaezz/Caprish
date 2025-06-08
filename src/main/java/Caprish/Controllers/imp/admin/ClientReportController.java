@@ -36,13 +36,13 @@ public class ClientReportController extends MyObjectGenericController<ClientRepo
 
             @GetMapping("/{id}")
             @Override
-            public ResponseEntity<ClientReport> findObjectById(Long id) {
+            public ResponseEntity<ClientReport> findObjectById(@PathVariable Long id) {
                 return findById(id);
             }
 
             @GetMapping("/all")
             @Override
-            public List<ClientReport> findAllObjects() {
+            public ResponseEntity<List<ClientReport>> findAllObjects() {
                 return findAll();
             }
 

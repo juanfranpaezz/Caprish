@@ -34,13 +34,13 @@ public class BusinessReportController extends MyObjectGenericController<Business
 
         @GetMapping("/{id}")
         @Override
-        public ResponseEntity<BusinessReport> findObjectById(Long id) {
+        public ResponseEntity<BusinessReport> findObjectById(@PathVariable Long id) {
             return findById(id);
         }
 
         @GetMapping("/all")
         @Override
-        public List<BusinessReport> findAllObjects() {
+        public ResponseEntity<List<BusinessReport>> findAllObjects() {
             return findAll();
         }
 

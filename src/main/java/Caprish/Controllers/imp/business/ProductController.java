@@ -26,13 +26,13 @@ public class ProductController extends MyObjectGenericController<Product, Produc
 
     @PostMapping("/create")
         @Override
-        public ResponseEntity<String> createObject(@Valid @RequestBody Product entity) {
+        public ResponseEntity<String> createObject(@RequestBody Product entity) {
             return create(entity);
         }
 
         @DeleteMapping("/delete/{id}")
         @Override
-        public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        public ResponseEntity<String> deleteObject(@PathVariable Long id) {
             return delete(id);
         }
 
@@ -40,7 +40,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     @PermitAll
     @GetMapping("/{id}")
         @Override
-        public ResponseEntity<Product> findObjectById(Long id) {
+        public ResponseEntity<Product> findObjectById(@PathVariable Long id) {
             return findById(id);
         }
 
@@ -78,7 +78,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     @PermitAll
         @GetMapping("/all")
         @Override
-        public List<Product> findAllObjects() {
+        public ResponseEntity<List<Product>> findAllObjects() {
             return findAll();
         }
 

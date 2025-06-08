@@ -29,20 +29,20 @@ public class StockController extends MyObjectGenericController<Stock, StockRepos
 
         @DeleteMapping("/delete/{id}")
         @Override
-        public ResponseEntity<String> deleteObject(Long id) {
+        public ResponseEntity<String> deleteObject(@PathVariable Long id) {
             return delete(id);
         }
 
 
         @GetMapping("/{id}")
         @Override
-        public ResponseEntity<Stock> findObjectById(Long id) {
+        public ResponseEntity<Stock> findObjectById(@PathVariable Long id) {
             return findById(id);
         }
 
         @GetMapping("/all")
         @Override
-        public List<Stock> findAllObjects() {
+        public ResponseEntity<List<Stock>> findAllObjects() {
             return findAll();
         }
 

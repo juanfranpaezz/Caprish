@@ -2,7 +2,6 @@ package Caprish.Model.enums;
 
 
 import Caprish.Model.imp.messaging.Message;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;

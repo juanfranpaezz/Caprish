@@ -5,7 +5,6 @@ import Caprish.Exception.InvalidIdException;
 import Caprish.Exception.InvalidUpdateFieldException;
 import Caprish.Model.BeanUtils;
 import Caprish.Model.imp.MyObject;
-import Caprish.Model.imp.business.Branch;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -82,6 +81,7 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         verifySpecificAttributes(entity);
         return repository.save(entity);
     }
+
 
 
     public Optional<M> findById(Long id) {

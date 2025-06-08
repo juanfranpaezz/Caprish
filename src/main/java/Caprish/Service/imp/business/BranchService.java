@@ -1,14 +1,11 @@
 package Caprish.Service.imp.business;
 
-import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Address;
 import Caprish.Model.imp.business.Branch;
 import Caprish.Repository.interfaces.business.BranchRepository;
-import Caprish.Service.enums.BranchTypeService;
 import Caprish.Service.imp.MyObjectGenericService;
 import Caprish.Service.others.GoogleGeocodingService;
 import org.springframework.aop.framework.AopContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -48,7 +45,6 @@ public class BranchService extends MyObjectGenericService<Branch, BranchReposito
         }
         return super.save(branch);
     }
-
 
     public void changeAddress(Long id, String address) {
         if(address== null || address.isBlank()) {

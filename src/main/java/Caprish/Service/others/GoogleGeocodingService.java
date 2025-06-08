@@ -10,16 +10,21 @@ import java.util.Map;
 @Service
 public class GoogleGeocodingService {
 
-    @Value("${google.api.key}")
-    private String apiKey;
+
 
     private final RestTemplate restTemplate= new RestTemplate();
+    private final GoogleApiKeyProvider apiKeyProvider;
+
+    public GoogleGeocodingService(GoogleApiKeyProvider apiKeyProvider) {
+        this.apiKeyProvider = apiKeyProvider;
+    }
+
 
     public boolean validateAddress(String inputAddress) {
         try {
             URI uri = UriComponentsBuilder.fromUriString("https://maps.googleapis.com/maps/api/geocode/json")
                     .queryParam("address", inputAddress)
-                    .queryParam("key", apiKey)
+                    .queryParam("key", apiKeyProvider.getApiKey())
                     .build()
                     .toUri();
 

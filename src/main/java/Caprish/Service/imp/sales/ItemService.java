@@ -7,6 +7,8 @@ import Caprish.Service.imp.MyObjectGenericService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class ItemService extends MyObjectGenericService<Item, ItemRepository, ItemService> {
@@ -16,6 +18,16 @@ public class ItemService extends MyObjectGenericService<Item, ItemRepository, It
 
     @Override
     protected void verifySpecificAttributes(Item entity) {
+        if (entity.getProduct() == null) {
+            throw new IllegalArgumentException("El producto del ítem no puede ser nulo");
+        }
 
+        if (entity.getCart() == null) {
+            throw new IllegalArgumentException("El carrito asociado al ítem no puede ser nulo");
+        }
+
+        if (entity.getQuantity() <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor a cero");
+        }
     }
 }

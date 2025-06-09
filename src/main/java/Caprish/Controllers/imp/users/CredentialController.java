@@ -72,7 +72,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     @PutMapping("/updatePassword")
     public ResponseEntity<String> updatePasswordHash(@AuthenticationPrincipal UserDetails userDetails,
                                                  @RequestBody Map<String,String> payload) {
-        return update(service.getIdByUserDetails(userDetails), "password", payload.get("password"));
+        return update(service.getIdByUserDetails(userDetails), "password", passwordEncoder.encode(payload.get("password")));
     }
 
     @PutMapping("/updateRole")

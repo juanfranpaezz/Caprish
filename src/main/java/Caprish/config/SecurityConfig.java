@@ -59,12 +59,14 @@ public class SecurityConfig {
 //                        .requestMatchers("/message/all").hasRole("USER")
 
                         /* CREDENTIAL */
-//                        .requestMatchers("/user/log").hasRole("USER")
+//                        .requestMatchers("/credential/log").permitAll()
                         .requestMatchers("/credential/updateFirstName/{id}/{firstName}").hasRole("USER")
                         .requestMatchers("/credential/updateLastName/{id}/{lastName}").hasRole("USER")
                         .requestMatchers("/credential/updatePassword/{id}/{password}").hasRole("USER")
 //                        .requestMatchers("/credential/updateRoleId/{id}/{roleId}").hasRole("BOSS")
-//                        .requestMatchers("/credential/create").hasRole("USER")
+
+//  ESTE SE DEJA PARA DESPUES POR EL TEMA DE LOS CONTROLLERS:
+//                      .requestMatchers("/credential/create").hasRole("USER")
 
                         /* CLIENT */
 //                        .requestMatchers("/client/create").permitAll()
@@ -83,10 +85,9 @@ public class SecurityConfig {
                         /* CART */
                         .requestMatchers("/cart/create").hasRole("EMPLOYEE")
 //                        .requestMatchers("/cart/confirm-purchase").hasRole("USER")
-//                        .requestMatchers("/cart/delete/{id}").hasRole("CLIENT")
+//                        .requestMatchers("/cart/delete/{id}").hasRole("EMPLOYEE")
 //                        .requestMatchers("/cart/{id}").hasRole("EMPLOYEE")
                         .requestMatchers("/cart/updateClientId/{id}/{clientId}").hasRole("EMPLOYEE")
-//                        .requestMatchers("/cart/updateCartStatus/{id}/{status}").hasRole("SUPERVISOR")
                         .requestMatchers("/cart/updateStaffId/{id}/{staffId}").hasRole("SUPERVISOR")
 //                        .requestMatchers("/cart/all").hasRole("EMPLOYEE")
 
@@ -110,7 +111,7 @@ public class SecurityConfig {
                         /* BUSINESS */
 //                        .requestMatchers("/business/create").permitAll()
 //                        .requestMatchers("/business/delete/{id}").hasRole("BOSS")
-//                        .requestMatchers("/business/{id}").hasRole("BOSS")
+//                        .requestMatchers("/business/{id}").hasRole("CLIENT")
                         .requestMatchers("/business/updateBusinessName/{id}/{name}").hasRole("BOSS")
                         .requestMatchers("/business/updateDescription/{id}/{description}").hasRole("BOSS")
                         .requestMatchers("/business/updateSlogan/{id}/{slogan}").hasRole("BOSS")

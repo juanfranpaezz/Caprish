@@ -9,11 +9,36 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DatabaseInitializerTest {
+public class DatabaseInitializer {
     @Autowired private CredentialRepository credentialRepository;
     @Autowired private RoleRepository roleRepository;
     @Autowired private PasswordEncoder passwordEncoder;
 
+
+    @PostConstruct
+    public void createEnums() {
+        createRoleIfNotExists("ROLE_ADMIN");
+        createRoleIfNotExists("ROLE_USER");
+        createRoleIfNotExists("ROLE_BOSS");
+        createRoleIfNotExists("ROLE_CLIENT");
+        createRoleIfNotExists("ROLE_SUPERVISOR");
+        createRoleIfNotExists("ROLE_EMPLOYEE");
+
+
+        // Ahora podés crear usuarios sin error
+        Role adminRole = roleRepository.findById("ROLE_ADMIN")
+                .orElseThrow(() -> new RuntimeException("Role ADMIN not found in DB"));
+
+        Credential admin = new Credential();
+        admin.setFirst_name("aa");
+        admin.setLast_name("bb");
+        admin.setEnabled(true);
+        admin.setUsername("admin@gmail.com");
+        admin.setPassword(passwordEncoder.encode("1234"));
+        admin.setRole(adminRole);
+
+        credentialRepository.save(admin);
+    }
 
 
     @PostConstruct

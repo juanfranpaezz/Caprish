@@ -62,8 +62,7 @@ public class DatabaseInitializer {
         admin.setUsername("admin@gmail.com");
         admin.setPassword(passwordEncoder.encode("1234"));
         admin.setRole(adminRole);
-
-        credentialRepository.save(admin);
+        if(credentialRepository.findByUsername("admin@gmail.com").isEmpty()) credentialRepository.save(admin);
     }
 
     private void createRoleIfNotExists(String id) {

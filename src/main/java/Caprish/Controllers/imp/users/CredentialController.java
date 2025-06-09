@@ -1,6 +1,7 @@
 package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
+import Caprish.Exception.UserException;
 import Caprish.Model.imp.mail.EmailToken;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.LoginRequest;
@@ -9,6 +10,8 @@ import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.mail.VerificationService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.others.JwtService;
+import com.mysql.cj.log.Log;
+import jakarta.servlet.ServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,16 +49,17 @@ public class CredentialController extends MyObjectGenericController<Credential, 
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(), request.getPassword()
-                )
-        );
-        UserDetails user = userDetailsService.loadUserByUsername(request.getUsername());
-        String token = jwtService.generateToken(user);
-        return ResponseEntity.ok(new LoginResponse(token));
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(), request.getPassword()
+                    )
+            );
+            return ResponseEntity.ok(service.doLogin(request.getUsername()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-
+    }
 
     @PutMapping("/updateFirstName")
     public ResponseEntity<String> updateFirstName(@AuthenticationPrincipal UserDetails userDetails,
@@ -80,6 +84,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
                                                      @RequestBody Map<String,String> payload) {
         return update(service.getIdByUserDetails(userDetails), "role_id", payload.get("roleId"));
     }
+
     @PostMapping("/verify-token")
     public ResponseEntity<String> verifyToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Map<String,String> code) {
         String email = userDetails.getUsername();
@@ -93,16 +98,17 @@ public class CredentialController extends MyObjectGenericController<Credential, 
 
 
     @PutMapping("/complete-data")
-    public ResponseEntity<String> completeData(@AuthenticationPrincipal UserDetails userDetails,
-                                               @RequestBody Map<String, String> payload) {
+    public ResponseEntity<LoginResponse> completeData(@AuthenticationPrincipal UserDetails userDetails,
+                                            @RequestBody Map<String, String> payload) {
         try {
             EmailToken token = verificationService.findByEmail(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("Token no encontrado"));
 
             if (!token.isVerified()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("El correo no ha sido verificado.");
+                        .build();
             }
+
             Credential newUser = new Credential();
             newUser.setUsername(token.getEmail());
             newUser.setPassword(token.getPassword());
@@ -110,10 +116,14 @@ public class CredentialController extends MyObjectGenericController<Credential, 
             newUser.setLast_name(payload.get("lastName"));
             service.save(newUser);
             verificationService.deleteById(token.getId());
-            return ResponseEntity.ok("Usuario creado correctamente con los datos completos.");
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            newUser.getUsername(), newUser.getPassword()
+                    )
+            );
+            return ResponseEntity.ok(service.doLogin(newUser.getUsername()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al completar los datos: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 

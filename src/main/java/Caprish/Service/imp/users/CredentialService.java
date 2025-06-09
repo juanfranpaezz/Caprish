@@ -3,16 +3,29 @@ package Caprish.Service.imp.users;
 
 import Caprish.Exception.UserException;
 import Caprish.Model.imp.users.Credential;
+import Caprish.Model.imp.users.LoginRequest;
+import Caprish.Model.imp.users.LoginResponse;
 import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import Caprish.Service.others.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class CredentialService extends MyObjectGenericService<Credential, CredentialRepository, CredentialService> {
+    @Autowired
+     private UserDetailsService userDetailsService;
+    @Autowired private AuthenticationManager authenticationManager;
+    @Autowired private JwtService jwtService;
+
     protected CredentialService(CredentialRepository childRepository) {
         super(childRepository);
     }
@@ -41,6 +54,11 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
         }
     }
 
+    public LoginResponse doLogin(String username) throws UserException {
+        UserDetails user = userDetailsService.loadUserByUsername(username);
+        String token = jwtService.generateToken(user);
+        return new LoginResponse(token);
+    }
 
     public Long getIdByUserDetails(UserDetails userDetails){
         return repository.findByUsername(userDetails.getUsername())

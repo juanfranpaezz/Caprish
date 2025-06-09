@@ -2,26 +2,51 @@ package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Model.imp.users.Credential;
-import Caprish.Model.imp.users.Staff;
+import Caprish.Model.imp.users.LoginRequest;
+import Caprish.Model.imp.users.LoginResponse;
 import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.users.CredentialService;
+import Caprish.Service.others.JwtService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/credential")
 @Validated
 public class CredentialController extends MyObjectGenericController<Credential, CredentialRepository, CredentialService> {
 
+    @Autowired private AuthenticationManager authenticationManager;
+    @Autowired private JwtService jwtService;
+    @Autowired private UserDetailsService userDetailsService;
+
+
     public CredentialController(CredentialService service) {
         super(service);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(), request.getPassword()
+                )
+        );
+        UserDetails user = userDetailsService.loadUserByUsername(request.getUsername());
+        String token = jwtService.generateToken(user);
+        return ResponseEntity.ok(new LoginResponse(token));
+    }
 
     @PutMapping("/updateFirstName/{id}/{firstName}")
     public ResponseEntity<String> updateFirstName(@PathVariable @Positive Long id,
@@ -29,10 +54,10 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         return update(id, "first_name", firstName);
     }
 
-    @PutMapping("/updateLastName/{id}/{lastName}")
-    public ResponseEntity<String> updateLastName(@PathVariable @Positive Long id,
-                                                 @PathVariable String lastName) {
-        return update(id, "last_name", lastName);
+    @PutMapping("/updateLastName")
+    public ResponseEntity<String> updateLastName(@AuthenticationPrincipal UserDetails userDetails,
+                                                 @RequestBody Map<String,String> payload) {
+        return update(service.getIdByUserDetails(userDetails), "last_name", payload.get("lastName"));
     }
 
     @PutMapping("/updatePasswordHash/{id}/{password}")

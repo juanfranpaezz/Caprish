@@ -5,7 +5,11 @@ import Caprish.Exception.UserException;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CredentialService extends MyObjectGenericService<Credential, CredentialRepository, CredentialService> {
@@ -35,6 +39,16 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
         if (!password.matches(number)) {
             throw new UserException("La contrasenia tiene que tener minimo un numero");
         }
+    }
+
+
+    public Long getIdByUserDetails(UserDetails userDetails){
+        return repository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado")).getId();
+    }
+
+    public Optional<Credential> findByUsername(String username) {
+        return repository.findByUsername(username);
     }
 
 }

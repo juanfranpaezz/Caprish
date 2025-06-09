@@ -4,6 +4,7 @@ import Caprish.Service.others.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +29,7 @@ import javax.sql.DataSource;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
+@EnableAspectJAutoProxy(exposeProxy = true)
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -41,7 +44,7 @@ public class SecurityConfig {
 
         http
                 // 1) DESACTIVO CSRF porque uso JWT
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
 
                 // 2) “Stateless” para JWT: no usamos sesión HTTP
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -49,7 +52,6 @@ public class SecurityConfig {
                 // 3) Configuración de rutas:
                 .authorizeHttpRequests(auth -> auth
                         // Permito llamar libremente a /auth/login para obtener el JWT
-                        .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**")
                         .permitAll()
 
@@ -59,9 +61,9 @@ public class SecurityConfig {
 //                        .requestMatchers("/message/all").hasRole("USER")
 
                         /* CREDENTIAL */
-//                        .requestMatchers("/credential/log").permitAll()
+                        .requestMatchers("/credential/login").permitAll()
                         .requestMatchers("/credential/updateFirstName/{id}/{firstName}").hasRole("USER")
-                        .requestMatchers("/credential/updateLastName/{id}/{lastName}").hasRole("USER")
+                        .requestMatchers("/credential/updateLastName").hasRole("USER")
                         .requestMatchers("/credential/updatePassword/{id}/{password}").hasRole("USER")
 //                        .requestMatchers("/credential/updateRoleId/{id}/{roleId}").hasRole("BOSS")
 
@@ -74,7 +76,7 @@ public class SecurityConfig {
                         .requestMatchers("/client/updatePhone/{id}/{phone}").hasRole("CLIENT")
                         .requestMatchers("/client/updateTax/{id}/{tax}").hasRole("CLIENT")
 //                        .requestMatchers("/client/{id}").hasRole("ADMIN")
-                        .requestMatchers("/client/all").hasRole("ADMIN")
+                        .requestMatchers("/client/all").hasRole("USER")
 
                         /* ITEM */
                         .requestMatchers("/item/add").hasRole("USER")

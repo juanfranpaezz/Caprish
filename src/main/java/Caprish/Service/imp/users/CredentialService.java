@@ -48,6 +48,7 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
     }
 
     public Optional<Credential> findByUsername(String username) {
+
         return repository.findByUsername(username);
     }
 

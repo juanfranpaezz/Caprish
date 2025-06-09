@@ -64,6 +64,8 @@ public class SecurityConfig {
                         .requestMatchers("/credential/login").permitAll()
                         .requestMatchers("/credential/updateFirstName/{id}/{firstName}").hasRole("USER")
                         .requestMatchers("/credential/updateLastName").hasRole("USER")
+                        .requestMatchers("/credential/verify-token").permitAll()
+                        .requestMatchers("/credential/complete-data").permitAll()
                         .requestMatchers("/credential/updatePassword/{id}/{password}").hasRole("USER")
 //                        .requestMatchers("/credential/updateRoleId/{id}/{roleId}").hasRole("BOSS")
 

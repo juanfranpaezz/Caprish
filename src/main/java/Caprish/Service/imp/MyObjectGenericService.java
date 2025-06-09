@@ -86,7 +86,6 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         return repository.save(entity);
     }
 
-
     public Optional<M> findById(Long id) {
         if (id == null) {
             throw new InvalidIdException("El ID no puede ser null");

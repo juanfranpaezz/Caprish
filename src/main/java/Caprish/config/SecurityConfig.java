@@ -107,6 +107,7 @@ public class SecurityConfig {
                         .requestMatchers("/product/updateDescription/{id}/{description}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/updatePrice/{id}/{price}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/all").permitAll()
+//                        .requestMatchers("/product/all/byBusiness").permitAll()
 
                         /* BUSINESS */
 //                        .requestMatchers("/business/create").permitAll()

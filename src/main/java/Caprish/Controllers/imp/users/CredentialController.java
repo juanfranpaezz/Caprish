@@ -35,16 +35,10 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         return update(id, "last_name", lastName);
     }
 
-    @PutMapping("/updateEmail/{id}/{email}")
-    public ResponseEntity<String> updateEmail(@PathVariable @Positive Long id,
-                                              @PathVariable String email) {
-        return update(id, "email", email);
-    }
-
-    @PutMapping("/updatePasswordHash/{id}/{passwordHash}")
+    @PutMapping("/updatePasswordHash/{id}/{password}")
     public ResponseEntity<String> updatePasswordHash(@PathVariable @Positive Long id,
-                                                     @PathVariable String passwordHash) {
-        return update(id, "password_hash", passwordHash);
+                                                     @PathVariable String password) {
+        return update(id, "password", password);
     }
 
     @PutMapping("/updateRoleId/{id}/{roleId}")
@@ -53,26 +47,22 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     }
 
     @PostMapping("/create")
-    @Override
-    public ResponseEntity<String> createObject(@RequestBody Credential entity) {
+    public ResponseEntity<String> createObject(@Valid @RequestBody Credential entity) {
         return create(entity);
     }
 
     @GetMapping("/{id}")
-    @Override
-    public ResponseEntity<Credential> findObjectById(@PathVariable Long id) {
+    public ResponseEntity<Credential> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
     }
 
     @GetMapping("/all")
-    @Override
     public ResponseEntity<List<Credential>> findAllObjects() {
         return findAll();
     }
 
     @DeleteMapping("/delete/{id}")
-    @Override
-    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
         return delete(id);
     }
 

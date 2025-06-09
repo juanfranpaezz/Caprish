@@ -25,30 +25,22 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     }
 
     @PostMapping("/create")
-        @Override
-        public ResponseEntity<String> createObject(@RequestBody Product entity) {
+        public ResponseEntity<String> createObject(@Valid @RequestBody Product entity) {
             return create(entity);
         }
 
         @DeleteMapping("/delete/{id}")
-        @Override
-        public ResponseEntity<String> deleteObject(@PathVariable Long id) {
+        public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
             return delete(id);
         }
 
 
     @PermitAll
     @GetMapping("/{id}")
-        @Override
-        public ResponseEntity<Product> findObjectById(@PathVariable Long id) {
+        public ResponseEntity<Product> findObjectById(@Positive @PathVariable Long id) {
             return findById(id);
         }
 
-    @PutMapping("/updateBusinessId/{id}/{businessId}")
-    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
-                                                   @PathVariable @Positive Long businessId) {
-        return update(id, "business_id", businessId);
-    }
 
     @PutMapping("/updateName/{id}/{name}")
     public ResponseEntity<String> updateName(@PathVariable @Positive Long id,
@@ -56,11 +48,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return update(id, "name", name);
     }
 
-    @PutMapping("/updateBarCode/{id}/{barCode}")
-    public ResponseEntity<String> updateBarCode(@PathVariable @Positive Long id,
-                                                @PathVariable Double barCode) {
-        return update(id, "bar_code", barCode);
-    }
 
     @PutMapping("/updateDescription/{id}/{description}")
     public ResponseEntity<String> updateDescription(@PathVariable @Positive Long id,
@@ -77,7 +64,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
 
     @PermitAll
         @GetMapping("/all")
-        @Override
         public ResponseEntity<List<Product>> findAllObjects() {
             return findAll();
         }

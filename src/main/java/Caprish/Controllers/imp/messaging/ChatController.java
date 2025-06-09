@@ -21,40 +21,11 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
     public ChatController(ChatService service) {
         super(service);
     }
-    @PostMapping("/create")
-    @Override
-    public ResponseEntity<String> createObject(@RequestBody Chat entity) {
-        return create(entity);
-    }
 
-    @DeleteMapping("/delete/{id}")
-    @Override
-    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
-        return delete(id);
-    }
 
     @GetMapping("/{id}")
-    @Override
-    public ResponseEntity<Chat> findObjectById(@PathVariable Long id) {
+    public ResponseEntity<Chat> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
     }
 
-    @PutMapping("/updateBusinessId/{id}/{businessId}")
-    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
-                                                   @PathVariable @Positive Long businessId) {
-        return update(id, "business_id", businessId);
-    }
-
-    @PutMapping("/updateClientId/{id}/{clientId}")
-    public ResponseEntity<String> updateClientId(@PathVariable @Positive Long id,
-                                                 @PathVariable @Positive Long clientId) {
-        return update(id, "client_id", clientId);
-    }
-
-
-    @GetMapping("/all")
-    @Override
-    public ResponseEntity<List<Chat>> findAllObjects() {
-        return findAll();
-    }
 }

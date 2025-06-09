@@ -26,27 +26,18 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
 
 
     @PostMapping("/create")
-    @Override
-    public ResponseEntity<String> createObject(@RequestBody Cart entity) {
+    public ResponseEntity<String> createObject(@Valid @RequestBody Cart entity) {
         return create(entity);
     }
 
     @DeleteMapping("/delete/{id}")
-    @Override
-    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
         return delete(id);
     }
 
     @GetMapping("/{id}")
-    @Override
-    public ResponseEntity<Cart> findObjectById(@PathVariable Long id) {
+    public ResponseEntity<Cart> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
-    }
-
-    @PutMapping("/updateCartType/{id}/{type}")
-    public ResponseEntity<String> updateCartType(@PathVariable @Positive Long id,
-                                                 @PathVariable String type) {
-        return update(id, "cart_type", type);
     }
 
     @PutMapping("/updateClientId/{id}/{clientId}")
@@ -67,14 +58,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return update(id, "staff_id", staffId);
     }
 
-    @PutMapping("/updateSaleDate/{id}/{date}")
-    public ResponseEntity<String> updateSaleDate(@PathVariable @Positive Long id,
-                                                 @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return update(id, "sale_date", date);
-    }
-
     @GetMapping("/all")
-    @Override
     public ResponseEntity<List<Cart>> findAllObjects() {
         return findAll();
     }

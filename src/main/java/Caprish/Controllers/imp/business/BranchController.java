@@ -5,6 +5,7 @@ import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Branch;
 import Caprish.Repository.interfaces.business.BranchRepository;
 import Caprish.Service.imp.business.BranchService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,22 +23,15 @@ public class BranchController extends MyObjectGenericController<Branch, BranchRe
     }
 
      @PostMapping("/create")
-         @Override
-         public ResponseEntity<String> createObject(@RequestBody Branch entity) {
+         public ResponseEntity<String> createObject(@Valid @RequestBody Branch entity) {
              return create(entity);
          }
 
          @DeleteMapping("/delete/{id}")
-         @Override
-         public ResponseEntity<String> deleteObject(Long id) {
+         public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
              return delete(id);
          }
 
-    @PutMapping("/updateBusinessId/{id}/{businessId}")
-    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
-                                                   @PathVariable @Positive Long businessId) {
-        return update(id, "business_id", businessId);
-    }
 
     @PutMapping("/updateAddress/{id}/{address}")
     public ResponseEntity<String> updateAddress(@PathVariable @Positive Long id,
@@ -53,13 +47,11 @@ public class BranchController extends MyObjectGenericController<Branch, BranchRe
 
 
          @GetMapping("/{id}")
-         @Override
-         public ResponseEntity<Branch> findObjectById(@PathVariable Long id) {
+         public ResponseEntity<Branch> findObjectById(@Positive @PathVariable Long id) {
              return findById(id);
          }
 
          @GetMapping("/all")
-         @Override
          public ResponseEntity<List<Branch>> findAllObjects() {
              return findAll();
          }

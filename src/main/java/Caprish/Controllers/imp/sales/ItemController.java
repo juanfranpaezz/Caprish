@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cart_item")
+@RequestMapping("/item")
 @Validated
 public class ItemController extends MyObjectGenericController<Item, ItemRepository, ItemService> {
 
@@ -24,35 +24,16 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         super(service);
     }
 
-    @PostMapping("/create")
-    @Override
-    public ResponseEntity<String> createObject(@RequestBody Item entity) {
+    @PostMapping("/add")
+    public ResponseEntity<String> createObject(@Valid @RequestBody Item entity) {
         return create(entity);
     }
 
     @DeleteMapping("/delete/{id}")
-    @Override
-    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
         return delete(id);
     }
 
-    @GetMapping("/{id}")
-    @Override
-    public ResponseEntity<Item> findObjectById(@PathVariable Long id) {
-        return findById(id);
-    }
-
-    @PutMapping("/updateCartId/{id}/{cartId}")
-    public ResponseEntity<String> updateCartId(@PathVariable @Positive Long id,
-                                               @PathVariable @Positive Long cartId) {
-        return update(id, "cart_id", cartId);
-    }
-
-    @PutMapping("/updateProductId/{id}/{productId}")
-    public ResponseEntity<String> updateProductId(@PathVariable @Positive Long id,
-                                                  @PathVariable @Positive Long productId) {
-        return update(id, "product_id", productId);
-    }
 
     @PutMapping("/updateQuantity/{id}/{quantity}")
     public ResponseEntity<String> updateQuantity(@PathVariable @Positive Long id,
@@ -61,7 +42,6 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
     }
 
     @GetMapping("/all")
-    @Override
     public ResponseEntity<List<Item>> findAllObjects() {
         return findAll();
     }

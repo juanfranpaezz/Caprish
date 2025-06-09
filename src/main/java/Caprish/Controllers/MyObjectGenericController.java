@@ -19,15 +19,6 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
         this.service = childService;
     }
 
-    public abstract ResponseEntity<String> createObject(@Valid @RequestBody M entity);
-
-    public abstract ResponseEntity<String> deleteObject(@Positive @PathVariable Long id);
-
-    public abstract ResponseEntity<M> findObjectById(@Positive @PathVariable Long id);
-
-    public abstract ResponseEntity<List<M>> findAllObjects();
-
-
     public ResponseEntity<String> create(M entity) {
         try {
             if (entity == null) {

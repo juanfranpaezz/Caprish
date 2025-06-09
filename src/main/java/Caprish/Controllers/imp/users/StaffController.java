@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/staff")
 @Validated
 public class StaffController extends MyObjectGenericController<Staff, StaffRepository, StaffService> {
 
@@ -22,21 +22,15 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     }
 
     @PostMapping("/create")
-    @Override
-    public ResponseEntity<String> createObject(@RequestBody Staff entity) {
+    public ResponseEntity<String> createObject(@Valid @RequestBody Staff entity) {
         return create(entity);
     }
 
     @DeleteMapping("/delete/{id}")
-    @Override
-    public ResponseEntity<String> deleteObject(@PathVariable Long id) {
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
         return delete(id);
     }
 
-    @PutMapping("/updateBusinessId/{id}/{businessId}")
-    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id, @PathVariable @Positive Long businessId) {
-        return update(id, "business_id", businessId);
-    }
 
     @PutMapping("/updateWorkRole/{id}/{workRole}")
     public ResponseEntity<String> updateWorkRole(@PathVariable @Positive Long id, @PathVariable String workRole) {
@@ -44,13 +38,11 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     }
 
     @GetMapping("/{id}")
-    @Override
-    public ResponseEntity<Staff> findObjectById(@PathVariable Long id) {
+    public ResponseEntity<Staff> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
     }
 
     @GetMapping("/all")
-    @Override
     public ResponseEntity<List<Staff>> findAllObjects() {
         return findAll();
     }

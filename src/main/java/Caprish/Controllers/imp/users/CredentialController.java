@@ -48,10 +48,11 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         return ResponseEntity.ok(new LoginResponse(token));
     }
 
-    @PutMapping("/updateFirstName/{id}/{firstName}")
-    public ResponseEntity<String> updateFirstName(@PathVariable @Positive Long id,
-                                                  @PathVariable String firstName) {
-        return update(id, "first_name", firstName);
+
+    @PutMapping("/updateFirstName")
+    public ResponseEntity<String> updateFirstName(@AuthenticationPrincipal UserDetails userDetails,
+                                                 @RequestBody Map<String,String> payload) {
+        return update(service.getIdByUserDetails(userDetails), "first_name", payload.get("firstName"));
     }
 
     @PutMapping("/updateLastName")
@@ -60,16 +61,18 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         return update(service.getIdByUserDetails(userDetails), "last_name", payload.get("lastName"));
     }
 
-    @PutMapping("/updatePasswordHash/{id}/{password}")
-    public ResponseEntity<String> updatePasswordHash(@PathVariable @Positive Long id,
-                                                     @PathVariable String password) {
-        return update(id, "password", password);
+    @PutMapping("/updatePassword")
+    public ResponseEntity<String> updatePasswordHash(@AuthenticationPrincipal UserDetails userDetails,
+                                                 @RequestBody Map<String,String> payload) {
+        return update(service.getIdByUserDetails(userDetails), "password", payload.get("password"));
     }
 
-    @PutMapping("/updateRoleId/{id}/{roleId}")
-    public ResponseEntity<String> updateRoleId(@PathVariable @Positive Long id, @PathVariable @Positive Long roleId) {
-        return update(id, "role_id", roleId);
+    @PutMapping("/updateRole")
+    public ResponseEntity<String> updateRoleId(@AuthenticationPrincipal UserDetails userDetails,
+                                                     @RequestBody Map<String,String> payload) {
+        return update(service.getIdByUserDetails(userDetails), "role_id", payload.get("roleId"));
     }
+
 
     @PostMapping("/create")
     public ResponseEntity<String> createObject(@Valid @RequestBody Credential entity) {

@@ -8,13 +8,10 @@ import Caprish.Service.imp.business.BranchService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/branch")
@@ -25,23 +22,16 @@ public class BranchController extends MyObjectGenericController<Branch, BranchRe
         super(service);
     }
 
-    @PostMapping("/create")
-    @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Branch entity) {
-        return create(entity);
-    }
+     @PostMapping("/create")
+         public ResponseEntity<String> createObject(@Valid @RequestBody Branch entity) {
+             return create(entity);
+         }
 
-    @DeleteMapping("/delete/{id}")
-    @Override
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-        return delete(id);
-    }
+         @DeleteMapping("/delete/{id}")
+         public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+             return delete(id);
+         }
 
-    @PutMapping("/updateBusinessId/{id}/{businessId}")
-    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
-                                                   @PathVariable @Positive Long businessId) {
-        return update(id, "business_id", businessId);
-    }
 
     @PutMapping("/updateAddress/{id}/{address}")
     public ResponseEntity<String> updateAddress(@PathVariable @Positive Long id,
@@ -55,16 +45,16 @@ public class BranchController extends MyObjectGenericController<Branch, BranchRe
         return update(id, "branch_type", type);
     }
 
-    @GetMapping("/{id}")
-    @Override
-    public ResponseEntity<Branch> findObjectById(@Positive @PathVariable Long id) {
-        return findById(id);
-    }
 
-    @GetMapping("/all")
-    @Override
-    public List<Branch> findAllObjects() {
-        return findAll();
-    }
+         @GetMapping("/{id}")
+         public ResponseEntity<Branch> findObjectById(@Positive @PathVariable Long id) {
+             return findById(id);
+         }
+
+         @GetMapping("/all")
+         public ResponseEntity<List<Branch>> findAllObjects() {
+             return findAll();
+         }
+
 
 }

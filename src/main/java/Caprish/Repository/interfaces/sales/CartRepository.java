@@ -4,10 +4,11 @@ import Caprish.Model.imp.sales.Cart;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import java.util.List;
 
+
 public interface CartRepository extends MyObjectGenericRepository<Cart> {
+
 
     @Query(value = "SELECT " +
             "c.id, " +
@@ -29,6 +30,4 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
             "GROUP BY c.id, cl.first_name, cl.last_name, ct.value, cs.value, s.first_name, s.last_name, b.id",
             nativeQuery = true)
     List<Object[]> getCartViewsByBusinessId(@Param("idBusiness") Long idBusiness);
-
 }
-

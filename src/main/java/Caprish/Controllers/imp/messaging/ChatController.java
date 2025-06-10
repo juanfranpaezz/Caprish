@@ -8,7 +8,6 @@ import Caprish.Service.imp.messaging.ChatService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,39 +22,10 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
         super(service);
     }
 
-    @PostMapping("/create")
-    @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Chat entity) {
-        return create(entity);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    @Override
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-        return delete(id);
-    }
 
     @GetMapping("/{id}")
-    @Override
     public ResponseEntity<Chat> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
     }
 
-    @PutMapping("/updateBusinessId/{id}/{businessId}")
-    public ResponseEntity<String> updateBusinessId(@PathVariable @Positive Long id,
-                                                   @PathVariable @Positive Long businessId) {
-        return update(id, "business_id", businessId);
-    }
-
-    @PutMapping("/updateClientId/{id}/{clientId}")
-    public ResponseEntity<String> updateClientId(@PathVariable @Positive Long id,
-                                                 @PathVariable @Positive Long clientId) {
-        return update(id, "client_id", clientId);
-    }
-
-    @GetMapping("/all")
-    @Override
-    public List<Chat> findAllObjects() {
-        return findAll();
-    }
 }

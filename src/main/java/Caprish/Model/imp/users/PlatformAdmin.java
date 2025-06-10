@@ -1,16 +1,15 @@
 package Caprish.Model.imp.users;
 
+import Caprish.Model.imp.MyObject;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
 @Table(name = "platform_admin")
 @Getter @Setter
-@NoArgsConstructor
-public class PlatformAdmin extends User {
-
-    public PlatformAdmin(String email, String encode) {
-    }
+public class PlatformAdmin extends MyObject {
 
 }

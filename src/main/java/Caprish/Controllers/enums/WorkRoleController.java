@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/work_role")
+
 public class WorkRoleController extends MyEnumGenericController<WorkRole, WorkRoleRepository, WorkRoleService> {
     public WorkRoleController(WorkRoleService service) {
         super(service);

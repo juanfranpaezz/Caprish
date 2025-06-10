@@ -5,6 +5,7 @@ import Caprish.Exception.InvalidIdException;
 import Caprish.Exception.InvalidUpdateFieldException;
 import Caprish.Model.BeanUtils;
 import Caprish.Model.imp.MyObject;
+import Caprish.Model.imp.business.Branch;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -47,6 +48,9 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         if (value == null) {
             throw new InvalidUpdateFieldException("El valor no puede ser null.");
         }
+        if (!BeanUtils.getPropertyNames(getEntityClass()).contains(fieldName)) {
+            throw new IllegalArgumentException("Campo inválido: " + fieldName);
+        }
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaUpdate<M> update = cb.createCriteriaUpdate(getEntityClass());
         Root<M> root = update.from(getEntityClass());
@@ -81,8 +85,6 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         verifySpecificAttributes(entity);
         return repository.save(entity);
     }
-
-
 
     public Optional<M> findById(Long id) {
         if (id == null) {

@@ -1,5 +1,6 @@
 package Caprish.Controllers.imp.users;
 
+import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.users.ClientRepository;
@@ -8,7 +9,6 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -18,20 +18,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/client")
 @Validated
-public class ClientController extends UserGenericController<Client, ClientRepository, ClientService> {
+public class ClientController extends MyObjectGenericController<Client, ClientRepository, ClientService> {
 
     public ClientController(ClientService childService) {
         super(childService);
     }
-
     @PostMapping("/create")
-    @Override
     public ResponseEntity<String> createObject(@Valid @RequestBody Client entity) {
         return create(entity);
     }
 
     @DeleteMapping("/delete/{id}")
-    @Override
     public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
         return delete(id);
     }
@@ -49,19 +46,13 @@ public class ClientController extends UserGenericController<Client, ClientReposi
     }
 
     @GetMapping("/{id}")
-    @Override
     public ResponseEntity<Client> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
     }
 
-    @Override
-    public List<Client> findAllObjects() {
-        return List.of();
-    }
 
-    @PermitAll
     @GetMapping("/all")
-    public List<Client> findAllObjectss() {
+    public ResponseEntity<List<Client>> findAllObjects() {
         return findAll();
     }
 

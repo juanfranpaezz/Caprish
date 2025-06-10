@@ -8,7 +8,6 @@ import Caprish.Service.imp.business.BusinessService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,24 +22,16 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         super(service);
     }
 
-    @PostMapping("/create")
-    @Override
-    public ResponseEntity<String> createObject(@Valid @RequestBody Business entity) {
-        return create(entity);
-    }
-
     @DeleteMapping("/delete/{id}")
-    @Override
     public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
         return delete(id);
     }
 
+
     @GetMapping("/{id}")
-    @Override
     public ResponseEntity<Business> findObjectById(@Positive @PathVariable Long id) {
         return findById(id);
     }
-
     @PutMapping("/updateBusinessName/{id}/{name}")
     public ResponseEntity<String> updateBusinessName(@PathVariable @Positive Long id,
                                                      @PathVariable String name) {
@@ -65,9 +56,9 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return update(id, "tax", tax);
     }
 
+
     @GetMapping("/all")
-    @Override
-    public List<Business> findAllObjects() {
+    public ResponseEntity<List<Business>> findAllObjects() {
         return findAll();
     }
 

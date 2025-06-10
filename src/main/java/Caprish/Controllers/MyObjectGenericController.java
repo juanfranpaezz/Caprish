@@ -4,6 +4,8 @@ import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.MyObject;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,21 +13,11 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 public abstract class MyObjectGenericController<M extends MyObject, R extends MyObjectGenericRepository<M>, S extends MyObjectGenericService<M, R, S>> {
-
     protected final S service;
 
     protected MyObjectGenericController(S childService) {
         this.service = childService;
     }
-
-    public abstract ResponseEntity<String> createObject(@RequestBody M entity);
-
-    public abstract ResponseEntity<String> deleteObject(@PathVariable Long id);
-
-    public abstract ResponseEntity<M> findObjectById(@PathVariable Long id);
-
-    public abstract List<M> findAllObjects();
-
 
     public ResponseEntity<String> create(M entity) {
         try {
@@ -38,8 +30,8 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
         }
     }
 
-    public List<M> findAll() {
-        return service.findAll();
+    public ResponseEntity<List<M>> findAll() {
+        return ResponseEntity.ok(service.findAll());
     }
 
     public ResponseEntity<M> findById(Long id) {
@@ -53,7 +45,7 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
             return ResponseEntity.notFound().build();
         }
         service.changeField(id, fieldName, objectValue);
-        return ResponseEntity.ok("a");
+        return ResponseEntity.ok("Update successful");
     }
 
     public ResponseEntity<String> delete(Long id) {

@@ -30,8 +30,6 @@ public class Product extends MyObject {
     @Column(nullable=false,columnDefinition = "TEXT")
     private String name;
 
-    private Double bar_code;
-
     @NotBlank(message = "El texto no puede estar vacío")
     @Column(nullable=false,columnDefinition = "TEXT")
     private String description;
@@ -42,6 +40,7 @@ public class Product extends MyObject {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("stock-product")
     private List<Stock> stock = new ArrayList<>();
+
     @Transient
     private List<Image> imagenes = new ArrayList<>();
 

@@ -11,10 +11,12 @@ import lombok.Setter;
 @MappedSuperclass
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public abstract class MyEnum {
     @Id
     @Column(name = "id", length = 255, nullable = false)
     protected String id;
+    public MyEnum(String id) {
+        this.id = id;
+    }
 }

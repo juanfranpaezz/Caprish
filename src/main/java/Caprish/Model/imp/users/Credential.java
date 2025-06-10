@@ -1,21 +1,20 @@
 package Caprish.Model.imp.users;
 
 import Caprish.Model.imp.MyObject;
+import Caprish.Model.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.Objects;
-import java.util.Set;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@MappedSuperclass
-public class User extends MyObject {
+@Entity
+@Table(name = "credential")
+public class Credential extends MyObject {
 
     @Column(columnDefinition = "text", nullable = false)
     private String first_name;
@@ -25,35 +24,37 @@ public class User extends MyObject {
 
     @Column(columnDefinition = "text", nullable = false, unique = true)
     @Email
-    private String email;
+    private String username;      // aquí guardás el email
 
     @Column(columnDefinition = "text", nullable = false)
-    private String password_hash;
+    private String password; // aquí guardás el BCrypt hash
+
+    @Column(nullable = false)
+    private boolean enabled = true;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "id_role")
     private Role role;
-
-
 
     public String getCompleteName() {
         return first_name + " " + last_name;
     }
 
-    public User(String email, String password_hash) {
-        this.email = email;
-        this.password_hash = password_hash;
+    public Credential(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-        return Objects.equals(email, user.email);
+        if (!(o instanceof Credential credential)) return false;
+        return Objects.equals(username, credential.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(username);
     }
 }
+

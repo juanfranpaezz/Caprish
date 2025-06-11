@@ -50,10 +50,10 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
 
     public ResponseEntity<String> delete(Long id) {
         if (!service.existsById(id)) {
-            return ResponseEntity.badRequest().body("Usuario no encontrado");
+            return ResponseEntity.badRequest().body("Objeto no encontrado");
         }
         service.deleteById(id);
-        return ResponseEntity.ok("Usuario eliminado con exito");
+        return ResponseEntity.ok("Eliminado con exito");
     }
 }
 

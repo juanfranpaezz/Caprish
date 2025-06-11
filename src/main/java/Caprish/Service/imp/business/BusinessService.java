@@ -2,10 +2,16 @@ package Caprish.Service.imp.business;
 
 import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.business.Business;
+import Caprish.Model.imp.business.dto.BusinessViewDTO;
+import Caprish.Model.imp.business.dto.ProductViewDTO;
 import Caprish.Repository.interfaces.business.BusinessRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -14,6 +20,9 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
     protected BusinessService(BusinessRepository childRepository) {
         super(childRepository);
     }
+
+
+
 
     @Override
     protected void verifySpecificAttributes(Business entity) {
@@ -39,6 +48,10 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
             throw new IllegalArgumentException("La descripción no puede estar vacía.");
         }
     }
+    public BusinessViewDTO findByBusinessId(Integer businessName) throws EntityNotFoundException{
+        return repository.findByBusinessId(businessName);
+    }
+
 
 
 }

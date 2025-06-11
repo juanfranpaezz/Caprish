@@ -11,7 +11,7 @@ import lombok.*;
 public class MyObject{
         @Id
         @GeneratedValue(strategy=GenerationType.IDENTITY)
-        private Long id;
+        protected Long id;
 
 }
 

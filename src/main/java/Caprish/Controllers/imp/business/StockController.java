@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/stock")
@@ -28,6 +29,16 @@ public class StockController extends MyObjectGenericController<Stock, StockRepos
         }
 
 
+        @GetMapping
+        public ResponseEntity<Integer>findStock(@RequestBody Map<String,String> request) {
+        String productName = request.get("productName");
+        String business=request.get("businessName");
+        try{
+            return ResponseEntity.ok(service.findStock(productName,business));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
     @PutMapping("/updateQuantity/{id}/{quantity}")
     public ResponseEntity<String> updateQuantity(@PathVariable @Positive Long id,
                                                 @PathVariable @Positive Integer quantity) {

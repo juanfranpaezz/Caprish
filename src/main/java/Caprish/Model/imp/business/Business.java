@@ -15,7 +15,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @NoArgsConstructor
 @Getter
 @Setter
@@ -55,4 +54,15 @@ public class Business extends MyObject {
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("businessReport-business")
     private List<BusinessReport> reports = new ArrayList<>();
+
+
+    public Business(Long id,String businessName,String description,String slogan,int tax){
+        this.id=id;
+        this.businessName=businessName;
+        this.description=description;
+        this.slogan=slogan;
+        this.tax=tax;
+    }
+
+
 }

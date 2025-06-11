@@ -99,19 +99,20 @@ public class SecurityConfig {
 //                        .requestMatchers("/chat/{id}").hasRole("ADMIN")
 
                         /* STOCK */
-//                        .requestMatchers("/stock/{id}").hasRole("EMPLOYEE")
+                        .requestMatchers("/stock").hasRole("EMPLOYEE")
                         .requestMatchers("/stock/updateQuantity/{id}/{quantity}").hasRole("EMPLOYEE")
                         .requestMatchers("/stock/all").hasRole("EMPLOYEE")
 
                         /* PRODUCT */
+                                .requestMatchers("/product").permitAll()
                         .requestMatchers("/product/create").hasRole("SUPERVISOR")
                         .requestMatchers("/product/delete/{id}").hasRole("SUPERVISOR")
-//                        .requestMatchers("/product/{id}").hasRole("CLIENT")
+                        .requestMatchers("/product/show-product").hasRole("USER")
                         .requestMatchers("/product/updateName/{id}/{name}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/updateDescription/{id}/{description}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/updatePrice/{id}/{price}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/all").permitAll()
-//                        .requestMatchers("/product/all/byBusiness").permitAll()
+                            .requestMatchers("/product/all/byBusiness/**").permitAll()
 
                         /* BUSINESS */
 //                        .requestMatchers("/business/create").permitAll()

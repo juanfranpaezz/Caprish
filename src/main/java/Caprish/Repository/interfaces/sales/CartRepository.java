@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface CartRepository extends MyObjectGenericRepository<Cart> {
 
-
     @Query(value = "SELECT " +
             "c.id, " +
             "CONCAT(cl.first_name, ' ', cl.last_name) AS client_name, " +
@@ -30,4 +29,5 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
             "GROUP BY c.id, cl.first_name, cl.last_name, ct.value, cs.value, s.first_name, s.last_name, b.id",
             nativeQuery = true)
     List<Object[]> getCartViewsByBusinessId(@Param("idBusiness") Long idBusiness);
+
 }

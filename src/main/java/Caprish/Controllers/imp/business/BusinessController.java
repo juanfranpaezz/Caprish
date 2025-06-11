@@ -3,6 +3,7 @@ package Caprish.Controllers.imp.business;
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Business;
+import Caprish.Model.imp.business.dto.BusinessViewDTO;
 import Caprish.Repository.interfaces.business.BusinessRepository;
 import Caprish.Service.imp.business.BusinessService;
 import jakarta.validation.Valid;
@@ -12,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/business")
@@ -28,9 +31,14 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     }
 
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Business> findObjectById(@Positive @PathVariable Long id) {
-        return findById(id);
+    @GetMapping("/{businessId}")
+    public ResponseEntity<BusinessViewDTO> findObjectById(
+            @PathVariable Integer businessId) {
+
+        Optional<BusinessViewDTO> result = Optional.ofNullable(service.findByBusinessId(businessId));
+
+        return result.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
     @PutMapping("/updateBusinessName/{id}/{name}")
     public ResponseEntity<String> updateBusinessName(@PathVariable @Positive Long id,

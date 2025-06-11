@@ -1,20 +1,20 @@
 package Caprish.Controllers.imp.business;
 
 import Caprish.Controllers.MyObjectGenericController;
-import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Product;
+import Caprish.Model.imp.business.dto.ProductViewDTO;
 import Caprish.Repository.interfaces.business.ProductRepository;
 import Caprish.Service.imp.business.ProductService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@PermitAll
+import java.util.Map;
+
+
 @RestController
 @RequestMapping("/product")
 @Validated
@@ -35,11 +35,17 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         }
 
 
-    @PermitAll
-    @GetMapping("/{id}")
-        public ResponseEntity<Product> findObjectById(@Positive @PathVariable Long id) {
-            return findById(id);
+
+    @PostMapping("/show-product")
+    public ResponseEntity<Product> findObjectByName(@RequestBody Map<String, String> request) {
+        String name = request.get("name");
+        try{
+            return ResponseEntity.ok(service.findByName(name));
+        }catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
+    }
+
 
 
     @PutMapping("/updateName/{id}/{name}")
@@ -62,10 +68,19 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     }
 
 
-    @PermitAll
         @GetMapping("/all")
         public ResponseEntity<List<Product>> findAllObjects() {
             return findAll();
         }
 
+
+    @GetMapping("/all/byBusiness")
+    public ResponseEntity<List<ProductViewDTO>> getProductByBusiness(@RequestBody Map<String,String> request) {
+        String businessName = request.get("businessName");
+        try{
+            return ResponseEntity.ok(service.getProductByBusinessName(businessName));
+        }catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

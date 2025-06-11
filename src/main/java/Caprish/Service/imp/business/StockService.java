@@ -5,6 +5,7 @@ import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Stock;
 import Caprish.Repository.interfaces.business.StockRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,9 @@ public class StockService extends MyObjectGenericService<Stock, StockRepository,
             throw new InvalidEntityException("Ya existe un stock para ese producto y esa sucursal.");
         }
 
+    }
+
+    public int findStock(String product, String business) throws EntityNotFoundException {
+        return repository.findStockByProductAndBusiness(product, business);
     }
 }

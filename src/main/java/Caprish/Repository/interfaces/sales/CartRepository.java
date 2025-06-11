@@ -56,24 +56,25 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
     @Query(value = """
     SELECT DISTINCT
         c.id,
-        CONCAT(cl.first_name, ' ', cl.last_name) AS client_name,
+        CONCAT(cr_cred.first_name, ' ', cr_cred.last_name) AS client_name,
         ct.id AS cart_type,
         cs.id AS cart_status,
-        CONCAT(cr.first_name, ' ', cr.last_name) AS staff_name,
+        CONCAT(cr_staff.first_name, ' ', cr_staff.last_name) AS staff_name,
         b.id AS business_id,
-        SUM(p.price * i.quantity) OVER (PARTITION BY c.id) AS total
+        SUM(p.price * i.quantity)AS total
     FROM cart c
     JOIN client cl ON cl.id = c.id_client
+    JOIN credential cr_cred ON cr_cred.id = cl.id_credential
     JOIN cart_type ct ON ct.id = c.id_cart_type
     JOIN cart_status cs ON cs.id = c.id_cart_status
     JOIN staff s ON s.id = c.id_staff
-    JOIN credential cr ON cr.id = s.id_credential
-    JOIN branch br ON br.id = s.id_branch
-    JOIN business b ON b.id = br.id_business
+    JOIN credential cr_staff ON cr_staff.id = s.id_credential
+    JOIN business b ON b.id = s.business_id
     JOIN item i ON i.id_cart = c.id
     JOIN product p ON p.id = i.id_product
-    WHERE cs.value = 'FINALIZADO' AND b.id = :idBusiness
-    """, nativeQuery = true)
+    WHERE cs.id = 'FINALIZADO' AND b.id = :idBusiness
+    group by c.id,client_name,cart_type,cart_status,staff_name,business_id
+""", nativeQuery = true)
     List<Object[]> getCartViewsByBusinessId(@Param("idBusiness") Long idBusiness);
 
 }

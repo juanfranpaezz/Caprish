@@ -68,5 +68,10 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
     }
 
+//    @GetMapping("/view/my-sales/{businessId}")
+//    public ResponseEntity<Long> getMySales(@PathVariable Long businessId) {
+//        return ResponseEntity.ok(businessId);
+//    }
+
 }
 

@@ -2,6 +2,7 @@ package Caprish.Model.imp.business;
 
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.enums.BranchType;
+import Caprish.Model.imp.users.Staff;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
@@ -31,6 +32,10 @@ public class Branch extends MyObject {
 
         @Column(unique=true, nullable=false)
         private String address;
+
+        @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
+        @JsonManagedReference("staff-branch")
+        private List<Staff> staff = new ArrayList<>();
 
         @ManyToOne(optional = false)
         @JoinColumn(name = "id_branch_type", nullable = false)

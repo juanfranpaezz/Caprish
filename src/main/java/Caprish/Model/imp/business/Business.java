@@ -42,10 +42,6 @@ public class Business extends MyObject {
     private List<Chat> chats = new ArrayList<>();
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("staff-business")
-    private List<Staff> staff = new ArrayList<>();
-
-    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("product-business")
     private List<Product> products = new ArrayList<>();
 

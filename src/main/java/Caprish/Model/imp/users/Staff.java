@@ -1,5 +1,6 @@
 package Caprish.Model.imp.users;
 
+import Caprish.Model.imp.business.Branch;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.enums.WorkRole;
 import Caprish.Model.imp.sales.Cart;
@@ -25,9 +26,9 @@ import java.util.List;
 public class Staff extends User {
 
     @ManyToOne(optional = false)
-    @JsonBackReference("staff-business")
-    @JoinColumn(name = "id_business", nullable = false)
-    private Business business;
+    @JsonBackReference("staff-branch")
+    @JoinColumn(name = "id_branch", nullable = false)
+    private Branch branch;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_work_role", nullable = false)

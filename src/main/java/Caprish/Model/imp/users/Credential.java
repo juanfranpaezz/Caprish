@@ -36,14 +36,6 @@ public class Credential extends MyObject {
     @JoinColumn(name = "id_role")
     private Role role;
 
-    public String getCompleteName() {
-        return first_name + " " + last_name;
-    }
-
-    public Credential(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 
     @Override
     public boolean equals(Object o) {

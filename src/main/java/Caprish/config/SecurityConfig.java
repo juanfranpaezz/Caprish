@@ -26,8 +26,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.sql.DataSource;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableAspectJAutoProxy(exposeProxy = true)
 @EnableWebSecurity
@@ -41,44 +39,30 @@ public class SecurityConfig {
             HttpSecurity http,
             JwtAuthFilter jwtAuthFilter,
             MyUserDetailsService myUserDetailsService) throws Exception {
-
-        http
-                // 1) DESACTIVO CSRF porque uso JWT
+                http
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // 2) “Stateless” para JWT: no usamos sesión HTTP
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // 3) Configuración de rutas:
                 .authorizeHttpRequests(auth -> auth
-                        // Permito llamar libremente a /auth/login para obtener el JWT
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**")
                         .permitAll()
 
-
-                        /*MESSAGE*/
-                        .requestMatchers("/message/create").hasRole("USER")
-//                        .requestMatchers("/message/all").hasRole("USER")
-
-                        /* CREDENTIAL */
                         .requestMatchers("/credential/login").permitAll()
-                        .requestMatchers("/credential/updateFirstName/{id}/{firstName}").hasRole("USER")
+                        .requestMatchers("/credential/sign-up").permitAll()
+                        .requestMatchers("/credential/updateFirstName").hasRole("USER")
                         .requestMatchers("/credential/updateLastName").hasRole("USER")
                         .requestMatchers("/credential/verify-token").permitAll()
                         .requestMatchers("/credential/complete-data").permitAll()
-                        .requestMatchers("/credential/updatePassword/{id}/{password}").hasRole("USER")
-//                        .requestMatchers("/credential/updateRoleId/{id}/{roleId}").hasRole("BOSS")
+                        .requestMatchers("/credential/updatePassword").hasRole("USER")
+//                      .requestMatchers("/credential/delete").hasRole("USER")    --> VER ESTO, EN REALIDAD IRÍA EN STAFF Y CLIENT
 
-//  ESTE SE DEJA PARA DESPUES POR EL TEMA DE LOS CONTROLLERS:
-//                      .requestMatchers("/credential/create").hasRole("USER")
 
                         /* CLIENT */
-//                        .requestMatchers("/client/create").permitAll()
+                        .requestMatchers("/client/create").permitAll()
                         .requestMatchers("/client/delete/{id}").hasRole("ADMIN")
                         .requestMatchers("/client/updatePhone/{id}/{phone}").hasRole("CLIENT")
                         .requestMatchers("/client/updateTax/{id}/{tax}").hasRole("CLIENT")
-//                        .requestMatchers("/client/{id}").hasRole("ADMIN")
-                        .requestMatchers("/client/all").hasRole("USER")
+                        .requestMatchers("/client/{id}").hasRole("EMPOLYEE")
+                        .requestMatchers("/client/all").hasRole("SUPERVISOR")
 
                         /* ITEM */
                         .requestMatchers("/item/add").hasRole("USER")
@@ -97,8 +81,11 @@ public class SecurityConfig {
 
                         /* CHAT */
 //                        .requestMatchers("/chat/{id}").hasRole("ADMIN")
+                                /*MESSAGE*/
+                                .requestMatchers("/message/create").hasRole("USER")
 
-                        /* STOCK */
+
+                                /* STOCK */
 //                        .requestMatchers("/stock/{id}").hasRole("EMPLOYEE")
                         .requestMatchers("/stock/updateQuantity/{id}/{quantity}").hasRole("EMPLOYEE")
                         .requestMatchers("/stock/all").hasRole("EMPLOYEE")
@@ -143,11 +130,11 @@ public class SecurityConfig {
 
 
                                 /* STAFF */ /*--> ACA TENDRIAMOS QUE AGARRAR Y HACER TRES CONTROLLERS PARA ORGANIZAR SEGUN TIPO DE STAFF*/
-//                        .requestMatchers("/staff/create").hasRole("BOSS")
-//                        .requestMatchers("/staff/delete/{id}").hasRole("BOSS")
-//                        .requestMatchers("/staff/updateWorkRole/{id}/{workRole}").hasRole("BOSS")
-//                        .requestMatchers("/staff/{id}").hasRole("BOSS")
-                                .requestMatchers("/staff/all").hasRole("BOSS")
+                        .requestMatchers("/staff/create").hasRole("BOSS")
+                        .requestMatchers("/staff/delete/{id}").hasRole("BOSS")
+                        .requestMatchers("/promote/{username}").hasRole("BOSS")
+                        .requestMatchers("/staff/{id}").hasRole("BOSS")
+                        .requestMatchers("/staff/all").hasRole("BOSS")
 
 
                         .anyRequest().authenticated()

@@ -5,7 +5,6 @@ import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.users.ClientRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,8 +20,10 @@ public class ClientService
     }
 
     @Override
-    protected void verifySpecificAttributes(Client entity) {
+    protected void verifySpecificAttributes(Client entity) {}
 
+    public Long getIdByCredentialId(Long id){
+        return repository.findIdByCredential_Id(id);
     }
 
 

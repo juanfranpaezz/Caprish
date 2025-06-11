@@ -17,7 +17,14 @@ public class ChatService extends MyObjectGenericService<Chat, ChatRepository, Ch
     }
 
     @Override
-    protected void verifySpecificAttributes(Chat entity) {
+    protected void verifySpecificAttributes(Chat entity) {}
 
+
+    public Chat findByBusinessIdAndClientId(Long businessId, Long clientId){
+        return repository.findByBusinessIdAndClientId(businessId, clientId);
+    }
+
+    public Long findIdByBusinessIdAndClientId(Long businessId, Long clientId){
+        return repository.findIdByBusinessIdAndClientId(businessId, clientId);
     }
 }

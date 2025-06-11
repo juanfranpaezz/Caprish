@@ -32,7 +32,14 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
     }
 
     @Override
-    protected void verifySpecificAttributes(Cart entity) {
+    protected void verifySpecificAttributes(Cart entity) {}
 
+    public boolean existsByBusinessIdAndClientId(Long businessId, Long clientId){
+        return repository.existsByBusinessIdAndClientId(businessId, clientId);
     }
+
+    public List<Object[]> findAllByBusinessId(Long businessId){
+        return repository.getCartViewsByBusinessId(businessId);
+    }
+
 }

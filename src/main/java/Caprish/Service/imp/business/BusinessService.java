@@ -15,6 +15,14 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
         super(childRepository);
     }
 
+    public Long findIdByBusinessName(String businessName) {
+        return repository.findIdByBusinessName(businessName);
+    }
+
+    public boolean existsByBusinessName(String businessName) {
+        return repository.existsByBusinessName(businessName);
+    }
+
     @Override
     protected void verifySpecificAttributes(Business entity) {
 

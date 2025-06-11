@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface CartRepository extends MyObjectGenericRepository<Cart> {
 
+    boolean existsByBusinessIdAndClientId(Long businessId, Long clientId);
 
     @Query(value = "SELECT " +
             "c.id, " +

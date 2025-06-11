@@ -3,18 +3,15 @@ package Caprish.Service.imp.users;
 
 import Caprish.Exception.UserException;
 import Caprish.Model.imp.users.Credential;
-import Caprish.Model.imp.users.LoginRequest;
 import Caprish.Model.imp.users.LoginResponse;
 import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import Caprish.Service.others.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,7 +20,6 @@ import java.util.Optional;
 public class CredentialService extends MyObjectGenericService<Credential, CredentialRepository, CredentialService> {
     @Autowired
      private UserDetailsService userDetailsService;
-    @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtService jwtService;
 
     protected CredentialService(CredentialRepository childRepository) {
@@ -32,8 +28,21 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
 
     @Override
     protected void verifySpecificAttributes(Credential entity) {
-
+        try{
+            stringVerificator(entity.getFirst_name());
+            stringVerificator(entity.getLast_name());
+            verifyPassword(entity.getPassword());
+        } catch (UserException e){
+            e.printStackTrace();
+        }
     }
+
+    public void stringVerificator(String value) throws UserException {
+        if (value != null && value.matches(".*\\d.*")) {
+            throw new UserException("El valor no puede contener números: “" + value + "”");
+        }
+    }
+
 
     public void verifyPassword(String password) throws UserException {
         if (password == null) throw new UserException("La contrasenia no puede ser nula");
@@ -60,14 +69,9 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
         return new LoginResponse(token);
     }
 
-    public Long getIdByUserDetails(UserDetails userDetails){
-        return repository.findByUsername(userDetails.getUsername())
+    public Long getIdByUsername(String username){
+        return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado")).getId();
-    }
-
-    public Optional<Credential> findByUsername(String username) {
-
-        return repository.findByUsername(username);
     }
 
 }

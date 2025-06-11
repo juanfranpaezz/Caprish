@@ -1,14 +1,12 @@
 package Caprish.Controllers.imp.business;
 
 import Caprish.Controllers.MyObjectGenericController;
-import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Product;
 import Caprish.Repository.interfaces.business.ProductRepository;
 import Caprish.Service.imp.business.ProductService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

@@ -9,14 +9,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
-@NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name="branch_type")
 public class BranchType extends MyEnum {
-    @OneToMany(mappedBy = "branch_type")
-    private List<Branch> branches = new ArrayList<>();
+    public BranchType(String id) {
+        super(id);
+    }
+
+    public BranchType() {
+
+    }
 }
 
     //    SALES_POINT, WAREHOUSE

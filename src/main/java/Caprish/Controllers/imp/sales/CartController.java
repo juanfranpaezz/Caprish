@@ -63,9 +63,9 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return findAll();
     }
 
-    @GetMapping("/view/my-sales")
-    public ResponseEntity<List<CartViewDTO>> getMySales(@RequestParam Long idBusiness) {
-        return ResponseEntity.ok(service.getCartViewsByBusiness(idBusiness));
+    @GetMapping("/view/my-sales/{businessId}")
+    public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
+        return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
     }
 
 }

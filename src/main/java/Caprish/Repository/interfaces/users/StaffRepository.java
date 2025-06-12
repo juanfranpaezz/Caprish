@@ -20,11 +20,11 @@ public interface StaffRepository extends MyObjectGenericRepository<Staff> {
             c.first_name,
             c.last_name,
             c.id_role,
-            b.id AS business_id,
-            b.name AS business_name
+            b.id AS id_business,
+            b.business_name AS business_name
         FROM staff s
         JOIN credential c ON c.id = s.id_credential
-        JOIN business b ON b.id = s.id_business
+        JOIN business b ON b.id = s.business_id
         WHERE b.id = :businessId
         """, nativeQuery = true)
     List<Object[]> findStaffByBusiness(@Param("businessId") Long businessId);

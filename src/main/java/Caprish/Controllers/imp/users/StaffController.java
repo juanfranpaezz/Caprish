@@ -39,8 +39,8 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return update(id, "work_role", workRole);
     }
 
-    @PreAuthorize("hasRole('BOSS')")
-    @GetMapping("/staff/by-business/{businessId}")
+    //@PreAuthorize("hasRole('BOSS')")
+    @GetMapping("/by-business/{businessId}")
     public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@PathVariable Long businessId) {
         List<StaffViewDTO> staff = service.getStaffByBusiness(businessId);
         return ResponseEntity.ok(staff);

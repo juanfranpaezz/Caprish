@@ -83,7 +83,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
 
     @PutMapping("/complete-data")
     public ResponseEntity<LoginResponse> completeData(@AuthenticationPrincipal UserDetails userDetails,
-                                            @RequestBody Map<String, String> payload) {
+                                                    @RequestBody Map<String, String> payload) {
         try {
             EmailToken token = verificationService.findByEmail(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("Token no encontrado"));

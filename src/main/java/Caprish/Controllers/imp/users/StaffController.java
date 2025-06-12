@@ -26,8 +26,6 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     @Autowired
     CredentialService credentialService;
     @Autowired
-    private StaffService staffService;
-    @Autowired
     private CartService cartService;
     @Autowired
     private ClientService clientService;
@@ -66,17 +64,10 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return update(staffId, "role", "ROLE_SUPERVISOR");
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<Staff> findObjectById(@Positive @PathVariable String username, @AuthenticationPrincipal UserDetails userDetails) {
-        Long clientId = clientService.getIdByCredentialId(credentialService.getIdByUsername(username));
-        if (!cartService.existsByBusinessIdAndClientId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), clientId)) return ResponseEntity.badRequest().build();
-        return findById(clientId);
-    }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Staff>> findAllObjects(@AuthenticationPrincipal UserDetails userDetails) {
-        cartService.findAllByBusinessId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
-        return findAll();
-    }
+
+
+
+
 
 }

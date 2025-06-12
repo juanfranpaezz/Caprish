@@ -3,9 +3,12 @@ package Caprish.Controllers.imp.users;
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.users.Client;
+import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.users.ClientRepository;
+import Caprish.Service.imp.sales.CartService;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
+import Caprish.Service.imp.users.StaffService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -27,6 +30,10 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
 
     @Autowired
     CredentialService credentialService;
+    @Autowired
+    StaffService staffService;
+    @Autowired
+    CartService cartService;
 
     public ClientController(ClientService childService) {
         super(childService);
@@ -48,29 +55,28 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         return delete(id);
     }
 
-    @PutMapping("/updatePhone")
+    @PutMapping("/update-phone")
     public ResponseEntity<String> updatePhone(@AuthenticationPrincipal UserDetails userDetails,
                                               @RequestBody Map<String,String> payload) {
         return update(service.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "phone", payload.get("phone"));
     }
 
-    @PutMapping("/updateTax")
+    @PutMapping("/update-tax")
     public ResponseEntity<String> updateTax(@AuthenticationPrincipal UserDetails userDetails,
                                             @RequestBody Map<String,String> payload) {
         return update(service.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "tax", payload.get("tax"));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Client> findObjectById(@Positive @PathVariable Long id) {
-        return findById(id);
+    @GetMapping("/{username}")
+    public ResponseEntity<Client> findObjectById(@Positive @PathVariable String username, @AuthenticationPrincipal UserDetails userDetails) {
+        Long clientId = service.getIdByCredentialId(credentialService.getIdByUsername(username));
+        if (!cartService.existsByBusinessIdAndClientId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), clientId)) return ResponseEntity.badRequest().build();
+        return findById(clientId);
     }
-
 
     @GetMapping("/all")
-    public ResponseEntity<List<Client>> findAllObjects() {
-        return findAll();
+    public ResponseEntity<List<Client>> findAllObjects(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(cartService.findClientsByBusinessId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));
     }
-
-
 
 }

@@ -56,16 +56,15 @@ public class SecurityConfig {
 //                      .requestMatchers("/credential/delete").hasRole("USER")    --> VER ESTO, EN REALIDAD IRÍA EN STAFF Y CLIENT
 
 
-                        /* CLIENT */
                         .requestMatchers("/client/create").permitAll()
-                        .requestMatchers("/client/delete/{id}").hasRole("ADMIN")
-                        .requestMatchers("/client/updatePhone/{id}/{phone}").hasRole("CLIENT")
-                        .requestMatchers("/client/updateTax/{id}/{tax}").hasRole("CLIENT")
-                        .requestMatchers("/client/{id}").hasRole("EMPOLYEE")
-                        .requestMatchers("/client/all").hasRole("SUPERVISOR")
+//                        .requestMatchers("/client/delete/{id}").hasRole("ADMIN")
+                        .requestMatchers("/client/update-phone").hasRole("CLIENT")
+                        .requestMatchers("/client/update-tax").hasRole("CLIENT")
+                        .requestMatchers("/client/{username}").hasRole("EMPOLYEE")
+                        .requestMatchers("/client/all").hasRole("EMPOLYEE")
 
-                        /* ITEM */
-                        .requestMatchers("/item/add").hasRole("USER")
+                        .requestMatchers("/item/add-from-sale").hasRole("EMPLOYEE")
+                        .requestMatchers("/item/add-from-purchase").hasRole("CLIENT")
                         .requestMatchers("/item/delete/{id}").hasRole("USER")
                         .requestMatchers("/item/updateQuantity/{id}/{quantity}").hasRole("USER")
                         .requestMatchers("/item/all").hasRole("USER")

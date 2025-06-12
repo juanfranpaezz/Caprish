@@ -66,6 +66,8 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
     }
 
 
+//    public findByIdFromBusiness
+
 
     public Product findByIdWithImages(Long id) {
         Product product = repository.findById(id).orElse(null);

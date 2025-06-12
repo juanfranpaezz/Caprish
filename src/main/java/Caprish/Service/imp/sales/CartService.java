@@ -3,6 +3,7 @@ package Caprish.Service.imp.sales;
 
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Model.imp.sales.dto.CartViewDTO;
+import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.sales.CartRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService extends MyObjectGenericService<Cart, CartRepository, CartService> {
+
     protected CartService(CartRepository childRepository) {
         super(childRepository);
     }
@@ -38,8 +40,8 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
         return repository.existsByBusinessIdAndClientId(businessId, clientId);
     }
 
-    public List<Object[]> findAllByBusinessId(Long businessId){
-        return repository.getCartViewsByBusinessId(businessId);
+    public List<Client> findClientsByBusinessId(Long businessId){
+        return repository.findClientsByBusinessId(businessId);
     }
 
 }

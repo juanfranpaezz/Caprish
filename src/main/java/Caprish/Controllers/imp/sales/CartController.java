@@ -49,7 +49,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
                                                @AuthenticationPrincipal UserDetails userDetails) {
         Cart entity = new Cart();
         entity.setStaff(staffService.findByCredentialId(
-                credentialService.getIdByUsername(userDetails.getUsername())));
+                credentialService.getIdByUsername(userDetails.getUsername())).orElse(null));
         entity.setCart_type(new CartType("SALE"));
         entity.setCart_status(new CartStatus("OPEN"));
         entity.setClient(clientService.getByCredentialId(

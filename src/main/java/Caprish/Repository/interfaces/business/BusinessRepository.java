@@ -6,7 +6,7 @@ import Caprish.Repository.interfaces.MyObjectGenericRepository;
 public interface BusinessRepository extends MyObjectGenericRepository<Business> {
 
     boolean existsByBusinessName(String businessName);
-    boolean existsByTax(int tax);
+    boolean existsByTax(Long tax);
     Long findIdByBusinessName(String businessName);
     Business findByBusinessName(String name);
 }

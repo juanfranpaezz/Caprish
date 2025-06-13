@@ -22,6 +22,10 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import Caprish.Model.imp.users.Credential;
+
 
 @RestController
 @RequestMapping("/client")
@@ -50,9 +54,12 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-        return delete(id);
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
+        Optional<Credential> c = credentialService.findById(credentialService.getIdByUsername(userDetails.getUsername()));
+        if(c.isEmpty()) return ResponseEntity.badRequest().build();
+        update(c.get().getId(), "enabled", false);
+        return ResponseEntity.ok("Borrado exitosamente");
     }
 
     @PutMapping("/update-phone")

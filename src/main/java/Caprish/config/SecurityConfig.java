@@ -56,15 +56,13 @@ public class SecurityConfig {
                         .requestMatchers("/credential/verify-token").permitAll()
                         .requestMatchers("/credential/complete-data").permitAll()
                         .requestMatchers("/credential/updatePassword").hasRole("USER")
-//                      .requestMatchers("/credential/delete").hasRole("USER")    --> VER ESTO, EN REALIDAD IRÍA EN STAFF Y CLIENT
-//                        .requestMatchers("/client/delete/{id}")
-
 
                         .requestMatchers("/client/create").permitAll()
                         .requestMatchers("/client/update-phone").hasRole("CLIENT")
                         .requestMatchers("/client/update-tax").hasRole("CLIENT")
                         .requestMatchers("/client/{username}").hasRole("EMPOLYEE")
                         .requestMatchers("/client/all").hasRole("EMPOLYEE")
+                        .requestMatchers("/client/delete").hasRole("CLIENT")
 
                         .requestMatchers("/item/staff/add-from-sale")           .hasRole("EMPLOYEE")
                         .requestMatchers("/item/staff/update-quantity/**")     .hasRole("EMPLOYEE")
@@ -101,13 +99,13 @@ public class SecurityConfig {
 
                         /* BUSINESS */
                         .requestMatchers("/business/create").hasRole("BOSS")
-//                        .requestMatchers("/business/delete/{id}").hasRole("BOSS")
-//                        .requestMatchers("/business/{id}").hasRole("CLIENT")
+                        .requestMatchers("/business/view-my").hasRole("BOSS")
+//                        .requestMatchers("/business/delete").hasRole("BOSS")
+                        .requestMatchers("/business/{name}").hasRole("CLIENT")
                         .requestMatchers("/business/updateBusinessName/{id}/{name}").hasRole("BOSS")
                         .requestMatchers("/business/updateDescription/{id}/{description}").hasRole("BOSS")
                         .requestMatchers("/business/updateSlogan/{id}/{slogan}").hasRole("BOSS")
                         .requestMatchers("/business/updateTax/{id}/{tax}").hasRole("BOSS")
-                        .requestMatchers("/business/all").hasRole("CLIENT")
 
 
                                 /* STAFF */ /*--> ACA TENDRIAMOS QUE AGARRAR Y HACER TRES CONTROLLERS PARA ORGANIZAR SEGUN TIPO DE STAFF*/

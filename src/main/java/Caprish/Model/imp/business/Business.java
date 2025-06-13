@@ -35,8 +35,7 @@ public class Business extends MyObject {
     private String slogan;
 
     @Column(nullable = false)
-    @NotBlank(message="El cuit no puede estar vacio")
-    private int tax;
+    private Long tax;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("chat-business")

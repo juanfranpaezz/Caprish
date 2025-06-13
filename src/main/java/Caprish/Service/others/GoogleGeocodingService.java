@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -20,7 +21,7 @@ public class GoogleGeocodingService {
     }
 
 
-    public boolean validateAddress(String inputAddress) {
+    public boolean validateAddress(String inputAddress) throws RuntimeException{
         try {
             URI uri = UriComponentsBuilder.fromUriString("https://maps.googleapis.com/maps/api/geocode/json")
                     .queryParam("address", inputAddress)

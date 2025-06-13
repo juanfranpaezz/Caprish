@@ -26,7 +26,7 @@ public class Staff extends MyObject {
     @JoinColumn(name = "id_credential", nullable = false, unique = true)
     private Credential credential;
 
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = false)
     @JsonBackReference("staff-business")
     private Business business;
 

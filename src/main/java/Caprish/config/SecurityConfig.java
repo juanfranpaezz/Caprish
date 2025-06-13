@@ -100,7 +100,7 @@ public class SecurityConfig {
                         .requestMatchers("/product/all-by-my-business").hasRole("EMPLOYEE")
 
                         /* BUSINESS */
-//                        .requestMatchers("/business/create").permitAll()
+                        .requestMatchers("/business/create").hasRole("BOSS")
 //                        .requestMatchers("/business/delete/{id}").hasRole("BOSS")
 //                        .requestMatchers("/business/{id}").hasRole("CLIENT")
                         .requestMatchers("/business/updateBusinessName/{id}/{name}").hasRole("BOSS")

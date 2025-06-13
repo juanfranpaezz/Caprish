@@ -37,6 +37,9 @@ public class Business extends MyObject {
     @Column(nullable = false)
     private Long tax;
 
+    @Column(nullable = false)
+    private boolean active;
+
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("chat-business")
     private List<Chat> chats = new ArrayList<>();

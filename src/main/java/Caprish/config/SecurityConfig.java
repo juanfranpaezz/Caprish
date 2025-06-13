@@ -72,7 +72,6 @@ public class SecurityConfig {
                         .requestMatchers("/item/client/delete/**")             .hasRole("CLIENT")
 
 
-                        /* CART */
                         .requestMatchers("/cart/create").hasRole("EMPLOYEE")
                         .requestMatchers("/cart/delete/{id}").hasRole("EMPLOYEE")
 //                        .requestMatchers("/cart/staff/view/my-sales").hasRole("EMPLOYEE")
@@ -80,12 +79,10 @@ public class SecurityConfig {
                         .requestMatchers("/cart/staff/confirm-sale/**").hasRole("EMPLOYEE")
                         .requestMatchers("/cart/client/confirm-purchase").hasRole("CLIENT")
 
-                                /*MESSAGE*/
                                 .requestMatchers("/chat/{name}").hasRole("USER")
                                 .requestMatchers("/message/create").hasRole("USER")
 
 
-                        /* PRODUCT */
                         .requestMatchers("/product/create").hasRole("SUPERVISOR")
                         .requestMatchers("/product/delete/{name}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/staff/name/{name}").hasRole("EMPLOYEE")
@@ -97,18 +94,16 @@ public class SecurityConfig {
                         .requestMatchers("/product/all-by-business/{businessName}").permitAll()
                         .requestMatchers("/product/all-by-my-business").hasRole("EMPLOYEE")
 
-                        /* BUSINESS */
                         .requestMatchers("/business/create").hasRole("BOSS")
                         .requestMatchers("/business/view-my").hasRole("BOSS")
-//                        .requestMatchers("/business/delete").hasRole("BOSS")
+                        .requestMatchers("/business/delete").hasRole("BOSS")
                         .requestMatchers("/business/{name}").hasRole("CLIENT")
-                        .requestMatchers("/business/updateBusinessName/{id}/{name}").hasRole("BOSS")
-                        .requestMatchers("/business/updateDescription/{id}/{description}").hasRole("BOSS")
-                        .requestMatchers("/business/updateSlogan/{id}/{slogan}").hasRole("BOSS")
-                        .requestMatchers("/business/updateTax/{id}/{tax}").hasRole("BOSS")
+                        .requestMatchers("/business/updateBusinessName").hasRole("BOSS")
+                        .requestMatchers("/business/updateDescription").hasRole("BOSS")
+                        .requestMatchers("/business/updateSlogan").hasRole("BOSS")
+                        .requestMatchers("/business/updateTax").hasRole("BOSS")
 
 
-                                /* STAFF */ /*--> ACA TENDRIAMOS QUE AGARRAR Y HACER TRES CONTROLLERS PARA ORGANIZAR SEGUN TIPO DE STAFF*/
                         .requestMatchers("/staff/create").hasRole("BOSS")
                         .requestMatchers("/staff/delete/{id}").hasRole("BOSS")
                         .requestMatchers("/promote/{username}").hasRole("BOSS")

@@ -9,4 +9,5 @@ public interface BusinessRepository extends MyObjectGenericRepository<Business> 
     boolean existsByTax(Long tax);
     Long findIdByBusinessName(String businessName);
     Business findByBusinessName(String name);
+    boolean getActiveById(Long id);
 }

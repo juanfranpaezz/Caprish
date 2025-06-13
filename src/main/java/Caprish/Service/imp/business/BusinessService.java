@@ -5,10 +5,18 @@ import Caprish.Model.imp.business.Address;
 import Caprish.Model.imp.business.Business;
 import Caprish.Repository.interfaces.business.BusinessRepository;
 import Caprish.Service.imp.MyObjectGenericService;
+import Caprish.Service.imp.users.CredentialService;
+import Caprish.Service.imp.users.StaffService;
 import Caprish.Service.others.GoogleGeocodingService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
+import Caprish.Model.imp.users.Staff;
+
 
 import java.net.URI;
 import java.util.List;
@@ -19,7 +27,12 @@ import java.util.Map;
 public class BusinessService extends MyObjectGenericService<Business, BusinessRepository, BusinessService> {
 
 
+    @Autowired
+    private CredentialService credentialService;
+    @Autowired
+    private StaffService staffService;
     private GoogleGeocodingService geocodingService;
+
 
     protected BusinessService(BusinessRepository childRepository, GoogleGeocodingService geocodingService) {
         super(childRepository);
@@ -29,6 +42,16 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
     public Long findIdByBusinessName(String businessName) {
         return repository.findIdByBusinessName(businessName);
     }
+
+    public Long resolveBusinessId(UserDetails userDetails) {
+        Long credId = credentialService.getIdByUsername(userDetails.getUsername());
+        return staffService.findByCredentialId(credId)
+                .map(Staff::getBusiness)
+                .map(b -> b.getId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.FORBIDDEN, "No autorizado: no se encontró negocio asociado."));
+    }
+
 
     public boolean existsByBusinessName(String businessName) {
         return repository.existsByBusinessName(businessName);
@@ -76,6 +99,10 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
         updateField(id, "address",  address);
     }
 
+
+    public boolean isActiveById(Long id){
+        return repository.getActiveById(id);
+    }
 
     public boolean addresValidation(String address) throws RuntimeException{
         return geocodingService.validateAddress(address);

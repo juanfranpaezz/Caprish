@@ -7,6 +7,7 @@ import Caprish.Model.enums.CartType;
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Model.imp.sales.dto.CartViewDTO;
 import Caprish.Repository.interfaces.sales.CartRepository;
+import Caprish.Service.imp.business.BusinessService;
 import Caprish.Service.imp.business.ProductService;
 import Caprish.Service.imp.sales.CartService;
 import Caprish.Service.imp.sales.ItemService;
@@ -39,6 +40,8 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     private ItemService itemService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private BusinessService businessService;
 
     public CartController(CartService service) {
         super(service);
@@ -86,6 +89,8 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
                                               @AuthenticationPrincipal UserDetails userDetails) {
         Long businessId = staffService.getBusinessIdByCredentialId(
                 credentialService.getIdByUsername(userDetails.getUsername()));
+        if(!businessService.isActiveById(businessId))
+            return ResponseEntity.badRequest().body("No se puede realizar la venta ya que la empresa está dada de baja");
         Cart cart = service.findById(cartId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Carrito no encontrado"));
         if (!cart.getStaff().getBusiness().getId().equals(businessId)
@@ -115,6 +120,9 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
                 || !"OPEN".equals(cart.getCart_status().getId())) {
             return ResponseEntity.badRequest().body("No puedes confirmar esta compra.");
         }
+        if(!businessService.isActiveById(cart.getStaff().getBusiness().getId()))
+            return ResponseEntity.badRequest().body("No se puede realizar la venta ya que la empresa está dada de baja");
+
         cart.setCart_status(new CartStatus("CONFIRMED"));
         cart.setSale_date(LocalDate.now());
         service.save(cart);

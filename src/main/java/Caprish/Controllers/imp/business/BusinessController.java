@@ -22,8 +22,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -35,12 +33,6 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     private StaffService staffService;
     @Autowired
     CredentialService credentialService;
-    @Autowired
-    CredentialRepository credentialRepository;
-    @Autowired
-    StaffRepository staffRepository;
-    @Autowired
-    GoogleGeocodingService geocodingService;
 
     public BusinessController(BusinessService service) {
         super(service);
@@ -59,9 +51,6 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
                     .badRequest()
                     .body("Solo puedes crear una empresa si aún no tienes una asociada.");
         }
-        entity.setChats(null);
-        entity.setStaff(null);
-        entity.setProducts(null);
         try {
             service.addresValidation(entity.getAddress().getFullAddress());
         } catch (RuntimeException e) {
@@ -74,6 +63,10 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
                     .badRequest()
                     .body("Ya existe una empresa con ese nombre, o el nombre es inválido.");
         }
+        entity.setChats(null);
+        entity.setStaff(null);
+        entity.setProducts(null);
+        entity.setActive(true);
         Business saved = service.save(entity);
         return ResponseEntity.ok("Guardado con ID: " + saved.getId());
     }
@@ -81,14 +74,18 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
-        //updatear campo activa o inactiva,
+        Long businessId = staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
+        update(businessId, "enabled", false);
         return delete(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
     }
 
 
     @GetMapping("/{name}")
     public ResponseEntity<Business> findObjectByName(@PathVariable String name) {
-        return ResponseEntity.ok(service.findByBusinessName(name));
+        Business business = service.findByBusinessName(name);
+        business.setChats(null);
+        business.setStaff(null);
+        return ResponseEntity.ok(business);
     }
 
     @GetMapping("/view-my")
@@ -97,68 +94,37 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return ResponseEntity.ok(a.get());
     }
 
-
-    @PutMapping("/updateBusinessName/{id}/{name}")
-    public ResponseEntity<String> updateBusinessName(@PathVariable @Positive Long id,
-                                                     @PathVariable String name) {
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Credential> credentialOpt = credentialRepository.findByUsername(username);
-        if (credentialOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no encontradas.");
-        }
-        Optional<Staff> staff = staffRepository.findById(credentialOpt.get().getId());
-        if (staff.isEmpty() || staff.get().getBusiness() == null || !staff.get().getBusiness().getId().equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No autorizado para este negocio.");
-        }
-        return update(id, "business_name", name); // corregido el nombre del campo
+    @PutMapping("/updateBusinessName")
+    public ResponseEntity<String> updateBusinessName(
+            @RequestParam String name,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long bizId = service.resolveBusinessId(userDetails);
+        return update(bizId, "business_name", name);
     }
 
-    @PutMapping("/updateDescription/{id}/{description}")
-    public ResponseEntity<String> updateDescription(@PathVariable @Positive Long id,
-                                                    @PathVariable String description) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Credential> credentialOpt = credentialRepository.findByUsername(username);
-        if (credentialOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no encontradas.");
-        }
-        Optional<Staff> staff = staffRepository.findById(credentialOpt.get().getId());
-        if (staff.isEmpty() || staff.get().getBusiness() == null || !staff.get().getBusiness().getId().equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No autorizado para este negocio.");
-        }
-        return update(id, "description", description);
+    @PutMapping("/updateDescription")
+    public ResponseEntity<String> updateDescription(
+            @RequestParam String description,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long bizId = service.resolveBusinessId(userDetails);
+        return update(bizId, "description", description);
     }
 
-    @PutMapping("/updateSlogan/{id}/{slogan}")
-    public ResponseEntity<String> updateSlogan(@PathVariable @Positive Long id,
-                                               @PathVariable String slogan) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Credential> credentialOpt = credentialRepository.findByUsername(username);
-        if (credentialOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no encontradas.");
-        }
-        Optional<Staff> staff = staffRepository.findById(credentialOpt.get().getId());
-        if (staff.isEmpty() || staff.get().getBusiness() == null || !staff.get().getBusiness().getId().equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No autorizado para este negocio.");
-        }
-        return update(id, "slogan", slogan);
+    @PutMapping("/updateSlogan")
+    public ResponseEntity<String> updateSlogan(
+            @RequestParam String slogan,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long bizId = service.resolveBusinessId(userDetails);
+        return update(bizId, "slogan", slogan);
     }
 
-    @PutMapping("/updateTax/{id}/{tax}")
-    public ResponseEntity<String> updateTax(@PathVariable @Positive Long id,
-                                            @PathVariable int tax) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Credential> credentialOpt = credentialRepository.findByUsername(username);
-        if (credentialOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no encontradas.");
-        }
-        Optional<Staff> staff = staffRepository.findById(credentialOpt.get().getId());
-        if (staff.isEmpty() || staff.get().getBusiness() == null || !staff.get().getBusiness().getId().equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No autorizado para este negocio.");
-        }
-        return update(id, "tax", tax);
+    @PutMapping("/updateTax")
+    public ResponseEntity<String> updateTax(
+            @RequestParam @Positive long tax,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long bizId = service.resolveBusinessId(userDetails);
+        return update(bizId, "tax", tax);
     }
-
 
 }
 

@@ -2,6 +2,7 @@ package Caprish.Service.imp.users;
 
 
 import Caprish.Exception.UserException;
+import Caprish.Model.imp.sales.Cart;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.LoginRequest;
 import Caprish.Model.imp.users.LoginResponse;
@@ -9,6 +10,8 @@ import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import Caprish.Service.others.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -65,9 +69,18 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado")).getId();
     }
 
-    public Optional<Credential> findByUsername(String username) {
-
+    Optional<Credential> findByUsername(String username){
         return repository.findByUsername(username);
     }
+
+
+
+
+
+    public Long getIdByUsername(String username){
+        return repository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado")).getId();
+}
+
 
 }

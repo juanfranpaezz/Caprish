@@ -52,7 +52,7 @@ public class DatabaseInitializer {
 
 
         // Ahora podés crear usuarios sin error
-        Role adminRole = roleRepository.findById("ROLE_ADMIN")
+        Role adminRole = roleRepository.findById("ROLE_CLIENT")
                 .orElseThrow(() -> new RuntimeException("Role ADMIN not found in DB"));
 
         Credential admin = new Credential();

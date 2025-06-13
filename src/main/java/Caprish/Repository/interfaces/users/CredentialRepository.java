@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface CredentialRepository extends MyObjectGenericRepository<Credential> {
     Optional<Credential> findByUsername(String username);
+
+
 }

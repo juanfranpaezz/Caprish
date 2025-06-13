@@ -107,10 +107,12 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     @PostMapping("/show-product")
     public ResponseEntity<Product> findObjectByName(@RequestBody Map<String, String> request) {
         String name = request.get("name");
-        try{
+        try {
             return ResponseEntity.ok(service.findByName(name));
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
+        }
+    }
 
             @GetMapping("/all-by-business/{businessName}")
     public ResponseEntity<List<Product>> findAllByBusinessName(@PathVariable @NotBlank String businessName) {
@@ -120,7 +122,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
                     .badRequest()
                     .body(Collections.emptyList());
         }
-    }
 
         List<Product> products = optBusiness.getProducts();
         if (products.isEmpty()) {
@@ -128,23 +129,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         }
         return ResponseEntity.ok(products);
     }
-
-
-    @GetMapping("/all-by-my-business")
-    public ResponseEntity<List<Product>> findAllByMyBusiness(@AuthenticationPrincipal UserDetails userDetails) {
-        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
-        Long businessId   = staffService.getBusinessIdByCredentialId(credentialId);
-        var optBusiness = businessService.findById(businessId);
-        if (businessId == null || optBusiness.isEmpty()) {
-            return ResponseEntity.badRequest().body(Collections.emptyList());
-        }
-        List<Product> products = optBusiness.get().getProducts();
-        if (products.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(products);
-    }
-
 
 
     @PutMapping("/updateName/{oldName}/{newName}")
@@ -214,24 +198,10 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return update(optProd.get().getId(), "price", price);
     }
 
-        @GetMapping("/all")
-        public ResponseEntity<List<Product>> findAllObjects() {
-            return findAll();
-        }
-
-
-    @GetMapping("/all/byBusiness")
-    public ResponseEntity<List<ProductViewDTO>> getProductByBusiness(@RequestBody Map<String,String> request) {
-        String businessName = request.get("businessName");
-        try{
-            return ResponseEntity.ok(service.getProductByBusinessName(businessName));
-        }catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
     @PermitAll
     @GetMapping("/all")
     public ResponseEntity<List<Product>> findAllObjects() {
         return findAll();
     }
+
 }

@@ -1,10 +1,8 @@
 package Caprish.Service.imp.business;
 
 import Caprish.Exception.InvalidEntityException;
-import Caprish.Model.imp.business.Address;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.imp.business.dto.BusinessViewDTO;
-import Caprish.Model.imp.business.dto.ProductViewDTO;
 import Caprish.Repository.interfaces.business.BusinessRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import jakarta.persistence.EntityNotFoundException;

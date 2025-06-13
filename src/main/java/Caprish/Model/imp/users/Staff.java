@@ -2,7 +2,6 @@ package Caprish.Model.imp.users;
 
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Business;
-import Caprish.Model.enums.WorkRole;
 import Caprish.Model.imp.sales.Cart;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -30,10 +29,6 @@ public class Staff extends MyObject {
     @ManyToOne(optional = false)
     @JsonBackReference("staff-business")
     private Business business;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_work_role", nullable = false)
-    private WorkRole work_role;
 
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("cart-staff")

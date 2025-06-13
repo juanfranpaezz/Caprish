@@ -18,7 +18,11 @@ import java.util.List;
 @Table(name="sender_type")
 public class SenderType extends MyEnum {
 
-    @OneToMany(mappedBy = "sender_type", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> messages = new ArrayList<>();
-    //    CLIENT / STAFF / ADMIN
+    public SenderType(String id) {
+        super(id);
+    }
+
+    public SenderType() {
+
+    }
 }

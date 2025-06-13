@@ -1,6 +1,7 @@
 package Caprish.Repository.interfaces.sales;
 
 import Caprish.Model.imp.sales.Cart;
+import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,6 +10,30 @@ import java.util.List;
 
 public interface CartRepository extends MyObjectGenericRepository<Cart> {
 
+    @Query(value =
+            "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END " +
+                    "FROM cart c " +
+                    "JOIN client cl ON cl.id = c.id_client " +
+                    "JOIN staff s  ON s.id  = c.id_staff " +
+                    "JOIN business b ON b.id = s.id_business " +
+                    "WHERE b.id   = :idBusiness " +
+                    "  AND cl.id  = :idClient",
+            nativeQuery = true
+    )
+    boolean existsByBusinessIdAndClientId(
+            @Param("idBusiness") Long businessId,
+            @Param("idClient")   Long clientId
+    );
+
+
+    @Query(value = "SELECT " +
+            "cl.*" +
+            "FROM cart c " +
+            "JOIN client cl ON cl.id = c.id_client " +
+            "JOIN business b ON b.id = s.id_business " +
+            "WHERE b.id = :idBusiness ",
+            nativeQuery = true)
+    List<Client> findClientsByBusinessId(Long businessId);
 
     @Query(value = "SELECT " +
             "c.id, " +

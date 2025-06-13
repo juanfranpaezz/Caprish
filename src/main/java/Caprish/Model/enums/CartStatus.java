@@ -15,8 +15,11 @@ import java.util.List;
 @Getter
 @Setter
 public class CartStatus extends MyEnum {
-    @OneToMany(mappedBy = "cart_status")
-    private List<Cart> carts = new ArrayList<>();
+    public CartStatus(String id) {
+        super(id);
+    }
 
-    //    OPEN, CONFIRMED;
+    public CartStatus() {
+
+    }
 }

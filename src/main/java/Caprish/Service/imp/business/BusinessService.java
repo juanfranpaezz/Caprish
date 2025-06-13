@@ -1,14 +1,29 @@
 package Caprish.Service.imp.business;
 
 import Caprish.Exception.InvalidEntityException;
+import Caprish.Model.imp.business.Address;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.imp.business.dto.BusinessViewDTO;
 import Caprish.Model.imp.business.dto.ProductViewDTO;
 import Caprish.Repository.interfaces.business.BusinessRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import jakarta.persistence.EntityNotFoundException;
+import Caprish.Service.imp.users.CredentialService;
+import Caprish.Service.imp.users.StaffService;
+import Caprish.Service.others.GoogleGeocodingService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriComponentsBuilder;
+import Caprish.Model.imp.users.Staff;
+
+
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,12 +32,36 @@ import java.util.stream.Collectors;
 @Service
 public class BusinessService extends MyObjectGenericService<Business, BusinessRepository, BusinessService> {
 
-    protected BusinessService(BusinessRepository childRepository) {
+
+    @Autowired
+    private CredentialService credentialService;
+    @Autowired
+    private StaffService staffService;
+    private GoogleGeocodingService geocodingService;
+
+
+    protected BusinessService(BusinessRepository childRepository, GoogleGeocodingService geocodingService) {
         super(childRepository);
+        this.geocodingService = geocodingService;
+    }
+
+    public Long findIdByBusinessName(String businessName) {
+        return repository.findIdByBusinessName(businessName);
+    }
+
+    public Long resolveBusinessId(UserDetails userDetails) {
+        Long credId = credentialService.getIdByUsername(userDetails.getUsername());
+        return staffService.findByCredentialId(credId)
+                .map(Staff::getBusiness)
+                .map(b -> b.getId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.FORBIDDEN, "No autorizado: no se encontró negocio asociado."));
     }
 
 
-
+    public boolean existsByBusinessName(String businessName) {
+        return repository.existsByBusinessName(businessName);
+    }
 
     @Override
     protected void verifySpecificAttributes(Business entity) {
@@ -47,6 +86,32 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
         if (entity.getDescription() == null || entity.getDescription().trim().isEmpty()) {
             throw new IllegalArgumentException("La descripción no puede estar vacía.");
         }
+
+    }
+
+    public Business findByBusinessName(String name){
+        return repository.findByBusinessName(name);
+    }
+
+
+    public void changeAddress(Long id, String address) {
+        if(address== null || address.isBlank()) {
+            throw new IllegalArgumentException("la direccion no puede estar vacia");
+        }
+        boolean direccionValida = geocodingService.validateAddress(address);
+        if (!direccionValida) {
+            throw new IllegalArgumentException("la direccion no es valida segun Google Maps");
+        }
+        updateField(id, "address",  address);
+    }
+
+
+    public boolean isActiveById(Long id){
+        return repository.getActiveById(id);
+    }
+
+    public boolean addresValidation(String address) throws RuntimeException{
+        return geocodingService.validateAddress(address);
     }
     public BusinessViewDTO findByBusinessId(Integer businessName) throws EntityNotFoundException{
         return repository.findByBusinessId(businessName);

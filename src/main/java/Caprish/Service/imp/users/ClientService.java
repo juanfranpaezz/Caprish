@@ -2,6 +2,7 @@ package Caprish.Service.imp.users;
 
 import Caprish.Exception.ClientException;
 import Caprish.Model.imp.users.Client;
+import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.users.ClientRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,14 @@ public class ClientService
     }
 
     @Override
-    protected void verifySpecificAttributes(Client entity) {
+    protected void verifySpecificAttributes(Client entity) {}
 
+    public Long getIdByCredentialId(Long id){
+        return repository.findIdByCredential_Id(id);
+    }
+
+    public Client getByCredentialId(Long id){
+        return repository.findByCredential_Id(id);
     }
 
 
@@ -34,9 +41,11 @@ public class ClientService
         }
     }
 
+
     public Client findByCredentialId(Long credentialId) {
-        return repository.findByCredential(credentialId);
+        return repository.findByCredential_Id(credentialId);
     }
+
 
 
 }

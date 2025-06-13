@@ -16,7 +16,11 @@ import java.util.List;
 @Getter
 @Setter
 public class CartType extends MyEnum {
-    @OneToMany(mappedBy = "cart_type")
-    private List<Cart> carts = new ArrayList<>();
-    //    PURCHASE, SALE;
+    public CartType(String id) {
+        super(id);
+    }
+
+    public CartType() {
+
+    }
 }

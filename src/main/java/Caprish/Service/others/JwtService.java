@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,11 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    // Clave secreta para firmar el token. ¡Nunca la subas a GitHub! Mejor usar variables de entorno.
-    private static final String SECRET_KEY = "clave-super-secreta-para-firmar-los-jwt-segura-y-larga";
+    private final String secretKey;
+
+    public JwtService(@Qualifier("jwtSecret") String secretKey) {
+        this.secretKey = secretKey;
+    }
 
     // Genera un token para un usuario autenticado
     public String generateToken(UserDetails userDetails) {
@@ -57,7 +61,7 @@ public class JwtService {
 
     //Convierte la clave secreta en un objeto Key para usar con la librería jjwt
     private Key getKey() {
-        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes); // Usa HMAC con SHA-256
     }
 }

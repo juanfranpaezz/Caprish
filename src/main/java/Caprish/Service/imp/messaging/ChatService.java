@@ -1,6 +1,5 @@
 package Caprish.Service.imp.messaging;
 
-import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.messaging.Chat;
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Repository.interfaces.messaging.ChatRepository;
@@ -17,7 +16,14 @@ public class ChatService extends MyObjectGenericService<Chat, ChatRepository, Ch
     }
 
     @Override
-    protected void verifySpecificAttributes(Chat entity) {
+    protected void verifySpecificAttributes(Chat entity) {}
 
+
+    public Chat findByBusinessIdAndClientId(Long businessId, Long clientId){
+        return repository.findByBusinessIdAndClientId(businessId, clientId);
+    }
+
+    public Long findIdByBusinessIdAndClientId(Long businessId, Long clientId){
+        return repository.findIdByBusinessIdAndClientId(businessId, clientId);
     }
 }

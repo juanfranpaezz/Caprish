@@ -6,12 +6,14 @@ import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
 
 public interface BusinessRepository extends MyObjectGenericRepository<Business> {
 
     boolean existsByBusinessName(String businessName);
+    boolean existsByTax(Long tax);
+    Long findIdByBusinessName(String businessName);
+    Business findByBusinessName(String name);
+    boolean getActiveById(Long id);
     boolean existsByTax(int tax);
     @Query(value = """
     SELECT 
@@ -24,5 +26,5 @@ public interface BusinessRepository extends MyObjectGenericRepository<Business> 
     LEFT JOIN staff s ON s.business_id = b.id
     WHERE b.id = :businessId
     """, nativeQuery = true)
-    BusinessViewDTO findByBusinessId(@Param ("businessId") Integer businessId);
+    BusinessViewDTO findByBusinessId(@Param("businessId") Integer businessId);
 }

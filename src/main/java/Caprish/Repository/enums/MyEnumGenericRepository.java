@@ -7,7 +7,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import java.util.Optional;
 
 @NoRepositoryBean
-public interface MyEnumGenericRepository<M extends MyEnum> extends JpaRepository<M, Long> {
+public interface MyEnumGenericRepository<M extends MyEnum> extends JpaRepository<M, String> {
     Optional<M> findById(String email);
     boolean existsById(String id);
 }

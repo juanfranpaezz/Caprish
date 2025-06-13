@@ -1,7 +1,6 @@
 package Caprish.Service.enums;
 
 import Caprish.Model.enums.SenderType;
-import Caprish.Repository.enums.BranchTypeRepository;
 import Caprish.Repository.enums.SenderTypeRepository;
 import org.springframework.stereotype.Service;
 

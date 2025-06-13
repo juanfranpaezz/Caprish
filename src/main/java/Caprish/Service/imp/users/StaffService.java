@@ -1,18 +1,16 @@
 package Caprish.Service.imp.users;
 
-import Caprish.Model.BeanUtils;
 import Caprish.Model.imp.users.Staff;
-import Caprish.Model.enums.WorkRole;
 import Caprish.Model.imp.users.dto.StaffViewDTO;
 import Caprish.Repository.interfaces.users.StaffRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.framework.AopContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -23,7 +21,14 @@ public class StaffService extends MyObjectGenericService<Staff, StaffRepository,
 
     @Override
     protected void verifySpecificAttributes(Staff entity) {
+    }
 
+    public Optional<Staff> findByCredentialId(Long credentialId) {
+        return Optional.ofNullable(repository.findByCredentialId(credentialId));
+    }
+
+    public Long getBusinessIdByCredentialId(Long id){
+        return repository.getBusinessIdByCredentialId(id);
     }
 
     public List<StaffViewDTO> getStaffByBusiness(Long businessId) {

@@ -37,11 +37,10 @@ public class Product extends MyObject {
     @Column(nullable=false,precision = 20, scale = 10)
     private BigDecimal price;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("stock-product")
-    private List<Stock> stock = new ArrayList<>();
-
     @Transient
     private List<Image> imagenes = new ArrayList<>();
+
+    @Column(nullable = false)
+    private Integer stock;
 
 }

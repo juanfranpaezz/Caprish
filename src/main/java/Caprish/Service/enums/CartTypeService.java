@@ -1,7 +1,6 @@
 package Caprish.Service.enums;
 
 import Caprish.Model.enums.CartType;
-import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Repository.enums.CartTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

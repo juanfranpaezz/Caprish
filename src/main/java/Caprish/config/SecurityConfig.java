@@ -23,10 +23,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.sql.DataSource;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableAspectJAutoProxy(exposeProxy = true)
@@ -41,125 +42,76 @@ public class SecurityConfig {
             HttpSecurity http,
             JwtAuthFilter jwtAuthFilter,
             MyUserDetailsService myUserDetailsService) throws Exception {
-
-        http
-                // 1) DESACTIVO CSRF porque uso JWT
+                http
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // 2) “Stateless” para JWT: no usamos sesión HTTP
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // 3) Configuración de rutas:
                 .authorizeHttpRequests(auth -> auth
-                        // Permito llamar libremente a /auth/login para obtener el JWT
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**")
                         .permitAll()
 
-
-                        /*MESSAGE*/
-                        .requestMatchers("/message/create").hasRole("USER")
-//                        .requestMatchers("/message/all").hasRole("USER")
-
-                        /* CREDENTIAL */
                         .requestMatchers("/credential/login").permitAll()
-                        .requestMatchers("/credential/updateFirstName/{id}/{firstName}").hasRole("USER")
+                        .requestMatchers("/credential/sign-up").permitAll()
+                        .requestMatchers("/credential/updateFirstName").hasRole("USER")
                         .requestMatchers("/credential/updateLastName").hasRole("USER")
                         .requestMatchers("/credential/verify-token").permitAll()
                         .requestMatchers("/credential/complete-data").permitAll()
-                        .requestMatchers("/credential/updatePassword/{id}/{password}").hasRole("USER")
-//                        .requestMatchers("/credential/updateRoleId/{id}/{roleId}").hasRole("BOSS")
+                        .requestMatchers("/credential/updatePassword").hasRole("USER")
 
-//  ESTE SE DEJA PARA DESPUES POR EL TEMA DE LOS CONTROLLERS:
-//                      .requestMatchers("/credential/create").hasRole("USER")
+                        .requestMatchers("/client/create").permitAll()
+                        .requestMatchers("/client/update-phone").hasRole("CLIENT")
+                        .requestMatchers("/client/update-tax").hasRole("CLIENT")
+                        .requestMatchers("/client/{username}").hasRole("EMPOLYEE")
+                        .requestMatchers("/client/all").hasRole("EMPOLYEE")
+                        .requestMatchers("/client/delete").hasRole("CLIENT")
 
-                        /* CLIENT */
-//                        .requestMatchers("/client/create").permitAll()
-                        .requestMatchers("/client/delete/{id}").hasRole("ADMIN")
-                        .requestMatchers("/client/updatePhone/{id}/{phone}").hasRole("CLIENT")
-                        .requestMatchers("/client/updateTax/{id}/{tax}").hasRole("CLIENT")
-//                        .requestMatchers("/client/{id}").hasRole("ADMIN")
-                        .requestMatchers("/client/all").hasRole("USER")
+                        .requestMatchers("/item/staff/add-from-sale")           .hasRole("EMPLOYEE")
+                        .requestMatchers("/item/staff/update-quantity/**")     .hasRole("EMPLOYEE")
+                        .requestMatchers("/item/staff/delete/**")              .hasRole("EMPLOYEE")
+                        .requestMatchers("/item/client/add-from-purchase")     .hasRole("CLIENT")
+                        .requestMatchers("/item/client/update-quantity/**")    .hasRole("CLIENT")
+                        .requestMatchers("/item/client/delete/**")             .hasRole("CLIENT")
 
-                        /* ITEM */
-                        .requestMatchers("/item/add").hasRole("USER")
-                        .requestMatchers("/item/delete/{id}").hasRole("USER")
-                        .requestMatchers("/item/updateQuantity/{id}/{quantity}").hasRole("USER")
-                        .requestMatchers("/item/all").hasRole("USER")
 
-                        /* CART */
                         .requestMatchers("/cart/create").hasRole("EMPLOYEE")
-                        .requestMatchers("/cart/view/my-sales/**").permitAll()
-//                        .requestMatchers("/cart/confirm-purchase").hasRole("USER")
-//                        .requestMatchers("/cart/delete/{id}").hasRole("EMPLOYEE")
-//                        .requestMatchers("/cart/{id}").hasRole("EMPLOYEE")
-                        .requestMatchers("/cart/updateClientId/{id}/{clientId}").hasRole("EMPLOYEE")
-                        .requestMatchers("/cart/updateStaffId/{id}/{staffId}").hasRole("SUPERVISOR")
-//                        .requestMatchers("/cart/all").hasRole("EMPLOYEE")
+                        .requestMatchers("/cart/delete/{id}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/cart/staff/view/my-sales").hasRole("EMPLOYEE")
+//                        .requestMatchers("/cart/client/view/my-purchases/{idBusiness}").hasRole("CLIENT")
+                        .requestMatchers("/cart/staff/confirm-sale/**").hasRole("EMPLOYEE")
+                        .requestMatchers("/cart/client/confirm-purchase").hasRole("CLIENT")
 
-                        /* CHAT */
-//                        .requestMatchers("/chat/{id}").hasRole("ADMIN")
+                                .requestMatchers("/chat/{name}").hasRole("USER")
+                                .requestMatchers("/message/create").hasRole("USER")
 
-                        /* STOCK */
-                        .requestMatchers("/stock").hasRole("EMPLOYEE")
-                        .requestMatchers("/stock/updateQuantity/{id}/{quantity}").hasRole("EMPLOYEE")
-                        .requestMatchers("/stock/all").hasRole("EMPLOYEE")
 
-                        /* PRODUCT */
-                                .requestMatchers("/product").permitAll()
                         .requestMatchers("/product/create").hasRole("SUPERVISOR")
-                        .requestMatchers("/product/delete/{id}").hasRole("SUPERVISOR")
-                        .requestMatchers("/product/show-product").hasRole("USER")
-                        .requestMatchers("/product/updateName/{id}/{name}").hasRole("SUPERVISOR")
-                        .requestMatchers("/product/updateDescription/{id}/{description}").hasRole("SUPERVISOR")
-                        .requestMatchers("/product/updatePrice/{id}/{price}").hasRole("SUPERVISOR")
+                        .requestMatchers("/product/delete/{name}").hasRole("SUPERVISOR")
+                        .requestMatchers("/product/staff/name/{name}").hasRole("EMPLOYEE")
+                        .requestMatchers("/product/client/name/{name}").hasRole("CLIENT")
+                        .requestMatchers("/product/updateName/{oldName}/{newName}").hasRole("SUPERVISOR")
+                        .requestMatchers("/product/updateDescription/{name}/{description}").hasRole("SUPERVISOR")
+                        .requestMatchers("/product/updatePrice/{name}/{price}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/all").permitAll()
-                            .requestMatchers("/product/all/byBusiness/**").permitAll()
+                        .requestMatchers("/product/all-by-business/{businessName}").permitAll()
+                        .requestMatchers("/product/all-by-my-business").hasRole("EMPLOYEE")
 
-                        /* BUSINESS */
-//                        .requestMatchers("/business/create").permitAll()
-//                        .requestMatchers("/business/delete/{id}").hasRole("BOSS")
-//                        .requestMatchers("/business/{id}").hasRole("CLIENT")
-                        .requestMatchers("/business/updateBusinessName/{id}/{name}").hasRole("BOSS")
-                        .requestMatchers("/business/updateDescription/{id}/{description}").hasRole("BOSS")
-                        .requestMatchers("/business/updateSlogan/{id}/{slogan}").hasRole("BOSS")
-                        .requestMatchers("/business/updateTax/{id}/{tax}").hasRole("BOSS")
-                        .requestMatchers("/business/all").hasRole("CLIENT")
-
-                        /* BRANCH */
-                        .requestMatchers("/branch/create").hasRole("BOSS")
-                        .requestMatchers("/branch/delete/{id}").hasRole("BOSS")
-//                        .requestMatchers("/branch/updateAddress/{id}/{address}").hasRole("BOSS")
-                        .requestMatchers("/branch/updateBranchType/{id}/{type}").hasRole("BOSS")
-//                        .requestMatchers("/branch/{id}").hasRole("EMPLOYEE")
-                        .requestMatchers("/branch/all").hasRole("EMPLOYEE")
-
-                        /* CLIENT_REPORT */
-                        .requestMatchers("/client_report/create").hasRole("CLIENT")
-                        .requestMatchers("/client_report/delete/{id}").hasRole("ADMIN")
-//                        .requestMatchers("/client_report/{id}").hasRole("ADMIN")
-
-                        /* BUSINESS_REPORT */
-                        .requestMatchers("/business_report/create").hasRole("EMPLOYEE")
-                        .requestMatchers("/business_report/delete/{id}").hasRole("ADMIN")
-//                        .requestMatchers("/business_report/{id}").hasRole("ADMIN")
+                        .requestMatchers("/business/create").hasRole("BOSS")
+                        .requestMatchers("/business/view-my").hasRole("BOSS")
+                        .requestMatchers("/business/delete").hasRole("BOSS")
+                        .requestMatchers("/business/{name}").hasRole("CLIENT")
+                        .requestMatchers("/business/updateBusinessName").hasRole("BOSS")
+                        .requestMatchers("/business/updateDescription").hasRole("BOSS")
+                        .requestMatchers("/business/updateSlogan").hasRole("BOSS")
+                        .requestMatchers("/business/updateTax").hasRole("BOSS")
 
 
-                                /* STAFF */ /*--> ACA TENDRIAMOS QUE AGARRAR Y HACER TRES CONTROLLERS PARA ORGANIZAR SEGUN TIPO DE STAFF*/
-//                        .requestMatchers("/staff/create").hasRole("BOSS")
-//                        .requestMatchers("/staff/delete/{id}").hasRole("BOSS")
-//                        .requestMatchers("/staff/updateWorkRole/{id}/{workRole}").hasRole("BOSS")
-//                        .requestMatchers("/staff/{id}").hasRole("BOSS")
-                                .requestMatchers("/staff/all").hasRole("BOSS")
-                                .requestMatchers("/staff/by-business/{businessId}").hasRole("BOSS")
-
+                        .requestMatchers("/staff/create").hasRole("BOSS")
+                        .requestMatchers("/staff/delete/{id}").hasRole("BOSS")
+                        .requestMatchers("/promote/{username}").hasRole("BOSS")
+                        .requestMatchers("/staff/all").hasRole("BOSS")
 
                         .anyRequest().authenticated()
                 )
-
-                // 5) Proveedor de autenticación (DaoAuthenticationProvider apuntando a MyUserDetailsService)
                 .authenticationProvider(authenticationProvider(myUserDetailsService))
-
-                // 6) Agrego el filtro JWT antes de UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

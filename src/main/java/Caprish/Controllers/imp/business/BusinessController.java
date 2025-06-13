@@ -1,19 +1,27 @@
 package Caprish.Controllers.imp.business;
 
 import Caprish.Controllers.MyObjectGenericController;
-import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Business;
-import Caprish.Model.imp.business.dto.BusinessViewDTO;
+import Caprish.Model.imp.users.Credential;
+import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.business.BusinessRepository;
+import Caprish.Repository.interfaces.users.CredentialRepository;
+import Caprish.Repository.interfaces.users.StaffRepository;
 import Caprish.Service.imp.business.BusinessService;
+import Caprish.Service.imp.users.CredentialService;
+import Caprish.Service.imp.users.StaffService;
+import Caprish.Service.others.GoogleGeocodingService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -21,53 +29,101 @@ import java.util.Optional;
 @Validated
 public class BusinessController extends MyObjectGenericController<Business, BusinessRepository, BusinessService> {
 
+    @Autowired
+    private StaffService staffService;
+    @Autowired
+    CredentialService credentialService;
+
     public BusinessController(BusinessService service) {
         super(service);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-        return delete(id);
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createBusiness(
+            @RequestBody @Valid Business entity,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
+        Optional<Staff> staffOpt = staffService.findByCredentialId(credentialId);
+        if (staffOpt.isPresent() && staffOpt.get().getBusiness() != null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Solo puedes crear una empresa si aún no tienes una asociada.");
+        }
+        try {
+            service.addresValidation(entity.getAddress().getFullAddress());
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Error al validar la dirección: " + e.getMessage());
+        }
+        if (entity.getBusinessName() == null || service.existsByBusinessName(entity.getBusinessName())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Ya existe una empresa con ese nombre, o el nombre es inválido.");
+        }
+        entity.setChats(null);
+        entity.setStaff(null);
+        entity.setProducts(null);
+        entity.setActive(true);
+        Business saved = service.save(entity);
+        return ResponseEntity.ok("Guardado con ID: " + saved.getId());
     }
 
 
-    @GetMapping("/{businessId}")
-    public ResponseEntity<BusinessViewDTO> findObjectById(
-            @PathVariable Integer businessId) {
-
-        Optional<BusinessViewDTO> result = Optional.ofNullable(service.findByBusinessId(businessId));
-
-        return result.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-    @PutMapping("/updateBusinessName/{id}/{name}")
-    public ResponseEntity<String> updateBusinessName(@PathVariable @Positive Long id,
-                                                     @PathVariable String name) {
-        return update(id, "bussiness_name", name);
-    }
-
-    @PutMapping("/updateDescription/{id}/{description}")
-    public ResponseEntity<String> updateDescription(@PathVariable @Positive Long id,
-                                                    @PathVariable String description) {
-        return update(id, "description", description);
-    }
-
-    @PutMapping("/updateSlogan/{id}/{slogan}")
-    public ResponseEntity<String> updateSlogan(@PathVariable @Positive Long id,
-                                               @PathVariable String slogan) {
-        return update(id, "slogan", slogan);
-    }
-
-    @PutMapping("/updateTax/{id}/{tax}")
-    public ResponseEntity<String> updateTax(@PathVariable @Positive Long id,
-                                            @PathVariable int tax) {
-        return update(id, "tax", tax);
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
+        Long businessId = staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
+        update(businessId, "enabled", false);
+        return delete(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
     }
 
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Business>> findAllObjects() {
-        return findAll();
+    @GetMapping("/{name}")
+    public ResponseEntity<Business> findObjectByName(@PathVariable String name) {
+        Business business = service.findByBusinessName(name);
+        business.setChats(null);
+        business.setStaff(null);
+        return ResponseEntity.ok(business);
+    }
+
+    @GetMapping("/view-my")
+    public ResponseEntity<Business> findObjectByBoss(@AuthenticationPrincipal UserDetails userDetails) {
+        Optional<Business> a = service.findById(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
+        return ResponseEntity.ok(a.get());
+    }
+
+    @PutMapping("/updateBusinessName")
+    public ResponseEntity<String> updateBusinessName(
+            @RequestParam String name,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long bizId = service.resolveBusinessId(userDetails);
+        return update(bizId, "business_name", name);
+    }
+
+    @PutMapping("/updateDescription")
+    public ResponseEntity<String> updateDescription(
+            @RequestParam String description,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long bizId = service.resolveBusinessId(userDetails);
+        return update(bizId, "description", description);
+    }
+
+    @PutMapping("/updateSlogan")
+    public ResponseEntity<String> updateSlogan(
+            @RequestParam String slogan,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long bizId = service.resolveBusinessId(userDetails);
+        return update(bizId, "slogan", slogan);
+    }
+
+    @PutMapping("/updateTax")
+    public ResponseEntity<String> updateTax(
+            @RequestParam @Positive long tax,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long bizId = service.resolveBusinessId(userDetails);
+        return update(bizId, "tax", tax);
     }
 
 }

@@ -4,6 +4,7 @@ package Caprish.Service.imp.sales;
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Model.imp.sales.dto.CartViewDTO;
 import Caprish.Model.imp.sales.dto.ClientPurchaseDTO;
+import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.sales.CartRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,13 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
     }
 
     @Override
-    protected void verifySpecificAttributes(Cart entity) {
+    protected void verifySpecificAttributes(Cart entity) {}
 
+    public boolean existsByBusinessIdAndClientId(Long businessId, Long clientId){
+        return repository.existsByBusinessIdAndClientId(businessId, clientId);
+    }
+
+    public List<Client> findClientsByBusinessId(Long businessId){
+        return repository.findClientsByBusinessId(businessId);
     }
 }

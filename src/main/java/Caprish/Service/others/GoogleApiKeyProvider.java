@@ -18,7 +18,7 @@ public class GoogleApiKeyProvider {
 
     private String loadApiKeyFromJson() {
         try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("google-api-key.json");
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("credentials/google-api-key.json");
             if (inputStream == null) throw new RuntimeException("Archivo google-api-key.json no encontrado");
 
             ObjectMapper mapper = new ObjectMapper();

@@ -41,6 +41,6 @@ public class Product extends MyObject {
     private List<Image> imagenes = new ArrayList<>();
 
     @Column(nullable = false)
-    private int quantity;
+    private Integer stock;
 
 }

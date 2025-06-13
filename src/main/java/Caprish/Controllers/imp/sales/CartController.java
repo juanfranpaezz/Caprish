@@ -7,6 +7,7 @@ import Caprish.Model.enums.CartType;
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Model.imp.sales.dto.CartViewDTO;
 import Caprish.Repository.interfaces.sales.CartRepository;
+import Caprish.Service.imp.business.ProductService;
 import Caprish.Service.imp.sales.CartService;
 import Caprish.Service.imp.sales.ItemService;
 import Caprish.Service.imp.users.ClientService;
@@ -36,6 +37,8 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     private CredentialService credentialService;
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private ProductService productService;
 
     public CartController(CartService service) {
         super(service);
@@ -93,6 +96,10 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         cart.setCart_status(new CartStatus("CONFIRMED"));
         cart.setSale_date(LocalDate.now());
         service.save(cart);
+        cart.getItems().forEach(item ->
+                update(item.getProduct().getId(),
+                        "stock",
+                        (item.getProduct().getStock() - item.getQuantity())));
         return ResponseEntity.ok("Venta confirmada");
     }
 
@@ -111,12 +118,14 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         cart.setCart_status(new CartStatus("CONFIRMED"));
         cart.setSale_date(LocalDate.now());
         service.save(cart);
-        Cart entity = new Cart();
-        entity.setCart_type(new CartType("PURCHASE"));
-        entity.setCart_status(new CartStatus("OPEN"));
-        entity.setClient(clientService.findById(clientId).get());
+        cart.getItems().forEach(item ->
+                update(item.getProduct().getId(),
+                        "stock",
+                        (item.getProduct().getStock() - item.getQuantity())));
+                Cart newCart = new Cart();
+        newCart.setCart_type(new CartType("PURCHASE"));
+        newCart.setCart_status(new CartStatus("OPEN"));
+        newCart.setClient(clientService.findById(clientId).get());
         return ResponseEntity.ok("Compra confirmada");
     }
-
-
 }

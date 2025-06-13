@@ -57,10 +57,10 @@ public class SecurityConfig {
                         .requestMatchers("/credential/complete-data").permitAll()
                         .requestMatchers("/credential/updatePassword").hasRole("USER")
 //                      .requestMatchers("/credential/delete").hasRole("USER")    --> VER ESTO, EN REALIDAD IRÍA EN STAFF Y CLIENT
+//                        .requestMatchers("/client/delete/{id}")
 
 
                         .requestMatchers("/client/create").permitAll()
-//                        .requestMatchers("/client/delete/{id}").hasRole("ADMIN")
                         .requestMatchers("/client/update-phone").hasRole("CLIENT")
                         .requestMatchers("/client/update-tax").hasRole("CLIENT")
                         .requestMatchers("/client/{username}").hasRole("EMPOLYEE")
@@ -69,7 +69,7 @@ public class SecurityConfig {
                         .requestMatchers("/item/staff/add-from-sale")           .hasRole("EMPLOYEE")
                         .requestMatchers("/item/staff/update-quantity/**")     .hasRole("EMPLOYEE")
                         .requestMatchers("/item/staff/delete/**")              .hasRole("EMPLOYEE")
-                                .requestMatchers("/item/client/add-from-purchase")     .hasRole("CLIENT")
+                        .requestMatchers("/item/client/add-from-purchase")     .hasRole("CLIENT")
                         .requestMatchers("/item/client/update-quantity/**")    .hasRole("CLIENT")
                         .requestMatchers("/item/client/delete/**")             .hasRole("CLIENT")
 
@@ -77,10 +77,10 @@ public class SecurityConfig {
                         /* CART */
                         .requestMatchers("/cart/create").hasRole("EMPLOYEE")
                         .requestMatchers("/cart/delete/{id}").hasRole("EMPLOYEE")
-//                        .requestMatchers("/cart/staff/view/my-sales/{idBusiness}").hasRole("EMPLOYEE")
-//                        .requestMatchers("/cart/client/view/my-sales/{idBusiness}").hasRole("CLIENT")
+//                        .requestMatchers("/cart/staff/view/my-sales").hasRole("EMPLOYEE")
+//                        .requestMatchers("/cart/client/view/my-purchases/{idBusiness}").hasRole("CLIENT")
                         .requestMatchers("/cart/staff/confirm-sale/**").hasRole("EMPLOYEE")
-//         TEMA STOCK     .requestMatchers("/cart/client/confirm-purchase").hasRole("CLIENT")
+                        .requestMatchers("/cart/client/confirm-purchase").hasRole("CLIENT")
 
                                 /*MESSAGE*/
                                 .requestMatchers("/chat/{name}").hasRole("USER")
@@ -89,13 +89,15 @@ public class SecurityConfig {
 
                         /* PRODUCT */
                         .requestMatchers("/product/create").hasRole("SUPERVISOR")
-                        .requestMatchers("/product/delete/{id}").hasRole("SUPERVISOR")
-//                        .requestMatchers("/product/{id}").hasRole("CLIENT")
-                        .requestMatchers("/product/updateName/{id}/{name}").hasRole("SUPERVISOR")
-                        .requestMatchers("/product/updateDescription/{id}/{description}").hasRole("SUPERVISOR")
-                        .requestMatchers("/product/updatePrice/{id}/{price}").hasRole("SUPERVISOR")
+                        .requestMatchers("/product/delete/{name}").hasRole("SUPERVISOR")
+                        .requestMatchers("/product/staff/name/{name}").hasRole("EMPLOYEE")
+                        .requestMatchers("/product/client/name/{name}").hasRole("CLIENT")
+                        .requestMatchers("/product/updateName/{oldName}/{newName}").hasRole("SUPERVISOR")
+                        .requestMatchers("/product/updateDescription/{name}/{description}").hasRole("SUPERVISOR")
+                        .requestMatchers("/product/updatePrice/{name}/{price}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/all").permitAll()
-//                        .requestMatchers("/product/all/byBusiness").permitAll()
+                        .requestMatchers("/product/all-by-business/{businessName}").permitAll()
+                        .requestMatchers("/product/all-by-my-business").hasRole("EMPLOYEE")
 
                         /* BUSINESS */
 //                        .requestMatchers("/business/create").permitAll()
@@ -111,9 +113,8 @@ public class SecurityConfig {
                                 /* STAFF */ /*--> ACA TENDRIAMOS QUE AGARRAR Y HACER TRES CONTROLLERS PARA ORGANIZAR SEGUN TIPO DE STAFF*/
                         .requestMatchers("/staff/create").hasRole("BOSS")
                         .requestMatchers("/staff/delete/{id}").hasRole("BOSS")
-//                        .requestMatchers("/promote/{username}").hasRole("BOSS")
-                        .requestMatchers("/staff/{username}").hasRole("BOSS")
-//                        .requestMatchers("/staff/all").hasRole("BOSS")
+                        .requestMatchers("/promote/{username}").hasRole("BOSS")
+                        .requestMatchers("/staff/all").hasRole("BOSS")
 
                         .anyRequest().authenticated()
                 )

@@ -4,7 +4,6 @@ import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Model.imp.business.Business;
 import Caprish.Repository.interfaces.business.BusinessRepository;
 import Caprish.Service.imp.business.BusinessService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +19,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     public BusinessController(BusinessService service) {
         super(service);
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {

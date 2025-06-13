@@ -66,6 +66,10 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
         }
     }
 
+    public Business findByBusinessName(String name){
+        return repository.findByBusinessName(name);
+    }
+
     public Business save(Business business) {
         // Validar dirección antes de guardar
         if (business.getAddress() == null) {

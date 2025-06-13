@@ -63,12 +63,12 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         if (cart.getClient() == null) {
             return ResponseEntity.badRequest().body("El carrito no tiene un cliente asignado.");
         }
-        Item item = new Item();
         int quantity = payload.get("quantity") == null ? 1 : Integer.parseInt(payload.get("quantity"));
+        if (productService.findById(productId).get().getStock() < quantity) return ResponseEntity.badRequest().body("No hay suficiente stock este producto.");
+        Item item = new Item();
         item.setQuantity(quantity);
         item.setProduct(product);
         item.setCart(cart);
-        // Guardar y devolver respuesta
         Item saved = service.save(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
@@ -118,9 +118,8 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
                         .body("El carrito ya contiene ítems de otra empresa. Vacíalo antes de agregar este producto.");
             }
         }
-
-        // 6) Crear y guardar ítem
         int quantity = payload.get("quantity") == null ? 1 : Integer.parseInt(payload.get("quantity"));
+        if (productService.findById(productId).get().getStock() < quantity) return ResponseEntity.badRequest().body("No hay suficiente stock este producto.");
         Item item = new Item();
         item.setQuantity(quantity);
         item.setProduct(product);
@@ -138,6 +137,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
                 credentialService.getIdByUsername(userDetails.getUsername()));
         Item item = service.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Item no encontrado"));
+        if (item.getProduct().getStock() < item.getQuantity()) return ResponseEntity.badRequest().body("No hay suficiente stock este producto.");
         Cart cart = item.getCart();
         // Verificar negocio a través del staff del carrito
         if (!cart.getStaff().getBusiness().getId().equals(businessId)
@@ -159,6 +159,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         Long clientId = clientService.getIdByCredentialId(credentialId);
         Item item = service.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Item no encontrado"));
+        if (item.getProduct().getStock() < item.getQuantity()) return ResponseEntity.badRequest().body("No hay suficiente stock este producto.");
         Cart cart = item.getCart();
         if (!cart.getClient().getId().equals(clientId)
                 || !"PURCHASE".equals(cart.getCart_type().getId())

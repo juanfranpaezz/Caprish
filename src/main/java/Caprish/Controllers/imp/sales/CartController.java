@@ -11,15 +11,12 @@ import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -74,9 +71,9 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return findAll();
     }
 
-    @GetMapping("/view/my-sales")
-    public ResponseEntity<List<CartViewDTO>> getMySales(@RequestParam Long idBusiness) {
-        return ResponseEntity.ok(service.getCartViewsByBusiness(idBusiness));
+    @GetMapping("/view/my-sales/{businessId}")
+    public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
+        return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
     }
 
     @GetMapping("/view/my-purchases")
@@ -98,6 +95,11 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         // Buscar las compras finalizadas del cliente
         return ResponseEntity.ok(service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername()));
     }
+
+    //    @GetMapping("/view/my-sales/{businessId}")
+//    public ResponseEntity<Long> getMySales(@PathVariable Long businessId) {
+//        return ResponseEntity.ok(businessId);
+//    }
 
 }
 

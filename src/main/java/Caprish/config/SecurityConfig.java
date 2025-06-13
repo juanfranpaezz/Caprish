@@ -88,6 +88,7 @@ public class SecurityConfig {
 
                         /* CART */
                         .requestMatchers("/cart/create").hasRole("EMPLOYEE")
+                        .requestMatchers("/cart/view/my-sales/**").permitAll()
 //                        .requestMatchers("/cart/confirm-purchase").hasRole("USER")
 //                        .requestMatchers("/cart/delete/{id}").hasRole("EMPLOYEE")
 //                        .requestMatchers("/cart/{id}").hasRole("EMPLOYEE")

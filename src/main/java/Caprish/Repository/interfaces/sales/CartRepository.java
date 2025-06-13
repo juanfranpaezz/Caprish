@@ -1,8 +1,6 @@
 package Caprish.Repository.interfaces.sales;
 
 import Caprish.Model.imp.sales.Cart;
-import Caprish.Model.imp.sales.dto.CartViewDTO;
-import Caprish.Model.imp.sales.dto.ClientPurchaseDTO;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

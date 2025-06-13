@@ -17,19 +17,24 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
         super(childRepository);
     }
 
-    public List<CartViewDTO> getCartViewsByBusiness(Long idBusiness) {
-        return repository.getCartViewsByBusinessId(idBusiness)
-                .stream()
-                .map(obj -> new CartViewDTO(
-                        ((Number) obj[0]).longValue(),             // idCart
-                        (String) obj[1],                           // clientName (first + last)
-                        (String) obj[2],                           // cartType
-                        (String) obj[3],                           // cartStatus
-                        (String) obj[4],                           // staffName (first + last)
-                        ((Number) obj[5]).longValue(),             // idBusiness
-                        ((Number) obj[6]).doubleValue()            // totalAmount
-                ))
-                .collect(Collectors.toList());
+    public List<CartViewDTO> getCartViewsByBusiness(Long businessId) {
+        try {
+            return repository.getCartViewsByBusinessId(businessId)
+                    .stream()
+                    .map(obj -> new CartViewDTO(
+                            ((Number) obj[0]).longValue(),             // idCart
+                            (String) obj[1],                           // clientName (first + last)
+                            (String) obj[2],                           // cartType
+                            (String) obj[3],                           // cartStatus
+                            (String) obj[4],                           // staffName (first + last)
+                            ((Number) obj[5]).longValue(),             // idBusiness
+                            ((Number) obj[6]).doubleValue()            // totalAmount
+                    ))
+                    .collect(Collectors.toList());
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Error getting cart views", e);
+        }
     }
 
     public List<ClientPurchaseDTO> getFinalizedCartsByClientUsername(Long clientId, String username) {

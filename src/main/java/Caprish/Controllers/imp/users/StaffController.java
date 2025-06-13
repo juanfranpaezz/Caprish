@@ -50,12 +50,16 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-        return delete(id);
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteObject(@Valid @RequestBody String username , @AuthenticationPrincipal UserDetails userDetails ) {
+        if (username == null) return ResponseEntity.badRequest().build();
+        Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
+        Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
+        if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().build();
+        return delete(staffId);
     }
 
-    @PutMapping("/promote/{username}")
+    @PutMapping("/promote")
     public ResponseEntity<String> updateWorkRole(@PathVariable String username, @AuthenticationPrincipal UserDetails userDetails) {
         if (username == null) return ResponseEntity.badRequest().build();
         Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
@@ -63,11 +67,4 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().build();
         return update(staffId, "role", "ROLE_SUPERVISOR");
     }
-
-
-
-
-
-
-
 }

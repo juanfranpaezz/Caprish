@@ -3,6 +3,7 @@ package Caprish.Service.imp.sales;
 
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Model.imp.sales.dto.CartViewDTO;
+import Caprish.Model.imp.sales.dto.ClientPurchaseDTO;
 import Caprish.Repository.interfaces.sales.CartRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,20 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
                         ((Number) obj[6]).doubleValue()            // totalAmount
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public List<ClientPurchaseDTO> getFinalizedCartsByClientUsername(Long clientId, String username) {
+        return  repository.findFinalizedCartsByClient(clientId, username)
+                .stream()
+                .map(row -> new ClientPurchaseDTO(
+                ((Number) row[0]).longValue(),
+                (String) row[1],
+                (String) row[2],
+                (String) row[3],
+                (String) row[4],
+                (String)row[5],
+                ((Number) row[6]).doubleValue()
+        )).collect(Collectors.toList());
     }
 
     @Override

@@ -5,7 +5,6 @@ import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.users.ClientRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,5 +33,10 @@ public class ClientService
             return client.get();
         }
     }
+
+    public Client findByCredentialId(Long credentialId) {
+        return repository.findByCredential(credentialId);
+    }
+
 
 }

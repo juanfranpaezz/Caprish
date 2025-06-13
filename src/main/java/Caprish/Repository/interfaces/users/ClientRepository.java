@@ -2,13 +2,19 @@ package Caprish.Repository.interfaces.users;
 
 
 import Caprish.Model.imp.users.Client;
-import Caprish.Model.imp.users.Credential;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
 public interface ClientRepository extends MyObjectGenericRepository<Client> {
    Optional<Client> findByPhone(Integer phone);
-   Optional<Client> findByCredential(Credential credential);
+
+   @Query("SELECT c FROM Client c WHERE c.credential.id = :credentialId")
+   Client findByCredential(@Param("credentialId")Long credential);
+
+
+
+
 }

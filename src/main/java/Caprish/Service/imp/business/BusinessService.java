@@ -11,6 +11,8 @@ import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import Caprish.Service.others.GoogleGeocodingService;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class BusinessService extends MyObjectGenericService<Business, BusinessRepository, BusinessService> {
@@ -30,7 +32,10 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
     public boolean existsByBusinessName(String businessName) {
         return repository.existsByBusinessName(businessName);
     }
+    public Optional<Business> findByBusinessName(String businessName){
+        return repository.findByBusinessName(businessName);
 
+    }
     @Override
     protected void verifySpecificAttributes(Business entity) {
 

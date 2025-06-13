@@ -111,7 +111,8 @@ public class SecurityConfig {
                                 /* STAFF */ /*--> ACA TENDRIAMOS QUE AGARRAR Y HACER TRES CONTROLLERS PARA ORGANIZAR SEGUN TIPO DE STAFF*/
                         .requestMatchers("/staff/create").hasRole("BOSS")
                         .requestMatchers("/staff/delete/{id}").hasRole("BOSS")
-//                        .requestMatchers("/promote/{username}").hasRole("BOSS")
+                        .requestMatchers("/promote").hasRole("BOSS")
+                                .requestMatchers("/create-boss").hasRole("BOSS")
                         .requestMatchers("/staff/{username}").hasRole("BOSS")
 //                        .requestMatchers("/staff/all").hasRole("BOSS")
 

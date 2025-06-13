@@ -1,6 +1,7 @@
 package Caprish.Controllers.imp.messaging;
 
 import Caprish.Controllers.MyObjectGenericController;
+import Caprish.Exception.EntityNotFoundCustomException;
 import Caprish.Model.enums.SenderType;
 import Caprish.Model.imp.messaging.Chat;
 import Caprish.Model.imp.messaging.Message;
@@ -21,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+
 @RestController
 @RequestMapping("/message")
 @Validated
@@ -38,9 +40,8 @@ public class MessageController extends MyObjectGenericController<Message, Messag
     }
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody Map<String,String> payload) {
+    public ResponseEntity<String> sendMessage(@AuthenticationPrincipal UserDetails userDetails,
+                                              @RequestBody Map<String,String> payload) {
 
         String businessName = payload.get("businessName");
         String content      = payload.get("content");
@@ -56,7 +57,6 @@ public class MessageController extends MyObjectGenericController<Message, Messag
         }
 
         Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
-
         boolean isClient = userDetails.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_CLIENT"));
 
@@ -69,18 +69,25 @@ public class MessageController extends MyObjectGenericController<Message, Messag
                 : clientService.getIdByCredentialId(
                 credentialService.getIdByUsername(businessName)
         );
+
+        // Obtener o crear chat
         Chat chat = chatService.findByBusinessIdAndClientId(businessId, clientId);
         if (chat == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("No existe un chat previo entre ese negocio y cliente.");
+            chat = new Chat();
+            chat.setBusiness(businessService.findById(businessId)
+                    .orElseThrow(() -> new EntityNotFoundCustomException("Negocio no encontrado")));
+            chat.setClient(clientService.findById(clientId)
+                    .orElseThrow(() -> new EntityNotFoundCustomException("Cliente no encontrado")));
+            chat = chatService.save(chat);
         }
+
         String senderTypeId = isClient ? "CLIENT" : "STAFF";
         SenderType senderType = senderTypeRepository
                 .findById(senderTypeId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "SenderType no encontrado: " + senderTypeId
                 ));
+
         Message message = new Message();
         message.setChat(chat);
         message.setContent(content);

@@ -56,13 +56,6 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
             throw new InvalidEntityException("El negocio asociado no existe.");
         }
 
-        if (entity.getStock() != null) {
-            entity.getStock().forEach(s -> {
-                if (s.getQuantity() < 0) {
-                    throw new InvalidEntityException("El stock no puede tener cantidades negativas.");
-                }
-            });
-        }
     }
 
 

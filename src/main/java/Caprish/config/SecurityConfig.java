@@ -23,6 +23,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.sql.DataSource;
 
@@ -63,31 +66,26 @@ public class SecurityConfig {
                         .requestMatchers("/client/{username}").hasRole("EMPOLYEE")
                         .requestMatchers("/client/all").hasRole("EMPOLYEE")
 
-                        .requestMatchers("/item/add-from-sale").hasRole("EMPLOYEE")
-                        .requestMatchers("/item/add-from-purchase").hasRole("CLIENT")
-                        .requestMatchers("/item/delete/{id}").hasRole("USER")
-                        .requestMatchers("/item/updateQuantity/{id}/{quantity}").hasRole("USER")
-                        .requestMatchers("/item/all").hasRole("USER")
+                        .requestMatchers("/item/staff/add-from-sale")           .hasRole("EMPLOYEE")
+                        .requestMatchers("/item/staff/update-quantity/**")     .hasRole("EMPLOYEE")
+                        .requestMatchers("/item/staff/delete/**")              .hasRole("EMPLOYEE")
+                                .requestMatchers("/item/client/add-from-purchase")     .hasRole("CLIENT")
+                        .requestMatchers("/item/client/update-quantity/**")    .hasRole("CLIENT")
+                        .requestMatchers("/item/client/delete/**")             .hasRole("CLIENT")
+
 
                         /* CART */
                         .requestMatchers("/cart/create").hasRole("EMPLOYEE")
-//                        .requestMatchers("/cart/confirm-purchase").hasRole("USER")
-//                        .requestMatchers("/cart/delete/{id}").hasRole("EMPLOYEE")
-//                        .requestMatchers("/cart/{id}").hasRole("EMPLOYEE")
-                        .requestMatchers("/cart/updateClientId/{id}/{clientId}").hasRole("EMPLOYEE")
-                        .requestMatchers("/cart/updateStaffId/{id}/{staffId}").hasRole("SUPERVISOR")
-//                        .requestMatchers("/cart/all").hasRole("EMPLOYEE")
+                        .requestMatchers("/cart/delete/{id}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/cart/staff/view/my-sales/{idBusiness}").hasRole("EMPLOYEE")
+//                        .requestMatchers("/cart/client/view/my-sales/{idBusiness}").hasRole("CLIENT")
+                        .requestMatchers("/cart/staff/confirm-sale/**").hasRole("EMPLOYEE")
+//         TEMA STOCK     .requestMatchers("/cart/client/confirm-purchase").hasRole("CLIENT")
 
-                        /* CHAT */
-//                        .requestMatchers("/chat/{id}").hasRole("ADMIN")
                                 /*MESSAGE*/
+                                .requestMatchers("/chat/{name}").hasRole("USER")
                                 .requestMatchers("/message/create").hasRole("USER")
 
-
-                                /* STOCK */
-//                        .requestMatchers("/stock/{id}").hasRole("EMPLOYEE")
-                        .requestMatchers("/stock/updateQuantity/{id}/{quantity}").hasRole("EMPLOYEE")
-                        .requestMatchers("/stock/all").hasRole("EMPLOYEE")
 
                         /* PRODUCT */
                         .requestMatchers("/product/create").hasRole("SUPERVISOR")
@@ -109,40 +107,17 @@ public class SecurityConfig {
                         .requestMatchers("/business/updateTax/{id}/{tax}").hasRole("BOSS")
                         .requestMatchers("/business/all").hasRole("CLIENT")
 
-                        /* BRANCH */
-                        .requestMatchers("/branch/create").hasRole("BOSS")
-                        .requestMatchers("/branch/delete/{id}").hasRole("BOSS")
-//                        .requestMatchers("/branch/updateAddress/{id}/{address}").hasRole("BOSS")
-                        .requestMatchers("/branch/updateBranchType/{id}/{type}").hasRole("BOSS")
-//                        .requestMatchers("/branch/{id}").hasRole("EMPLOYEE")
-                        .requestMatchers("/branch/all").hasRole("EMPLOYEE")
-
-                        /* CLIENT_REPORT */
-                        .requestMatchers("/client_report/create").hasRole("CLIENT")
-                        .requestMatchers("/client_report/delete/{id}").hasRole("ADMIN")
-//                        .requestMatchers("/client_report/{id}").hasRole("ADMIN")
-
-                        /* BUSINESS_REPORT */
-                        .requestMatchers("/business_report/create").hasRole("EMPLOYEE")
-                        .requestMatchers("/business_report/delete/{id}").hasRole("ADMIN")
-//                        .requestMatchers("/business_report/{id}").hasRole("ADMIN")
-
 
                                 /* STAFF */ /*--> ACA TENDRIAMOS QUE AGARRAR Y HACER TRES CONTROLLERS PARA ORGANIZAR SEGUN TIPO DE STAFF*/
                         .requestMatchers("/staff/create").hasRole("BOSS")
                         .requestMatchers("/staff/delete/{id}").hasRole("BOSS")
-                        .requestMatchers("/promote/{username}").hasRole("BOSS")
-                        .requestMatchers("/staff/{id}").hasRole("BOSS")
-                        .requestMatchers("/staff/all").hasRole("BOSS")
-
+//                        .requestMatchers("/promote/{username}").hasRole("BOSS")
+                        .requestMatchers("/staff/{username}").hasRole("BOSS")
+//                        .requestMatchers("/staff/all").hasRole("BOSS")
 
                         .anyRequest().authenticated()
                 )
-
-                // 5) Proveedor de autenticación (DaoAuthenticationProvider apuntando a MyUserDetailsService)
                 .authenticationProvider(authenticationProvider(myUserDetailsService))
-
-                // 6) Agrego el filtro JWT antes de UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

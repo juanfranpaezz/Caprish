@@ -1,12 +1,10 @@
 package Caprish.config;
 
-import Caprish.Model.enums.BranchType;
 import Caprish.Model.enums.CartStatus;
 import Caprish.Model.enums.CartType;
 import Caprish.Model.enums.SenderType;
 import Caprish.Model.enums.Role;
 import Caprish.Model.imp.users.Credential;
-import Caprish.Repository.enums.BranchTypeRepository;
 import Caprish.Repository.enums.CartStatusRepository;
 import Caprish.Repository.enums.CartTypeRepository;
 import Caprish.Repository.enums.SenderTypeRepository;
@@ -23,7 +21,6 @@ public class DatabaseInitializer {
 
     @Autowired private CredentialRepository credentialRepository;
     @Autowired private RoleRepository roleRepository;
-    @Autowired private BranchTypeRepository branchTypeRepository;
     @Autowired private CartStatusRepository cartStatusRepository;
     @Autowired private CartTypeRepository cartTypeRepository;
     @Autowired private SenderTypeRepository senderTypeRepository;
@@ -38,10 +35,6 @@ public class DatabaseInitializer {
         createIfNotExists(roleRepository, Role::new, "ROLE_CLIENT");
         createIfNotExists(roleRepository, Role::new, "ROLE_SUPERVISOR");
         createIfNotExists(roleRepository, Role::new, "ROLE_EMPLOYEE");
-
-        // BranchType
-        createIfNotExists(branchTypeRepository, BranchType::new, "SALES_POINT");
-        createIfNotExists(branchTypeRepository, BranchType::new, "WAREHOUSE");
 
         // CartStatus
         createIfNotExists(cartStatusRepository, CartStatus::new, "OPEN");

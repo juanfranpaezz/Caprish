@@ -17,6 +17,10 @@ public class StaffService extends MyObjectGenericService<Staff, StaffRepository,
     protected void verifySpecificAttributes(Staff entity) {
     }
 
+    public Staff findByCredentialId(Long credentialId) {
+        return repository.findAllByCredentialId(credentialId);
+    }
+
     public Long getBusinessIdByCredentialId(Long id){
         return repository.getBusinessIdByCredentialId(id);
     }

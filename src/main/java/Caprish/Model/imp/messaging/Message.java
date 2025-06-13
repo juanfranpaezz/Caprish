@@ -1,6 +1,5 @@
 package Caprish.Model.imp.messaging;
 
-import Caprish.Model.enums.BranchType;
 import Caprish.Model.enums.SenderType;
 import Caprish.Model.imp.MyObject;
 import com.fasterxml.jackson.annotation.JsonBackReference;

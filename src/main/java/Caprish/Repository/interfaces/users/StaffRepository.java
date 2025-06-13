@@ -9,4 +9,8 @@ import org.springframework.data.repository.query.Param;
 public interface StaffRepository extends MyObjectGenericRepository<Staff> {
     @Query("SELECT s.business.id FROM Staff s WHERE s.credential.id = :credentialId")
     Long getBusinessIdByCredentialId(@Param("credentialId") Long credentialId);
+
+    @Query("SELECT s FROM Staff s WHERE s.credential.id = :credentialId")
+    Staff findAllByCredentialId(Long credentialId);
+
 }

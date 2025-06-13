@@ -1,6 +1,5 @@
 package Caprish.Service.imp.messaging;
 
-import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.messaging.Chat;
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Repository.interfaces.messaging.ChatRepository;

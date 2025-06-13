@@ -1,7 +1,6 @@
 package Caprish.Controllers.imp.business;
 
 import Caprish.Controllers.MyObjectGenericController;
-import Caprish.Model.imp.admin.BusinessReport;
 import Caprish.Model.imp.business.Business;
 import Caprish.Repository.interfaces.business.BusinessRepository;
 import Caprish.Service.imp.business.BusinessService;

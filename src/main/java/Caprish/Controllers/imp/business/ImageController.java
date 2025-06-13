@@ -15,32 +15,53 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/api/images")
 @Validated
+@Tag(name = "Imágenes", description = "Gestión de imágenes asociadas a entidades del sistema")
+@SecurityRequirement(name = "bearerAuth")
 public class ImageController {
 
     @Autowired
-    private  ImageService imageService;
+    private ImageService imageService;
 
-
-
+    @Operation(
+            summary = "Obtener imágenes por entidad y referencia",
+            description = "Devuelve una lista de imágenes vinculadas a una entidad específica por su ID de referencia"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lista de imágenes devuelta exitosamente")
+    })
     @GetMapping("/byEntity")
     public ResponseEntity<List<Image>> getImagesByEntity(
-            @RequestParam String entidad,
-            @RequestParam Long referenciaId)
-    {
+            @RequestParam @Parameter(description = "Nombre de la entidad (por ejemplo: 'product')") String entidad,
+            @RequestParam @Parameter(description = "ID de la entidad relacionada") Long referenciaId) {
         List<Image> images = imageService.findByEntidadAndReferenciaId(entidad, referenciaId);
         return ResponseEntity.ok(images);
     }
 
+    @Operation(
+            summary = "Subir una imagen",
+            description = "Permite subir una imagen asociada a una entidad del sistema (por ejemplo, un producto o usuario)."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Imagen guardada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Error al guardar la imagen")
+    })
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImage(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("entidad") String entidad,
-            @RequestParam("referenciaId") Long referenciaId,
-            @RequestParam(value = "nombre", required = false) String nombre,
-            @RequestParam(value = "tipo", required = false) String tipo
+            @RequestParam("file") @Parameter(description = "Archivo de imagen (formato JPG/PNG)") MultipartFile file,
+            @RequestParam("entidad") @Parameter(description = "Entidad asociada (por ejemplo: 'product')") String entidad,
+            @RequestParam("referenciaId") @Parameter(description = "ID de la entidad relacionada") Long referenciaId,
+            @RequestParam(value = "nombre", required = false) @Parameter(description = "Nombre opcional de la imagen") String nombre,
+            @RequestParam(value = "tipo", required = false) @Parameter(description = "Tipo de imagen (por ejemplo: 'thumbnail')") String tipo
     ) {
         try {
             Image image = imageService.saveImage(file, entidad, referenciaId, nombre, tipo);
@@ -50,10 +71,16 @@ public class ImageController {
         }
     }
 
-
+    @Operation(
+            summary = "Eliminar imagen por ID",
+            description = "Elimina una imagen del sistema utilizando su ID."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Imagen eliminada exitosamente")
+    })
     @DeleteMapping("/view/{id}")
-    public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
-       imageService.DeleteById(id);
-       return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteImage(@PathVariable @Parameter(description = "ID de la imagen") Long id) {
+        imageService.DeleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

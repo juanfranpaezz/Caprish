@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface ClientRepository extends MyObjectGenericRepository<Client> {
    Optional<Client> findByPhone(Integer phone);
    Long findIdByCredential_Id(Long credentialId);
-   Long findIdByUsername(String username);
+//Long findIdByUsername(String username);
 }

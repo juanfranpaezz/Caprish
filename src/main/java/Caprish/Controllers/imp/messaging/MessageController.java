@@ -21,9 +21,19 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/message")
 @Validated
+@Tag(name = "Mensajes", description = "Gestión de mensajes entre clientes y empresas")
+@SecurityRequirement(name = "bearerAuth")
 public class MessageController extends MyObjectGenericController<Message, MessageRepository, MessageService> {
 
     @Autowired private StaffService staffService;
@@ -37,18 +47,33 @@ public class MessageController extends MyObjectGenericController<Message, Messag
         super(service);
     }
 
+    @Operation(
+            summary = "Enviar mensaje",
+            description = """
+            Envía un mensaje en el contexto de un chat existente entre un cliente y un negocio.
+            El sistema detecta si quien envía es un CLIENT o un STAFF según los roles del usuario autenticado.
+            Se requiere que ya exista un chat entre ese cliente y el negocio.
+        """
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mensaje enviado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Faltan campos, negocio no encontrado o no existe chat previo"),
+            @ApiResponse(responseCode = "404", description = "Tipo de remitente (SenderType) no encontrado")
+    })
     @PostMapping("/send")
     public ResponseEntity<String> sendMessage(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody Map<String,String> payload) {
+            @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody Map<String, String> payload) {
 
         String businessName = payload.get("businessName");
-        String content      = payload.get("content");
+        String content = payload.get("content");
+
         if (businessName == null || content == null) {
             return ResponseEntity
                     .badRequest()
                     .body("Faltan businessName o content.");
         }
+
         if (!businessService.existsByBusinessName(businessName)) {
             return ResponseEntity
                     .badRequest()
@@ -69,22 +94,26 @@ public class MessageController extends MyObjectGenericController<Message, Messag
                 : clientService.getIdByCredentialId(
                 credentialService.getIdByUsername(businessName)
         );
+
         Chat chat = chatService.findByBusinessIdAndClientId(businessId, clientId);
         if (chat == null) {
             return ResponseEntity
                     .badRequest()
                     .body("No existe un chat previo entre ese negocio y cliente.");
         }
+
         String senderTypeId = isClient ? "CLIENT" : "STAFF";
         SenderType senderType = senderTypeRepository
                 .findById(senderTypeId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "SenderType no encontrado: " + senderTypeId
                 ));
+
         Message message = new Message();
         message.setChat(chat);
         message.setContent(content);
         message.setSender_type(senderType);
+
         return create(message);
     }
 }

@@ -149,6 +149,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/staff/updateWorkRole/{id}/{workRole}").hasRole("BOSS")
 //                        .requestMatchers("/staff/{id}").hasRole("BOSS")
                                 .requestMatchers("/staff/all").hasRole("BOSS")
+                                .requestMatchers("/staff/by-business/{businessId}").hasRole("BOSS")
 
 
                         .anyRequest().authenticated()

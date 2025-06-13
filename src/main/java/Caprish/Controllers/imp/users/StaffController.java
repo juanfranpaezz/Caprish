@@ -45,8 +45,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         try {
             if (entity == null ||
                     !userDetails.getAuthorities().toString().equals("ROLE_EMPLOYEE") ||
-                    !userDetails.getAuthorities().toString().equals("ROLE_SUPERVISOR") ||
-                    !userDetails.getAuthorities().toString().equals("ROLE_BOSS")
+                    !userDetails.getAuthorities().toString().equals("ROLE_SUPERVISOR")
                 ) return ResponseEntity.badRequest().build();
             entity.setId(credentialService.getIdByUsername(userDetails.getUsername()));
             return ResponseEntity.ok(String.valueOf(service.save(entity)));

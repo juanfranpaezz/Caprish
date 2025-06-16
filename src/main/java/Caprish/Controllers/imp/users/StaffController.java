@@ -11,6 +11,10 @@ import Caprish.Service.imp.sales.CartService;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,7 @@ import Caprish.Model.imp.users.dto.StaffViewDTO;
 @RestController
 @RequestMapping("/staff")
 @Validated
+@Tag(name = "Staff", description = "Operaciones relacionadas al personal de la empresa")
 public class StaffController extends MyObjectGenericController<Staff, StaffRepository, StaffService> {
     @Autowired
     CredentialService credentialService;
@@ -44,6 +49,15 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         super(service);
     }
 
+
+    @Operation(
+            summary = "Crear un nuevo empleado",
+            description = "Permite al usuario autenticado con rol válido (EMPLOYEE, SUPERVISOR o BOSS) crear su propia cuenta Staff"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Staff creado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o rol no permitido")
+    })
     @PostMapping("/create")
     public ResponseEntity<String> createStaff(@Valid @RequestBody Staff entity, @AuthenticationPrincipal UserDetails userDetails) {
         try {
@@ -75,6 +89,15 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return ResponseEntity.ok("Staff jefe creado con éxito.");
     }
 
+
+    @Operation(
+            summary = "Eliminar un empleado por ID",
+            description = "Elimina un registro Staff usando su identificador único"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Eliminado correctamente"),
+            @ApiResponse(responseCode = "400", description = "ID inválido")
+    })
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteObject(@Valid @RequestBody String username , @AuthenticationPrincipal UserDetails userDetails ) {
         if (username == null) return ResponseEntity.badRequest().build();
@@ -83,6 +106,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("La empresa no existe");
         return delete(staffId);
     }
+
 
     @GetMapping("/view-my-account")
     public ResponseEntity<Staff> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
@@ -94,6 +118,15 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return delete(id);
     }
 
+
+    @Operation(
+            summary = "Promover a un empleado",
+            description = "Asigna el rol de SUPERVISOR a un empleado dado su nombre de usuario, si pertenece a la misma empresa"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Rol actualizado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Usuario inválido o no pertenece a la empresa")
+    })
     @PutMapping("/promote")
     public ResponseEntity<String> updateWorkRole(@PathVariable String username, @AuthenticationPrincipal UserDetails userDetails) {
         if (username == null) return ResponseEntity.badRequest().build();

@@ -14,6 +14,10 @@ import Caprish.Service.imp.sales.ItemService;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/item")
+@Tag(name = "Ítems", description = "Gestión de ítems dentro del sistema (productos en un carrito, pedido, etc.)")
 public class ItemController extends MyObjectGenericController<Item, ItemRepository, ItemService> {
 
     @Autowired
@@ -128,7 +133,14 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    // 2) Staff update quantity
+    @Operation(
+            summary = "Actualizar cantidad de un ítem",
+            description = "Modifica el valor del campo 'quantity' para el ítem con el ID dado"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cantidad actualizada correctamente"),
+            @ApiResponse(responseCode = "400", description = "Parámetros inválidos")
+    })
     @PutMapping("/staff/update-quantity/{itemId}/{quantity}")
     public ResponseEntity<?> updateQuantityStaff(@PathVariable @Positive Long itemId,
                                                  @PathVariable @Positive int quantity,
@@ -150,7 +162,14 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         return ResponseEntity.ok("Cantidad actualizada");
     }
 
-    // 3) Client update quantity
+    @Operation(
+            summary = "Actualizar cantidad de un ítem",
+            description = "Modifica el valor del campo 'quantity' para el ítem con el ID dado"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cantidad actualizada correctamente"),
+            @ApiResponse(responseCode = "400", description = "Parámetros inválidos")
+    })
     @PutMapping("/client/update-quantity/{itemId}/{quantity}")
     public ResponseEntity<?> updateQuantityClient(@PathVariable @Positive Long itemId,
                                                   @PathVariable @Positive int quantity,
@@ -171,7 +190,14 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         return ResponseEntity.ok("Cantidad actualizada");
     }
 
-    // 4) Staff delete item
+    @Operation(
+            summary = "Eliminar ítem",
+            description = "Elimina un ítem existente por su ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ítem eliminado correctamente"),
+            @ApiResponse(responseCode = "400", description = "ID inválido")
+    })
     @DeleteMapping("/staff/delete/{itemId}")
     public ResponseEntity<?> deleteItemStaff(@PathVariable @Positive Long itemId,
                                              @AuthenticationPrincipal UserDetails userDetails) {
@@ -190,7 +216,14 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         return ResponseEntity.ok("Ítem eliminado");
     }
 
-    // 5) Client delete item
+    @Operation(
+            summary = "Eliminar ítem",
+            description = "Elimina un ítem existente por su ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ítem eliminado correctamente"),
+            @ApiResponse(responseCode = "400", description = "ID inválido")
+    })
     @DeleteMapping("/client/delete/{itemId}")
     public ResponseEntity<?> deleteItemClient(@PathVariable @Positive Long itemId,
                                               @AuthenticationPrincipal UserDetails userDetails) {

@@ -8,6 +8,10 @@ import Caprish.Service.imp.business.BusinessService;
 import Caprish.Service.imp.business.ProductService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -29,6 +33,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/product")
 @Validated
+@Tag(name = "Productos", description = "Gestión de productos disponibles para la venta")
 public class ProductController extends MyObjectGenericController<Product, ProductRepository, ProductService> {
 
     @Autowired
@@ -42,6 +47,10 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         super(service);
     }
 
+
+
+    @Operation(summary = "Crear nuevo producto", description = "Crea un nuevo producto con nombre, descripción y precio.")
+    @ApiResponse(responseCode = "200", description = "Producto creado exitosamente")
     @PostMapping("/create")
     public ResponseEntity<String> createObject(@Valid @RequestBody Product entity,
                                                @AuthenticationPrincipal UserDetails userDetails) {
@@ -58,6 +67,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         entity.setBusiness(business);
         return create(entity);
     }
+
 
     @DeleteMapping("/delete/{name}")
     public ResponseEntity<String> deleteByName(@PathVariable @NotBlank String name,
@@ -130,7 +140,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return ResponseEntity.ok(products);
     }
 
-
+    @Operation(summary = "Actualizar nombre", description = "Actualiza el nombre del producto.")
     @PutMapping("/updateName/{oldName}/{newName}")
     public ResponseEntity<String> updateName(@PathVariable @NotBlank String oldName,
                                              @PathVariable @NotBlank String newName,
@@ -158,6 +168,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return update(id, "name", newName);
     }
 
+    @Operation(summary = "Actualizar descripción", description = "Actualiza la descripción del producto.")
     @PutMapping("/updateDescription/{name}/{description}")
     public ResponseEntity<String> updateDescription(@PathVariable @NotBlank String name,
                                                     @PathVariable @NotBlank String description,
@@ -178,6 +189,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return update(optProd.get().getId(), "description", description);
     }
 
+    @Operation(summary = "Actualizar precio", description = "Actualiza el precio del producto.")
     @PutMapping("/updatePrice/{name}/{price}")
     public ResponseEntity<String> updatePrice(@PathVariable @NotBlank String name,
                                               @PathVariable @Positive Double price,
@@ -198,6 +210,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return update(optProd.get().getId(), "price", price);
     }
 
+    @Operation(summary = "Obtener todos los productos", description = "Devuelve una lista de todos los productos disponibles.")
     @PermitAll
     @GetMapping("/all")
     public ResponseEntity<List<Product>> findAllObjects() {

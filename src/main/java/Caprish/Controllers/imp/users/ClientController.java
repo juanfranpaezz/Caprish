@@ -9,6 +9,10 @@ import Caprish.Service.imp.sales.CartService;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -30,6 +34,7 @@ import Caprish.Model.imp.users.Credential;
 @RestController
 @RequestMapping("/client")
 @Validated
+@Tag(name = "Clientes", description = "Gestión de datos de los clientes")
 public class ClientController extends MyObjectGenericController<Client, ClientRepository, ClientService> {
 
     @Autowired
@@ -45,6 +50,15 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         super(childService);
     }
 
+
+    @Operation(
+            summary = "Crear cuenta de cliente",
+            description = "Permite a un usuario autenticado con rol CLIENT crear su cuenta de cliente"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente creado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o sin permisos")
+    })
     @PostMapping("/create")
     public ResponseEntity<String> createClient(@Valid @RequestBody Client entity, @AuthenticationPrincipal UserDetails userDetails) {
         try {
@@ -56,6 +70,15 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         }
     }
 
+
+    @Operation(
+            summary = "Eliminar cliente",
+            description = "Elimina un cliente por su ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente eliminado correctamente"),
+            @ApiResponse(responseCode = "400", description = "ID inválido")
+    })
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
         Optional<Credential> c = credentialService.findById(credentialService.getIdByUsername(userDetails.getUsername()));
@@ -64,18 +87,33 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         return ResponseEntity.ok("Borrado exitosamente");
     }
 
+
+    @Operation(
+            summary = "Actualizar teléfono",
+            description = "Actualiza el número de teléfono del cliente autenticado"
+    )
     @PutMapping("/update-phone")
     public ResponseEntity<String> updatePhone(@AuthenticationPrincipal UserDetails userDetails,
                                               @RequestBody Map<String,String> payload) {
         return update(service.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "phone", payload.get("phone"));
     }
 
+    @Operation(
+            summary = "Actualizar identificación fiscal",
+            description = "Actualiza el número de identificación fiscal del cliente autenticado"
+    )
     @PutMapping("/update-tax")
     public ResponseEntity<String> updateTax(@AuthenticationPrincipal UserDetails userDetails,
                                             @RequestBody Map<String,String> payload) {
         return update(service.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "tax", payload.get("tax"));
     }
 
+
+    @Operation(
+            summary = "Buscar cliente por ID",
+            description = "Obtiene un cliente por su identificador"
+    )
+    @ApiResponse(responseCode = "200", description = "Cliente encontrado")
     @GetMapping("/{username}")
     public ResponseEntity<Client> findObjectById(@Positive @PathVariable String username, @AuthenticationPrincipal UserDetails userDetails) {
         Long clientId = service.getIdByCredentialId(credentialService.getIdByUsername(username));
@@ -88,6 +126,12 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         return ResponseEntity.ok(clientService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
     }
 
+
+    @Operation(
+            summary = "Listar todos los clientes",
+            description = "Devuelve una lista con todos los clientes registrados"
+    )
+    @ApiResponse(responseCode = "200", description = "Lista devuelta correctamente")
     @GetMapping("/all")
     public ResponseEntity<List<Client>> findAllObjects(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(cartService.findClientsByBusinessId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));

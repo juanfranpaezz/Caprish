@@ -11,6 +11,10 @@ import Caprish.Service.imp.business.BusinessService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
 import Caprish.Service.others.GoogleGeocodingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/business")
 @Validated
+@Tag(name = "Negocios", description = "Operaciones relacionadas con entidades de tipo Business")
 public class BusinessController extends MyObjectGenericController<Business, BusinessRepository, BusinessService> {
 
     @Autowired
@@ -71,7 +76,8 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return ResponseEntity.ok("Guardado con ID: " + saved.getId());
     }
 
-
+    @Operation(summary = "Eliminar un negocio", description = "Elimina un negocio a partir de su ID")
+    @ApiResponse(responseCode = "200", description = "Negocio eliminado correctamente")
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
         Long businessId = staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
@@ -79,7 +85,11 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return delete(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
     }
 
-
+    @Operation(summary = "Buscar negocio por nombre", description = "Obtiene un negocio usando su nombre")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Negocio encontrado"),
+            @ApiResponse(responseCode = "404", description = "Negocio no encontrado")
+    })
     @GetMapping("/{name}")
     public ResponseEntity<Business> findObjectByName(@PathVariable String name) {
         Business business = service.findByBusinessName(name);
@@ -94,6 +104,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return ResponseEntity.ok(a.get());
     }
 
+    @Operation(summary = "Actualizar nombre del negocio")
     @PutMapping("/updateBusinessName")
     public ResponseEntity<String> updateBusinessName(
             @RequestParam String name,
@@ -102,6 +113,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return update(bizId, "business_name", name);
     }
 
+    @Operation(summary = "Actualizar descripción del negocio")
     @PutMapping("/updateDescription")
     public ResponseEntity<String> updateDescription(
             @RequestParam String description,
@@ -110,6 +122,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return update(bizId, "description", description);
     }
 
+    @Operation(summary = "Actualizar eslogan del negocio")
     @PutMapping("/updateSlogan")
     public ResponseEntity<String> updateSlogan(
             @RequestParam String slogan,
@@ -118,6 +131,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return update(bizId, "slogan", slogan);
     }
 
+    @Operation(summary = "Actualizar valor del impuesto del negocio")
     @PutMapping("/updateTax")
     public ResponseEntity<String> updateTax(
             @RequestParam @Positive long tax,

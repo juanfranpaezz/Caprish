@@ -18,6 +18,10 @@ import Caprish.Service.imp.sales.ItemService;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/cart")
+@Tag(name = "Carritos", description = "Gestión de carritos de compra y ventas asociadas")
 public class CartController extends MyObjectGenericController<Cart, CartRepository, CartService> {
 
     @Autowired
@@ -56,6 +61,14 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
 
     }
 
+    @Operation(
+            summary = "Crear un nuevo carrito",
+            description = "Crea un nuevo carrito con los datos proporcionados"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Carrito creado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    })
     @PostMapping("/create")
     public ResponseEntity<String> createObject(@RequestBody Map<String,String> payload,
                                                @AuthenticationPrincipal UserDetails userDetails) {
@@ -69,6 +82,10 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return create(entity);
     }
 
+    @Operation(
+            summary = "Eliminar carrito",
+            description = "Elimina un carrito según su ID"
+    )
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteSaleCart(@PathVariable @Positive Long id,
                                                  @AuthenticationPrincipal UserDetails userDetails) {
@@ -88,7 +105,11 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     }
 
 
-
+    @Operation(
+            summary = "Ver mis ventas",
+            description = "Obtiene los carritos (ventas) relacionados con un usuario en especifico"
+    )
+    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
     @GetMapping("/staff/view/my-sales")
     public ResponseEntity<List<CartViewDTO>> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(service.getCartViewsByBusiness(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));
@@ -118,6 +139,11 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return ResponseEntity.ok("Venta confirmada");
     }
 
+    @Operation(
+            summary = "Ver mis ventas",
+            description = "Obtiene los carritos (ventas) relacionados con una empresa específica, útil para vista del supervisor"
+    )
+    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
     @GetMapping("/view/my-sales/{businessId}")
     public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
         return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));

@@ -13,6 +13,10 @@ import Caprish.Service.imp.messaging.MessageService;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +30,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/message")
 @Validated
+@Tag(name = "Mensajes", description = "Gestión de mensajes entre clientes y empresas")
 public class MessageController extends MyObjectGenericController<Message, MessageRepository, MessageService> {
 
     @Autowired private StaffService staffService;
@@ -39,6 +44,19 @@ public class MessageController extends MyObjectGenericController<Message, Messag
         super(service);
     }
 
+    @Operation(
+            summary = "Enviar mensaje",
+            description = """
+            Envía un mensaje en el contexto de un chat existente entre un cliente y un negocio.
+            El sistema detecta si quien envía es un CLIENT o un STAFF según los roles del usuario autenticado.
+            Se requiere que ya exista un chat entre ese cliente y el negocio.
+        """
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mensaje enviado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Faltan campos, negocio no encontrado o no existe chat previo"),
+            @ApiResponse(responseCode = "404", description = "Tipo de remitente (SenderType) no encontrado")
+    })
     @PostMapping("/send")
     public ResponseEntity<String> sendMessage(@AuthenticationPrincipal UserDetails userDetails,
                                               @RequestBody Map<String,String> payload) {

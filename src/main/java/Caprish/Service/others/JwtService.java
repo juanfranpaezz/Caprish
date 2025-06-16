@@ -1,7 +1,5 @@
 package Caprish.Service.others;
 
-
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,45 +21,72 @@ public class JwtService {
         this.secretKey = secretKey;
     }
 
-    // Genera un token para un usuario autenticado
+    /**
+     * Genera un token JWT estándar sin campos adicionales.
+     */
     public String generateToken(UserDetails userDetails) {
-        return Jwts.builder()
-                .setSubject(userDetails.getUsername()) // El "dueño" del token (ej: nombre de usuario)
-                .claim("role", userDetails.getAuthorities()) // Información adicional: los roles del usuario
-                .setIssuedAt(new Date(System.currentTimeMillis())) // Cuándo fue generado
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Expira en 1 hora
-                .signWith(getKey(), SignatureAlgorithm.HS256) // Firma el token con HS256 y la clave secreta
-                .compact(); // Lo convierte a una cadena tipo JWT (header.payload.firma)
+        return generateToken(userDetails, null);
     }
 
-    //  Verifica si un token es válido para un usuario dado
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token); // extrae el usuario desde el token
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    /**
+     * Genera un token JWT incluyendo un claim de versión.
+     */
+    public String generateToken(UserDetails userDetails, Long tokenVersion) {
+        var builder = Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .claim("role", userDetails.getAuthorities())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60));
+
+        if (tokenVersion != null) {
+            builder.claim("ver", tokenVersion);
+        }
+
+        return builder.signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
-    // Extrae el nombre de usuario desde el token (campo "sub")
+    /**
+     * Extrae un claim genérico del token por nombre y tipo.
+     */
+    public <T> T extractClaim(String token, String claimName, Class<T> requiredType) {
+        Claims claims = extractAllClaims(token);
+        Object value = claims.get(claimName);
+        if (value == null) {
+            return null;
+        }
+        // Si pidieron Long pero vino Integer (u otro Number), lo convertimos:
+        if (requiredType == Long.class && value instanceof Number) {
+            Number num = (Number) value;
+            return requiredType.cast(Long.valueOf(num.longValue()));
+        }
+        return requiredType.cast(value);
+    }
+
+
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    // Verifica si el token está vencido (exp < fecha actual)
     private boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-    // Extrae todos los datos (claims) del token
-    private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getKey()) // Le dice con qué clave validar la firma
-                .build()
-                .parseClaimsJws(token) // Parsea el JWT completo y lo valida
-                .getBody(); // Devuelve el contenido (payload)
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    //Convierte la clave secreta en un objeto Key para usar con la librería jjwt
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
     private Key getKey() {
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes); // Usa HMAC con SHA-256
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

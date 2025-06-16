@@ -8,16 +8,22 @@ import Caprish.Model.imp.users.LoginResponse;
 import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.mail.VerificationService;
 import Caprish.Service.imp.users.CredentialService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,15 +46,28 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(), request.getPassword()
-                    )
+            var tokenRequest = new UsernamePasswordAuthenticationToken(
+                    request.getUsername(), request.getPassword()
             );
+            Authentication authResult = authenticationManager.authenticate(tokenRequest);
+            System.out.println("✅ Autenticación exitosa, authorities: " + authResult.getAuthorities());
             return ResponseEntity.ok(service.doLogin(request.getUsername()));
+        } catch (BadCredentialsException bc) {
+            System.err.println("🔒 Credenciales inválidas: " + bc.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@AuthenticationPrincipal UserDetails userDetails) {
+        Credential cred = service.findByUsername(userDetails.getUsername()).get();
+        cred.setTokenVersion(cred.getTokenVersion() + 1);
+        service.save(cred);
+        return ResponseEntity.ok("Logout exitoso");
     }
 
     @PutMapping("/updateFirstName")

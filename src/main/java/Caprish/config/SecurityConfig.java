@@ -95,7 +95,7 @@ public class SecurityConfig {
                                 .requestMatchers("/product/all-by-my-business").hasRole("EMPLOYEE")
 
                                 .requestMatchers("/business/create").hasRole("BOSS")
-                                .requestMatchers("/business/view-my").hasRole("BOSS")
+                                .requestMatchers("/business/view-my").hasRole("EMPLOYEE")
                                 .requestMatchers("/business/delete").hasRole("BOSS")
                                 .requestMatchers("/business/{name}").hasRole("CLIENT")
                                 .requestMatchers("/business/updateBusinessName").hasRole("BOSS")
@@ -123,25 +123,19 @@ public class SecurityConfig {
     // ------------------------------------------------------------
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        // Este bean NO será usado directamente por DaoAuthenticationProvider,
-        // porque en AuthenticationProvider inyecto MyUserDetailsService.
-        // Lo bueno es que lo defino por si otro componente lo necesita.
+    public JdbcUserDetailsManager jdbcUserDetailsManager() {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
-
         // Consulta para cargar username/password/enabled:
         manager.setUsersByUsernameQuery(
                 "SELECT username, password, enabled FROM credential WHERE username = ?"
         );
-
-        // Consulta para cargar autoridades: ojo al alias “authority”
-        // Esta columna debe devolver “ROLE_ADMIN”, “ROLE_USER”, etc.
+        // Consulta para cargar autoridades (alias “authority”):
         manager.setAuthoritiesByUsernameQuery(
                 "SELECT username, id_role AS authority FROM credential WHERE username = ?"
         );
-
         return manager;
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider(MyUserDetailsService myUserDetailsService) {

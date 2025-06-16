@@ -2,6 +2,7 @@ package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.InvalidEntityException;
+import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.users.StaffRepository;
@@ -11,13 +12,17 @@ import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Optional;
+import Caprish.Model.imp.users.dto.StaffViewDTO;
 
 @RestController
 @RequestMapping("/staff")
@@ -31,6 +36,8 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     private ClientService clientService;
     @Autowired
     private BusinessService businessService;
+    @Autowired
+    private StaffService staffService;
 
 
     public StaffController(StaffService service) {
@@ -42,7 +49,8 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         try {
             if (entity == null ||
                     !userDetails.getAuthorities().toString().equals("ROLE_EMPLOYEE") ||
-                    !userDetails.getAuthorities().toString().equals("ROLE_SUPERVISOR")
+                    !userDetails.getAuthorities().toString().equals("ROLE_SUPERVISOR") ||
+                    !userDetails.getAuthorities().toString().equals("ROLE_BOSS")
                 ) return ResponseEntity.badRequest().build();
             entity.setId(credentialService.getIdByUsername(userDetails.getUsername()));
             return ResponseEntity.ok(String.valueOf(service.save(entity)));
@@ -76,6 +84,16 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return delete(staffId);
     }
 
+    @GetMapping("/view-my-account")
+    public ResponseEntity<Staff> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(staffService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())).get());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
+        return delete(id);
+    }
+
     @PutMapping("/promote")
     public ResponseEntity<String> updateWorkRole(@PathVariable String username, @AuthenticationPrincipal UserDetails userDetails) {
         if (username == null) return ResponseEntity.badRequest().build();
@@ -83,6 +101,23 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
         if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("El staff no existe");
         return update(staffId, "role", "ROLE_SUPERVISOR");
+    }
+
+    //@PreAuthorize("hasRole('BOSS')")
+    @GetMapping("/by-business/{businessId}")
+    public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@PathVariable Long businessId) {
+        List<StaffViewDTO> staff = service.getStaffByBusiness(businessId);
+        return ResponseEntity.ok(staff);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Staff> findObjectById(@Positive @PathVariable Long id) {
+        return findById(id);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Staff>> findAllObjects() {
+        return findAll();
     }
 
 }

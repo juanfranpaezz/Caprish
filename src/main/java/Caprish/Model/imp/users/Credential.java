@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -27,7 +28,7 @@ public class Credential extends MyObject {
     private String username;      // aquí guardás el email
 
     @Column(columnDefinition = "text", nullable = false)
-    private String password; // aquí guardás el BCrypt hash
+    private String password;      // aquí guardás el BCrypt hash
 
     @Column(nullable = false)
     private boolean enabled = true;
@@ -36,6 +37,9 @@ public class Credential extends MyObject {
     @JoinColumn(name = "id_role")
     private Role role;
 
+    // Nuevo campo para invalidar tokens antiguos
+    @Column(nullable = false)
+    private Long tokenVersion = 0L;
 
     @Override
     public boolean equals(Object o) {
@@ -49,4 +53,3 @@ public class Credential extends MyObject {
         return Objects.hash(username);
     }
 }
-

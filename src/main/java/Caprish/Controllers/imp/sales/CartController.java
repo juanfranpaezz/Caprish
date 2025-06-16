@@ -88,6 +88,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     }
 
 
+
     @GetMapping("/staff/view/my-sales")
     public ResponseEntity<List<CartViewDTO>> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(service.getCartViewsByBusiness(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));

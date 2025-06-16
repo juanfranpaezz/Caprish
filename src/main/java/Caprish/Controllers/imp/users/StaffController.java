@@ -2,6 +2,7 @@ package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.InvalidEntityException;
+import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.users.Staff;
 import Caprish.Model.imp.users.dto.StaffViewDTO;
 import Caprish.Repository.interfaces.users.StaffRepository;
@@ -31,6 +32,8 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     private CartService cartService;
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private StaffService staffService;
 
 
     public StaffController(StaffService service) {
@@ -50,6 +53,11 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         } catch (InvalidEntityException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/view-my-account")
+    public ResponseEntity<Staff> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(staffService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())).get());
     }
 
     @DeleteMapping("/delete/{id}")

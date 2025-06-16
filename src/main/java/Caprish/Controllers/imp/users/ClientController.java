@@ -38,6 +38,8 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     StaffService staffService;
     @Autowired
     CartService cartService;
+    @Autowired
+    private ClientService clientService;
 
     public ClientController(ClientService childService) {
         super(childService);
@@ -79,6 +81,11 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         Long clientId = service.getIdByCredentialId(credentialService.getIdByUsername(username));
         if (!cartService.existsByBusinessIdAndClientId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), clientId)) return ResponseEntity.badRequest().build();
         return findById(clientId);
+    }
+
+    @GetMapping("/view-my-account")
+    public ResponseEntity<Client> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(clientService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
     }
 
     @GetMapping("/all")

@@ -8,6 +8,7 @@ import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import Caprish.Service.others.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +19,8 @@ import java.util.Optional;
 @Service
 public class CredentialService extends MyObjectGenericService<Credential, CredentialRepository, CredentialService> {
     @Autowired
-     private UserDetailsService userDetailsService;
+    @Qualifier("myUserDetailsService")
+    private UserDetailsService userDetailsService;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtService jwtService;
 
@@ -62,24 +64,26 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
         }
     }
 
-    public LoginResponse doLogin(String username) throws UserException {
+        public LoginResponse doLogin(String username) throws UserException {
+        // Carga el usuario para autenticación
         UserDetails user = userDetailsService.loadUserByUsername(username);
-        String token = jwtService.generateToken(user);
+        // Trae la entidad Credential desde la BD para obtener tokenVersion real
+        Credential cred = repository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        Long ver = cred.getTokenVersion();
+        String token = jwtService.generateToken(user, ver);
         return new LoginResponse(token);
     }
+
 
     public Long getIdByUsername(String username){
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado")).getId();
     }
 
-    Optional<Credential> findByUsername(String username){
+    public Optional<Credential> findByUsername(String username){
         return repository.findByUsername(username);
     }
-
-
-
-
 
 }
 

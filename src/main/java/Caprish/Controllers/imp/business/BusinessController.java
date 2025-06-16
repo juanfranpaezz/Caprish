@@ -126,5 +126,19 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return update(bizId, "tax", tax);
     }
 
+    @PutMapping("/updateActive")
+    public ResponseEntity<String> updateActive(
+            @RequestParam boolean active,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long bizId = service.resolveBusinessId(userDetails);
+        try {
+            service.changeActiveStatus(bizId, active);
+            return ResponseEntity.ok("Estado actualizado correctamente.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
 

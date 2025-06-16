@@ -102,6 +102,7 @@ public class SecurityConfig {
                                 .requestMatchers("/business/updateDescription").hasRole("BOSS")
                                 .requestMatchers("/business/updateSlogan").hasRole("BOSS")
                                 .requestMatchers("/business/updateTax").hasRole("BOSS")
+                                .requestMatchers("/business/updateActive").hasRole("BOSS")
 
 
                                 .requestMatchers("/staff/create").hasRole("BOSS")

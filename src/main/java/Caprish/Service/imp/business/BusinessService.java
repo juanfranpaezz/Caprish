@@ -4,6 +4,7 @@ import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.imp.business.dto.BusinessViewDTO;
 import Caprish.Repository.interfaces.business.BusinessRepository;
+import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import jakarta.persistence.EntityNotFoundException;
 import Caprish.Service.imp.users.CredentialService;
@@ -36,6 +37,8 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
     @Autowired
     private StaffService staffService;
     private GoogleGeocodingService geocodingService;
+    @Autowired
+    private CredentialRepository credentialRepository;
 
 
     protected BusinessService(BusinessRepository childRepository, GoogleGeocodingService geocodingService) {
@@ -113,6 +116,22 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
     }
     public BusinessViewDTO findByBusinessId(Integer businessName) throws EntityNotFoundException{
         return repository.findByBusinessId(businessName);
+    }
+
+    public void changeActiveStatus(Long businessId, boolean newStatus) {
+        Business business = repository.findById(businessId)
+                .orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
+
+        if (business.isActive() == newStatus) {
+            throw new IllegalStateException("El estado del negocio ya es " + newStatus);
+        }
+
+        business.setActive(newStatus);
+        repository.save(business);
+
+        if (!newStatus) {
+            credentialRepository.disableCredentialsForBusiness(businessId);
+        }
     }
 
 

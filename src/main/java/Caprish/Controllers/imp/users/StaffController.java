@@ -113,12 +113,6 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return ResponseEntity.ok(staffService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())).get());
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteObject(@Positive @PathVariable Long id) {
-        return delete(id);
-    }
-
-
     @Operation(
             summary = "Promover a un empleado",
             description = "Asigna el rol de SUPERVISOR a un empleado dado su nombre de usuario, si pertenece a la misma empresa"
@@ -136,21 +130,11 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return update(staffId, "role", "ROLE_SUPERVISOR");
     }
 
-    //@PreAuthorize("hasRole('BOSS')")
     @GetMapping("/by-business/{businessId}")
     public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@PathVariable Long businessId) {
         List<StaffViewDTO> staff = service.getStaffByBusiness(businessId);
         return ResponseEntity.ok(staff);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Staff> findObjectById(@Positive @PathVariable Long id) {
-        return findById(id);
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<Staff>> findAllObjects() {
-        return findAll();
-    }
 
 }

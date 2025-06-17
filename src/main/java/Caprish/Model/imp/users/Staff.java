@@ -1,5 +1,6 @@
 package Caprish.Model.imp.users;
 
+import Caprish.Model.enums.Role;
 import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.imp.sales.Cart;

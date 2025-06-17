@@ -2,6 +2,7 @@ package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.UserException;
+import Caprish.Model.enums.Role;
 import Caprish.Model.imp.mail.EmailToken;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.LoginRequest;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/credential")
@@ -62,17 +64,13 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         try {
-            var tokenRequest = new UsernamePasswordAuthenticationToken(
-                    request.getUsername(), request.getPassword()
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),request.getPassword()
+                    )
             );
-            Authentication authResult = authenticationManager.authenticate(tokenRequest);
-            System.out.println("✅ Autenticación exitosa, authorities: " + authResult.getAuthorities());
             return ResponseEntity.ok(service.doLogin(request.getUsername()));
-        } catch (BadCredentialsException bc) {
-            System.err.println("🔒 Credenciales inválidas: " + bc.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
@@ -111,7 +109,8 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     )
     @PutMapping("/updatePassword")
     public ResponseEntity<String> updatePasswordHash(@AuthenticationPrincipal UserDetails userDetails,
-                                                    @RequestBody Map<String,String> payload) {
+                                                    @RequestBody Map<String,String> payload) throws UserException {
+        credentialService.verifyPassword(payload.get("password"));
         return update(service.getIdByUsername(userDetails.getUsername()), "password", passwordEncoder.encode(payload.get("password")));
     }
 
@@ -121,51 +120,32 @@ public class CredentialController extends MyObjectGenericController<Credential, 
             description = "Valida el código de verificación enviado por correo electrónico"
     )
     @PostMapping("/verify-token")
-    public ResponseEntity<String> verifyToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Map<String,String> code) {
+    public ResponseEntity<String> verifyToken(@RequestBody Map<String,String> code) {
         String email = code.get("email");
         boolean ok = verificationService.verifyCode(email, code.get("code"));
         if (ok){
+            Credential cred=new Credential(email, passwordEncoder.encode(code.get("password")),new Role("ROLE_USER"));
+            service.save(cred);
             return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
         } else {
             return ResponseEntity.badRequest().body("Código inválido o expirado.");
         }
     }
 
-
     @Operation(
             summary = "Completar datos de perfil",
             description = "Permite completar nombre y apellido luego de la verificación del correo electrónico"
     )
     @PutMapping("/complete-data")
-    public ResponseEntity<LoginResponse> completeData(@AuthenticationPrincipal UserDetails userDetails,
-                                                    @RequestBody Map<String, String> payload) {
-        try {
-            EmailToken token = verificationService.findByEmail(userDetails.getUsername())
-                    .orElseThrow(() -> new RuntimeException("Token no encontrado"));
-
-            if (!token.isVerified()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .build();
-            }
-
-            Credential newUser = new Credential();
-            newUser.setUsername(token.getEmail());
-            newUser.setPassword(token.getPassword());
-            newUser.setFirst_name(payload.get("firstName"));
-            newUser.setLast_name(payload.get("lastName"));
-            service.save(newUser);
-            verificationService.deleteById(token.getId());
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            newUser.getUsername(), newUser.getPassword()
-                    )
-            );
-            return ResponseEntity.ok(service.doLogin(newUser.getUsername()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<String> completeData(
+            @RequestBody Map<String, String> payload) {
+            Optional<Credential> cred = credentialService.findByUsername(payload.get("username"));
+            System.out.println(cred.get().getId());
+            System.out.println(cred.get().getUsername());
+            update(cred.get().getId(),"first_name",payload.get("firstName"));
+            update(cred.get().getId(),"last_name",payload.get("lastName"));
+            return ResponseEntity.ok().body("Campos actualizados exitosamente");
         }
-    }
-
 
     @Operation(
             summary = "Registro de usuario",

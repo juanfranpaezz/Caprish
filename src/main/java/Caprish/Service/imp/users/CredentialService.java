@@ -82,6 +82,8 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
         return repository.findByUsername(username);
     }
 
+
+
 }
 
 

@@ -55,7 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/credential/updateFirstName").hasRole("USER")
                         .requestMatchers("/credential/updateLastName").hasRole("USER")
                         .requestMatchers("/credential/verify-token").permitAll()
-                        .requestMatchers("/credential/complete-data").permitAll()
+                        .requestMatchers("/credential/complete-data").hasRole("USER")
                         .requestMatchers("/credential/updatePassword").hasRole("USER")
 
                         .requestMatchers("/client/create").permitAll()
@@ -105,8 +105,6 @@ public class SecurityConfig {
                         .requestMatchers("/business/updateSlogan").hasRole("BOSS")
                         .requestMatchers("/business/updateTax").hasRole("BOSS")
                         .requestMatchers("/business/updateActive").hasRole("BOSS")
-
-
 
                         .requestMatchers("/staff/create").hasRole("BOSS")
                         .requestMatchers("/staff/delete").hasRole("BOSS")

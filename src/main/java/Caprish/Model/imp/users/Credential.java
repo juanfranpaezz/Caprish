@@ -17,30 +17,34 @@ import java.util.Objects;
 @Table(name = "credential")
 public class Credential extends MyObject {
 
-    @Column(columnDefinition = "text", nullable = false)
+    @Column(columnDefinition = "text")
     private String first_name;
 
-    @Column(columnDefinition = "text", nullable = false)
+    @Column(columnDefinition = "text")
     private String last_name;
 
     @Column(columnDefinition = "text", nullable = false, unique = true)
     @Email
-    private String username;      // aquí guardás el email
+    private String username;
 
     @Column(columnDefinition = "text", nullable = false)
-    private String password;      // aquí guardás el BCrypt hash
+    private String password;
 
-    @Column(nullable = false)
+    @Column
     private boolean enabled = true;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_role")
     private Role role;
 
-    // Nuevo campo para invalidar tokens antiguos
     @Column(nullable = false)
     private Long tokenVersion = 0L;
-
+    public Credential (String email, String password,Role role){
+        this.password=password;
+        this.username=email;
+        this.role=role;
+        this.tokenVersion= 2L;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

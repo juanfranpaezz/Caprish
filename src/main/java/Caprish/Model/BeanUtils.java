@@ -15,7 +15,7 @@ public class BeanUtils {
     public static <M extends MyObject> List<String> getPropertyNames(Class<M> myClass) {
         return Arrays.stream(new BeanWrapperImpl(myClass).getPropertyDescriptors())
                 .map(PropertyDescriptor::getName)
-                .filter(name -> !"class".equals(name) && !"id".equals(name)) // ⬅️ Ignoramos también el campo "id"
+                .filter(name -> !"class".equals(name) && !"id".equals(name))
                 .collect(Collectors.toList());
     }
 

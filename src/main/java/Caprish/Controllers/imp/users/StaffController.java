@@ -2,8 +2,9 @@ package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.InvalidEntityException;
-import Caprish.Model.imp.users.Client;
+import Caprish.Model.enums.Role;
 import Caprish.Model.imp.business.Business;
+import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.users.StaffRepository;
 import Caprish.Service.imp.business.BusinessService;
@@ -16,7 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import Caprish.Model.imp.users.dto.StaffViewDTO;
 
@@ -43,6 +44,8 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     private BusinessService businessService;
     @Autowired
     private StaffService staffService;
+    @Autowired
+    private CredentialController credentialController;
 
 
     public StaffController(StaffService service) {
@@ -50,29 +53,49 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     }
 
 
-    @Operation(
-            summary = "Crear un nuevo empleado",
-            description = "Permite al usuario autenticado con rol válido (EMPLOYEE, SUPERVISOR o BOSS) crear su propia cuenta Staff"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Staff creado correctamente"),
-            @ApiResponse(responseCode = "400", description = "Datos inválidos o rol no permitido")
+    @Operation(summary = "Crear credencial y empleado (solo BOSS)",
+            description = "Permite al usuario con rol BOSS crear un nuevo Credential y su Staff de tipo EMPLOYEE en su empresa desde un solo endpoint")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Empleado creado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o no pertenece a la empresa"),
+            @ApiResponse(responseCode = "403", description = "No estás autorizado para esta operación")
     })
-    @PostMapping("/create")
-    public ResponseEntity<String> createStaff(@Valid @RequestBody Staff entity, @AuthenticationPrincipal UserDetails userDetails) {
+    @PostMapping("/create-employee")
+    public ResponseEntity<String> createEmployee(
+            @Valid @RequestBody Map<String,String> payload,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long bossCredId = credentialService.getIdByUsername(userDetails.getUsername());
+        Long bossBusinessId = service.getBusinessIdByCredentialId(bossCredId);
+        if (bossBusinessId == null) {
+            return ResponseEntity.badRequest().body("No se encontró la empresa para el jefe actual.");
+        }
+        String firstName = payload.get("firstName");
+        String lastName = payload.get("lastName");
+        String username = payload.get("username");
+        String password = payload.get("password");
+        if (username == null || password == null) {
+            return ResponseEntity.badRequest().body("Faltan datos obligatorios: 'username' y/o 'password'.");
+        }
+        Credential newCred = new Credential();
+        newCred.setFirst_name(firstName);
+        newCred.setLast_name(lastName);
+        newCred.setUsername(username);
+        newCred.setPassword(password);
+        newCred.setRole(new Role("ROLE_EMPLOYEE"));
+        Credential savedCred = credentialService.save(newCred);
+        Business bossBusiness = businessService.findById(bossBusinessId)
+                .orElseThrow(() -> new IllegalStateException("Empresa inconsistente."));
+        Staff newStaff = new Staff();
+        newStaff.setCredential(savedCred);
+        newStaff.setBusiness(bossBusiness);
+
         try {
-            if (entity == null ||
-                    !userDetails.getAuthorities().toString().equals("ROLE_EMPLOYEE") ||
-                    !userDetails.getAuthorities().toString().equals("ROLE_SUPERVISOR") ||
-                    !userDetails.getAuthorities().toString().equals("ROLE_BOSS")
-                ) return ResponseEntity.badRequest().build();
-            entity.setId(credentialService.getIdByUsername(userDetails.getUsername()));
-            return ResponseEntity.ok(String.valueOf(service.save(entity)));
-        } catch (InvalidEntityException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            service.save(newStaff);
+            return ResponseEntity.ok("Empleado y credencial creados con éxito.");
+        } catch (InvalidEntityException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
-
     @PostMapping("/create-boss")
     public ResponseEntity<String> createBoss(
             @Valid @RequestBody Staff entity,
@@ -98,13 +121,14 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
             @ApiResponse(responseCode = "200", description = "Eliminado correctamente"),
             @ApiResponse(responseCode = "400", description = "ID inválido")
     })
-    @DeleteMapping("/delete/{username}")
-    public ResponseEntity<String> deleteObject(@Valid @RequestBody String username , @AuthenticationPrincipal UserDetails userDetails ) {
+    @PutMapping("/delete")
+    public ResponseEntity<String> deleteObject(@RequestBody Map <String,String> payload, @AuthenticationPrincipal UserDetails userDetails ) {
+        String username = payload.get("username");
         if (username == null) return ResponseEntity.badRequest().build();
         Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
         Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
         if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("La empresa no existe");
-        return delete(staffId);
+        return credentialController.update(credentialService.getIdByUsername(username),"enabled",false);
     }
 
 
@@ -121,13 +145,14 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
             @ApiResponse(responseCode = "200", description = "Rol actualizado correctamente"),
             @ApiResponse(responseCode = "400", description = "Usuario inválido o no pertenece a la empresa")
     })
-    @PutMapping("/promote/{username}")
-    public ResponseEntity<String> updateWorkRole(@PathVariable String username, @AuthenticationPrincipal UserDetails userDetails) {
-        if (username == null) return ResponseEntity.badRequest().build();
-        Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
-        Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
-        if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("El staff no existe");
-        return update(staffId, "role", "ROLE_SUPERVISOR");
+    @PutMapping("/promote")
+    public ResponseEntity<String> updateWorkRole(@RequestBody Map <String,String> payload, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = payload.get("username");
+//        if (username == null) return ResponseEntity.badRequest().build();
+//        Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
+//        Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
+//        if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("El staff no existe");
+        return credentialController.update(credentialService.getIdByUsername(username), "id_role", "ROLE_SUPERVISOR");
     }
 
     @GetMapping("/by-business/{businessId}")

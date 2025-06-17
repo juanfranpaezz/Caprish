@@ -75,7 +75,6 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         }
     }
 
-
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@AuthenticationPrincipal UserDetails userDetails) {
         Credential cred = service.findByUsername(userDetails.getUsername()).get();
@@ -121,7 +120,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     )
     @PostMapping("/verify-token")
     public ResponseEntity<String> verifyToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Map<String,String> code) {
-        String email = userDetails.getUsername();
+        String email = code.get("email");
         boolean ok = verificationService.verifyCode(email, code.get("code"));
         if (ok){
             return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");

@@ -29,7 +29,6 @@ public class DatabaseInitializer {
     @PostConstruct
     public void init() {
         // Roles
-        createIfNotExists(roleRepository, Role::new, "ROLE_ADMIN");
         createIfNotExists(roleRepository, Role::new, "ROLE_USER");
         createIfNotExists(roleRepository, Role::new, "ROLE_BOSS");
         createIfNotExists(roleRepository, Role::new, "ROLE_CLIENT");
@@ -49,16 +48,16 @@ public class DatabaseInitializer {
         createIfNotExists(senderTypeRepository, SenderType::new, "STAFF");
 
         // Ahora creamos un Admin de ejemplo si no existe
-        Role adminRole = roleRepository.findById("ROLE_ADMIN")
-                .orElseThrow(() -> new RuntimeException("Role ADMIN not found in DB"));
+        Role adminRole = roleRepository.findById("ROLE_BOSS")
+                .orElseThrow(() -> new RuntimeException("Role BOSS not found in DB"));
 
-        if(credentialRepository.findByUsername("admin@gmail.com").isEmpty()) {
+        if(credentialRepository.findByUsername("boss@gmail.com").isEmpty()) {
             Credential admin = new Credential();
             admin.setFirst_name("aa");
             admin.setLast_name("bb");
             admin.setEnabled(true);
-            admin.setUsername("admin@gmail.com");
-            admin.setPassword(passwordEncoder.encode("1234"));
+            admin.setUsername("boss@gmail.com");
+            admin.setPassword(passwordEncoder.encode("Secret123!"));
             admin.setRole(adminRole);
             credentialRepository.save(admin);
         }

@@ -144,35 +144,25 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
             description = "Obtiene los carritos (ventas) relacionados con una empresa específica, útil para vista del supervisor"
     )
     @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
-    @GetMapping("/view/my-sales/{businessId}")
+    @GetMapping("/staff/view/my-sales/{businessId}")
     public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
         return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
     }
 
-    @GetMapping("/view/my-purchases")
-    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/client/view/my-purchases")
     public ResponseEntity<List<ClientPurchaseDTO>> getMyPurchases(@AuthenticationPrincipal UserDetails userDetails) {
 
         String username = userDetails.getUsername(); // viene del JWT
-
-        // Obtener el ID del Credential
         Long credentialId = credentialService.getIdByUsername(username);
-
-        // Obtener el Client a partir del ID de Credential
         Client client = clientService.findByCredentialId(credentialId);
 
         if (client == null) {
             return ResponseEntity.notFound().build();
         }
 
-        // Buscar las compras finalizadas del cliente
         return ResponseEntity.ok(service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername()));
     }
 
-    //    @GetMapping("/view/my-sales/{businessId}")
-//    public ResponseEntity<Long> getMySales(@PathVariable Long businessId) {
-//        return ResponseEntity.ok(businessId);
-//    }
     @PutMapping("/client/confirm-purchase")
     public ResponseEntity<String> confirmPurchase(@RequestBody Map<String,String> payload,
                                                   @AuthenticationPrincipal UserDetails userDetails) {

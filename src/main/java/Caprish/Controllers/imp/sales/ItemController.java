@@ -83,16 +83,11 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
     public ResponseEntity<?> addItemFromPurchase(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody Map<String, String> payload) {
-        // 1) Identificar cliente
         Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
         Long clientId = clientService.getIdByCredentialId(credentialId);
-
-        // 2) Cargar producto
         Long productId = Long.valueOf(payload.get("productId"));
         Product product = productService.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Producto no encontrado"));
-
-        // 3) Obtener o crear carrito de compra abierto
         String cartIdStr = payload.get("cartId");
         Cart cart;
         if (cartIdStr != null && cartService.existsById(Long.valueOf(cartIdStr))) {
@@ -106,14 +101,10 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
                     .orElseThrow(() -> new EntityNotFoundCustomException("Cliente no encontrado")));
             cart = cartService.save(cart);
         }
-
-        // 4) Verificar estado y tipo
         if (!"PURCHASE".equals(cart.getCart_type().getId())
                 || !"OPEN".equals(cart.getCart_status().getId())) {
             return ResponseEntity.badRequest().body("El carrito no está abierto o no es de tipo compra.");
         }
-
-        // 5) Verificar empresa consistente
         if (!cart.getItems().isEmpty()) {
             Long existingBiz = cart.getItems().get(0)
                     .getProduct().getBusiness().getId();
@@ -206,7 +197,6 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         Item item = service.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Item no encontrado"));
         Cart cart = item.getCart();
-        // Verificar negocio a través del staff del carrito
         if (!cart.getStaff().getBusiness().getId().equals(businessId)
                 || !"SALE".equals(cart.getCart_type().getId())
                 || !"OPEN".equals(cart.getCart_status().getId())) {

@@ -110,10 +110,10 @@ public class SecurityConfig {
 
                         .requestMatchers("/staff/create").hasRole("BOSS")
                         .requestMatchers("/staff/delete").hasRole("BOSS")
-                        .requestMatchers("/promote").hasRole("BOSS")
-                        .requestMatchers("/view-my-account").hasRole("EMPLOYEE")
-                        .requestMatchers("/create-boss").hasRole("BOSS")
-                        .requestMatchers("/by-business/{businessId}").hasRole("BOSS")
+                        .requestMatchers("/staff/promote").hasRole("BOSS")
+                        .requestMatchers("/staff/view-my-account").hasRole("EMPLOYEE")
+                        .requestMatchers("/staff/create-boss").hasRole("BOSS")
+                        .requestMatchers("/staff/by-business/{businessId}").hasRole("BOSS")
 
                         .anyRequest().authenticated()
                 )
@@ -128,11 +128,9 @@ public class SecurityConfig {
     @Bean
     public JdbcUserDetailsManager jdbcUserDetailsManager() {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
-        // Consulta para cargar username/password/enabled:
         manager.setUsersByUsernameQuery(
                 "SELECT username, password, enabled FROM credential WHERE username = ?"
         );
-        // Consulta para cargar autoridades (alias “authority”):
         manager.setAuthoritiesByUsernameQuery(
                 "SELECT username, id_role AS authority FROM credential WHERE username = ?"
         );
@@ -153,7 +151,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // Jerarquía de roles (opcional):
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();

@@ -63,10 +63,6 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
             throw new InvalidEntityException("El precio debe ser mayor a cero.");
         }
 
-
-
-
-        // REVISAR ESTO
         if (entity.getBusiness() == null || entity.getBusiness().getId() == null) {
             throw new InvalidEntityException("El producto debe estar asociado a un negocio válido.");
         }
@@ -79,10 +75,6 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
     public Product findByName(String name)throws EntityNotFoundException{
         return repository.findProductByName(name);
     }
-
-//    public findByIdFromBusiness
-
-
     public Product findByIdWithImages(Long id) {
         Product product = repository.findById(id).orElse(null);
         if (product != null) {

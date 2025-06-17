@@ -64,17 +64,10 @@ public class ImageService {
             Files.createDirectories(uploadPath);
         }
 
-        //generamos el nombre
         String fileName = UUID.randomUUID().toString() + ext;
         Path filePath = uploadPath.resolve(fileName);
-
-        // guardamos el archivo en el directorio
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-        //url
         String url= accessUrl + fileName;
-
-        //guardamos en l base de datos
         Image image = new Image();
         image.setNombre(nombre!= null ? nombre : file.getOriginalFilename());
         image.setUrl(url);
@@ -91,7 +84,6 @@ public class ImageService {
             String imageUrl= image.getUrl();
             if(imageUrl != null && !imageUrl.isEmpty()) {
                 try{
-                    //convertir la ruta relativa a absoluta
                     String fileName= imageUrl.substring(imageUrl.lastIndexOf("/")+1);
                     Path filePath = Paths.get(uploadDir, fileName);
                     Files.deleteIfExists(filePath);

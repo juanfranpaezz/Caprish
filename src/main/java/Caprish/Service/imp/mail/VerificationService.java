@@ -25,7 +25,6 @@ public class VerificationService extends MyObjectGenericService<EmailToken,Email
         super(childRepository);
     }
 
-    //generador de token
     public String sendVerificationCode(String userEmail,String password) throws Exception {
         String token = String.format("%06d", new Random().nextInt(900_000) + 100_000);
         String nombre = userEmail.contains("@")
@@ -55,7 +54,6 @@ public class VerificationService extends MyObjectGenericService<EmailToken,Email
         return repo.findByEmail(userDetails);
     }
 
-    //validador de token
     public boolean verifyCode(String email, String code) {
         return repo.findByEmailAndToken(email, code)
                 .filter(e -> e.getExpiration().isAfter(LocalDateTime.now()))

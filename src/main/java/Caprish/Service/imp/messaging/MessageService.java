@@ -19,10 +19,8 @@ public class MessageService extends MyObjectGenericService<Message, MessageRepos
 
     @Override
     protected void verifySpecificAttributes(Message entity) {
-        // ninguna validación extra
     }
 
-    /** Lista los mensajes de un chat ordenados cronológicamente */
     public List<Message> findByChatId(Long chatId) {
         return repository.findByChatId(chatId);
     }

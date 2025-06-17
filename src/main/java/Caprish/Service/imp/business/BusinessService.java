@@ -16,18 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 import Caprish.Model.imp.users.Staff;
-
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import java.util.Optional;
 
 @Slf4j
 @Service

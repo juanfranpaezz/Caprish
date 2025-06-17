@@ -15,8 +15,8 @@ import java.util.Collection;
 public class MyUserDetails implements UserDetails {
 
     private final Credential credential;
-    private final Client client; // null si no es cliente
-    private final Staff staff;   // null si no es staff
+    private final Client client;
+    private final Staff staff;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public MyUserDetails(Credential credential,
@@ -46,17 +46,17 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // o lógica personalizada
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // o lógica personalizada
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // o lógica personalizada
+        return true;
     }
 
     @Override

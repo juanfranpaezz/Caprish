@@ -98,7 +98,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
             @ApiResponse(responseCode = "200", description = "Eliminado correctamente"),
             @ApiResponse(responseCode = "400", description = "ID inválido")
     })
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{username}")
     public ResponseEntity<String> deleteObject(@Valid @RequestBody String username , @AuthenticationPrincipal UserDetails userDetails ) {
         if (username == null) return ResponseEntity.badRequest().build();
         Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
@@ -121,7 +121,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
             @ApiResponse(responseCode = "200", description = "Rol actualizado correctamente"),
             @ApiResponse(responseCode = "400", description = "Usuario inválido o no pertenece a la empresa")
     })
-    @PutMapping("/promote")
+    @PutMapping("/promote/{username}")
     public ResponseEntity<String> updateWorkRole(@PathVariable String username, @AuthenticationPrincipal UserDetails userDetails) {
         if (username == null) return ResponseEntity.badRequest().build();
         Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));

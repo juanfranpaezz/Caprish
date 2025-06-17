@@ -1,6 +1,7 @@
 package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
+import Caprish.Exception.UserException;
 import Caprish.Model.imp.mail.EmailToken;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.LoginRequest;
@@ -43,6 +44,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private VerificationService verificationService;
+    @Autowired private CredentialService credentialService;
 
     public CredentialController(CredentialService service) {
         super(service);
@@ -174,8 +176,10 @@ public class CredentialController extends MyObjectGenericController<Credential, 
             @ApiResponse(responseCode = "400", description = "Error al registrar el usuario")
     })
     @PostMapping("/sign-up")
-    public ResponseEntity<String> createObject(@Valid @RequestBody Credential entity){
+    public ResponseEntity<String> createObject(@Valid @RequestBody Credential entity) throws UserException {
+        credentialService.verifyPassword(entity.getPassword());
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+
         try{
                 return ResponseEntity.ok(verificationService.sendVerificationCode(entity.getUsername(), entity.getPassword()));
         }catch (Exception e){

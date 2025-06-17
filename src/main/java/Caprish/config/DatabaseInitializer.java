@@ -46,8 +46,6 @@ public class DatabaseInitializer {
         // SenderType
         createIfNotExists(senderTypeRepository, SenderType::new, "CLIENT");
         createIfNotExists(senderTypeRepository, SenderType::new, "STAFF");
-
-        // Ahora creamos un Admin de ejemplo si no existe
         Role adminRole = roleRepository.findById("ROLE_BOSS")
                 .orElseThrow(() -> new RuntimeException("Role BOSS not found in DB"));
 

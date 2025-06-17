@@ -65,16 +65,13 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
     }
 
         public LoginResponse doLogin(String username) throws UserException {
-        // Carga el usuario para autenticación
         UserDetails user = userDetailsService.loadUserByUsername(username);
-        // Trae la entidad Credential desde la BD para obtener tokenVersion real
         Credential cred = repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
         Long ver = cred.getTokenVersion();
         String token = jwtService.generateToken(user, ver);
         return new LoginResponse(token);
     }
-
 
     public Long getIdByUsername(String username){
         return repository.findByUsername(username)

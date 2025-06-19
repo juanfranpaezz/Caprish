@@ -1,6 +1,7 @@
 package Caprish.Controllers.imp.business;
 
 import Caprish.Controllers.MyObjectGenericController;
+import Caprish.Exception.CustomBadRequestException;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.Staff;
@@ -26,12 +27,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/business")
 @Validated
-@Tag(name = "Negocios", description = "Operaciones relacionadas con entidades de tipo Business")
+@Tag(name = "Negocios")
 public class BusinessController extends MyObjectGenericController<Business, BusinessRepository, BusinessService> {
 
     @Autowired
@@ -81,9 +83,18 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     @ApiResponse(responseCode = "200", description = "Negocio eliminado correctamente")
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
-        Long businessId = staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
-        update(businessId, "enabled", false);
-        return delete(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new CustomBadRequestException("Usuario no autenticado o inválido.");
+        }
+        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
+        if (credentialId == null) {
+            throw new CustomBadRequestException("No se encontró el usuario en las credenciales.");
+        }
+        Long businessId = staffService.getBusinessIdByCredentialId(credentialId);
+        if (businessId == null) {
+            throw new CustomBadRequestException("El ID de negocio es inválido.");
+        }
+        return update(businessId, "active", false);
     }
 
     @Operation(summary = "Buscar negocio por nombre", description = "Obtiene un negocio usando su nombre")
@@ -106,15 +117,16 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     }
 
     @Operation(summary = "Actualizar nombre del negocio")
-    @PutMapping("/updateBusinessName")
+    @PutMapping("/updateBusinessName/{name}")
     public ResponseEntity<String> updateBusinessName(
-            @RequestParam String name,
+            @PathVariable String name,
             @AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println("CHOTA");
         Long bizId = service.resolveBusinessId(userDetails);
-        return update(bizId, "business_name", name);
+        return update(bizId, "businessName", name);
     }
 
-    @Operation(summary = "Actualizar descripción del negocio")
+    @Operation(summary = "Actualizar eslogan del negocio")
     @PutMapping("/updateDescription")
     public ResponseEntity<String> updateDescription(
             @RequestParam String description,
@@ -123,27 +135,28 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return update(bizId, "description", description);
     }
 
+
     @Operation(summary = "Actualizar eslogan del negocio")
-    @PutMapping("/updateSlogan")
+    @PutMapping("/updateSlogan/{slogan}")
     public ResponseEntity<String> updateSlogan(
-            @RequestParam String slogan,
+            @PathVariable String slogan,
             @AuthenticationPrincipal UserDetails userDetails) {
         Long bizId = service.resolveBusinessId(userDetails);
         return update(bizId, "slogan", slogan);
     }
 
     @Operation(summary = "Actualizar valor del impuesto del negocio")
-    @PutMapping("/updateTax")
+    @PutMapping("/updateTax/{tax}")
     public ResponseEntity<String> updateTax(
-            @RequestParam @Positive long tax,
+            @PathVariable @Positive long tax,
             @AuthenticationPrincipal UserDetails userDetails) {
         Long bizId = service.resolveBusinessId(userDetails);
         return update(bizId, "tax", tax);
     }
 
-    @PutMapping("/updateActive")
+    @PutMapping("/updateActive/{active}")
     public ResponseEntity<String> updateActive(
-            @RequestParam boolean active,
+            @PathVariable boolean active,
             @AuthenticationPrincipal UserDetails userDetails) {
 
         Long bizId = service.resolveBusinessId(userDetails);

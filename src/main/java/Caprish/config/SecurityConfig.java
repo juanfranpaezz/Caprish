@@ -100,10 +100,10 @@ public class SecurityConfig {
                         .requestMatchers("/business/view-my").hasRole("EMPLOYEE")
                         .requestMatchers("/business/delete").hasRole("BOSS")
                         .requestMatchers("/business/{name}").hasRole("CLIENT")
-                        .requestMatchers("/business/updateBusinessName").hasRole("BOSS")
+                        .requestMatchers("/business/updateBusinessName/{name}").hasRole("BOSS")
                         .requestMatchers("/business/updateDescription").hasRole("BOSS")
-                        .requestMatchers("/business/updateSlogan").hasRole("BOSS")
-                        .requestMatchers("/business/updateTax").hasRole("BOSS")
+                        .requestMatchers("/business/updateSlogan/{slogan}").hasRole("BOSS")
+                        .requestMatchers("/business/updateTax/{tax}").hasRole("BOSS")
                         .requestMatchers("/business/updateActive").hasRole("BOSS")
 
                         .requestMatchers("/staff/create").hasRole("BOSS")

@@ -13,9 +13,9 @@ public interface ClientRepository extends MyObjectGenericRepository<Client> {
    Long findIdByCredential_Id(Long credentialId);
    Client findByCredential_Id(Long credentialId);
 
-   @Query("SELECT c FROM Client c WHERE c.credential.id = :credentialId")
-   Client findByCredential(@Param("credentialId")Long credential);
-
+//   @Query("SELECT c.id FROM Client c WHERE c.credential.id = :credentialId")
+//   Long findByCredential(@Param("credentialId")Long credential);
+//
 
 
 

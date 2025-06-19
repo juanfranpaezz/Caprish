@@ -88,10 +88,10 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         Long productId = Long.valueOf(payload.get("productId"));
         Product product = productService.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Producto no encontrado"));
-        String cartIdStr = payload.get("cartId");
+        Long cartIdStr = Long.valueOf(payload.get("cartId"));
         Cart cart;
-        if (cartIdStr != null && cartService.existsById(Long.valueOf(cartIdStr))) {
-            cart = cartService.findById(Long.valueOf(cartIdStr))
+        if (cartIdStr != null && cartService.existsById(cartIdStr)) {
+            cart = cartService.findById(cartIdStr)
                     .orElseThrow(() -> new EntityNotFoundCustomException("Carrito no encontrado"));
         } else {
             cart = new Cart();

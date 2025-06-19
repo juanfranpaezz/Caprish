@@ -24,7 +24,8 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
             if (entity == null) {
                 ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(String.valueOf(service.save(entity)));
+            service.save(entity);
+            return ResponseEntity.ok("Cargado correctamente");
         } catch (InvalidEntityException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

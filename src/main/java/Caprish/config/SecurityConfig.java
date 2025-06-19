@@ -87,14 +87,13 @@ public class SecurityConfig {
 
                         .requestMatchers("/product/create").hasRole("SUPERVISOR")
                         .requestMatchers("/product/delete/{name}").hasRole("SUPERVISOR")
-                        .requestMatchers("/product/staff/name/{name}").hasRole("EMPLOYEE")
-                        .requestMatchers("/product/client/name/{name}").hasRole("CLIENT")
+                        .requestMatchers("/product/staff/name/{nameProduct}").hasRole("EMPLOYEE")
+                        .requestMatchers("/product/client/name/{nameProduct}").hasRole("CLIENT")
                         .requestMatchers("/product/updateName/{oldName}/{newName}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/updateDescription/{name}/{description}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/updatePrice/{name}/{price}").hasRole("SUPERVISOR")
                         .requestMatchers("/product/all").permitAll()
                         .requestMatchers("/product/all-by-business/{businessName}").permitAll()
-                        .requestMatchers("/product/show-product").hasRole("USER")
 
                         .requestMatchers("/business/create").hasRole("BOSS")
                         .requestMatchers("/business/view-my").hasRole("EMPLOYEE")

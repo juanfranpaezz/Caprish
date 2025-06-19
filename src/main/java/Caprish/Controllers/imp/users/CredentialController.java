@@ -138,14 +138,15 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     )
     @PutMapping("/complete-data")
     public ResponseEntity<String> completeData(
-            @RequestBody Map<String, String> payload) {
-            Optional<Credential> cred = credentialService.findByUsername(payload.get("username"));
-            System.out.println(cred.get().getId());
-            System.out.println(cred.get().getUsername());
-            update(cred.get().getId(),"first_name",payload.get("firstName"));
-            update(cred.get().getId(),"last_name",payload.get("lastName"));
-            return ResponseEntity.ok().body("Campos actualizados exitosamente");
-        }
+            @RequestBody Map<String, String> payload,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Optional<Credential> cred = credentialService.findByUsername(userDetails.getUsername());
+        System.out.println(cred.get().getId());
+        System.out.println(cred.get().getUsername());
+        update(cred.get().getId(),"first_name",payload.get("firstName"));
+        update(cred.get().getId(),"last_name",payload.get("lastName"));
+        return ResponseEntity.ok().body("Campos actualizados exitosamente");
+    }
 
     @Operation(
             summary = "Registro de usuario",

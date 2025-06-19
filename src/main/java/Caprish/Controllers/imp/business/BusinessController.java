@@ -109,6 +109,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     public ResponseEntity<String> updateBusinessName(
             @RequestParam String name,
             @AuthenticationPrincipal UserDetails userDetails) {
+        if(service.existsByBusinessName(name)) return ResponseEntity.badRequest().body("Una empresa ya posee ese nombre");
         Long bizId = service.resolveBusinessId(userDetails);
         return update(bizId, "business_name", name);
     }

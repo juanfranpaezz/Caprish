@@ -88,18 +88,18 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return ResponseEntity.ok("Producto '" + name + "' eliminado correctamente.");
     }
 
-    @GetMapping("/client/name/{name}")
-    public ResponseEntity<List<Product>> findByNameFromClient(@PathVariable @NotBlank String name) {
+    @GetMapping("/client/name/{nameProduct}")
+    public ResponseEntity<List<Product>> findByNameFromClient(@PathVariable @NotBlank String nameProduct) {
         List<Product> all = service.findAll();
         if (all.isEmpty()) return ResponseEntity.noContent().build();
         List<Product> matching = all.stream()
-                .filter(p -> p.getName().equalsIgnoreCase(name))
+                .filter(p -> p.getName().equalsIgnoreCase(nameProduct))
                 .toList();
         return ResponseEntity.ok(matching);
     }
 
-    @GetMapping("/staff/name/{name}")
-    public ResponseEntity<List<Product>> findByNameFromBusiness(@PathVariable @NotBlank String name,
+    @GetMapping("/staff/name/{nameProduct}")
+    public ResponseEntity<List<Product>> findByNameFromBusiness(@PathVariable @NotBlank String nameProduct,
                                                                 @AuthenticationPrincipal UserDetails userDetails) {
         Long businessId = staffService.getBusinessIdByCredentialId(
                 credentialService.getIdByUsername(userDetails.getUsername()));
@@ -108,21 +108,11 @@ public class ProductController extends MyObjectGenericController<Product, Produc
             return ResponseEntity.badRequest().body(Collections.emptyList());
         }
         List<Product> matching = optBusiness.get().getProducts().stream()
-                .filter(p -> p.getName().equalsIgnoreCase(name))
+                .filter(p -> p.getName().equalsIgnoreCase(nameProduct))
                 .toList();
         return ResponseEntity.ok(matching);
     }
 
-
-    @PostMapping("/show-product")
-    public ResponseEntity<Product> findObjectByName(@RequestBody Map<String, String> request) {
-        String name = request.get("name");
-        try {
-            return ResponseEntity.ok(service.findByName(name));
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
             @GetMapping("/all-by-business/{businessName}")
     public ResponseEntity<List<Product>> findAllByBusinessName(@PathVariable @NotBlank String businessName) {

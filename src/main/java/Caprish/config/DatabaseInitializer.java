@@ -46,19 +46,7 @@ public class DatabaseInitializer {
         // SenderType
         createIfNotExists(senderTypeRepository, SenderType::new, "CLIENT");
         createIfNotExists(senderTypeRepository, SenderType::new, "STAFF");
-        Role adminRole = roleRepository.findById("ROLE_BOSS")
-                .orElseThrow(() -> new RuntimeException("Role BOSS not found in DB"));
 
-        if(credentialRepository.findByUsername("boss@gmail.com").isEmpty()) {
-            Credential admin = new Credential();
-            admin.setFirst_name("aa");
-            admin.setLast_name("bb");
-            admin.setEnabled(true);
-            admin.setUsername("boss@gmail.com");
-            admin.setPassword(passwordEncoder.encode("Secret123!"));
-            admin.setRole(adminRole);
-            credentialRepository.save(admin);
-        }
     }
 
     /**

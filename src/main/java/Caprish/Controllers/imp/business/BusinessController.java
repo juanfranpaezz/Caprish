@@ -73,6 +73,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         entity.setProducts(null);
         entity.setActive(true);
         Business saved = service.save(entity);
+        staffService.save(new Staff(credentialService.findByUsername(userDetails.getUsername()).get(),saved));
         return ResponseEntity.ok("Guardado con ID: " + saved.getId());
     }
 

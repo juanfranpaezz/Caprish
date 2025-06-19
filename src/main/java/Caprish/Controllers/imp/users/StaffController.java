@@ -96,6 +96,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
     @PostMapping("/create-boss")
     public ResponseEntity<String> createBoss(
             @Valid @RequestBody Staff entity,
@@ -111,7 +112,6 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         service.save(entity);
         return ResponseEntity.ok("Staff jefe creado con éxito.");
     }
-
 
     @Operation(
             summary = "Eliminar un empleado por ID",
@@ -148,10 +148,10 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     @PutMapping("/promote")
     public ResponseEntity<String> updateWorkRole(@RequestBody Map <String,String> payload, @AuthenticationPrincipal UserDetails userDetails) {
         String username = payload.get("username");
-//        if (username == null) return ResponseEntity.badRequest().build();
-//        Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
-//        Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
-//        if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("El staff no existe");
+        if (username == null) return ResponseEntity.badRequest().build();
+        Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
+        Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
+        if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("El staff no existe");
         return credentialController.update(credentialService.getIdByUsername(username), "id_role", "ROLE_SUPERVISOR");
     }
 

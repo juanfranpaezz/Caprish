@@ -34,5 +34,9 @@ public class Staff extends MyObject {
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("cart-staff")
     private List<Cart> carts = new ArrayList<>();
+    public Staff(Credential credential, Business business) {
+        this.credential = credential;
+        this.business=business;
+    }
 
 }

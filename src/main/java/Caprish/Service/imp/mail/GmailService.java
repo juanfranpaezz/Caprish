@@ -40,7 +40,7 @@ public class GmailService {
     @Value("${gmail.credentials.path}")
     private String credentialsPath;
 
-    private static final String SENDER_EMAIL = "carprishcommerce@gmail.com";
+    private static final String SENDER_EMAIL = "caprishcommerce@gmail.com";
 
     public GmailService() {}
 

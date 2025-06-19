@@ -52,7 +52,44 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         super(service);
     }
 
-
+    @Operation(
+            summary = "Registro de usuario",
+            description = "Crea una nueva credencial codificando la contraseña y enviando un código de verificación por correo"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Registro exitoso, código enviado por correo"),
+            @ApiResponse(responseCode = "400", description = "Error al registrar el usuario")
+    })
+    @PostMapping("/sign-up")
+    public ResponseEntity<String> createObject(@Valid @RequestBody Map <String,String> payload) {
+        if(credentialService.findByUsername(payload.get("username")).isPresent()) return ResponseEntity.badRequest().body("El usuario ya existe");
+        String password=payload.get("password");
+        try{
+            credentialService.verifyPassword(password);
+            passwordEncoder.encode(password);
+            return ResponseEntity.ok(verificationService.sendVerificationCode(payload.get("username"),password));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @Operation(
+            summary = "Verificar token por correo",
+            description = "Valida el código de verificación enviado por correo electrónico"
+    )
+    @PostMapping("/verify-token")
+    public ResponseEntity<String> verifyToken(@RequestBody Map<String,String> code) {
+        String email = code.get("email");
+        if (verificationService.verifyCode(email, code.get("code"))&& code.get("role").equals("BOSS")){
+            Credential cred=new Credential(email, passwordEncoder.encode(code.get("password")),new Role("ROLE_BOSS"));
+            service.save(cred);
+            return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
+        } else  if(verificationService.verifyCode(email, code.get("code"))&& code.get("role").equals("CLIENT")){
+            Credential cred=new Credential(email, passwordEncoder.encode(code.get("password")),new Role("ROLE_CLIENT"));
+            service.save(cred);
+            return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
+        }
+        return ResponseEntity.badRequest().body("Codigo o mail incorrecto");
+    }
     @Operation(
             summary = "Iniciar sesión",
             description = "Autentica al usuario mediante su nombre de usuario y contraseña"
@@ -61,18 +98,36 @@ public class CredentialController extends MyObjectGenericController<Credential, 
             @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso"),
             @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
     })
+
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@AuthenticationPrincipal UserDetails userDetails,
+                                   @RequestBody LoginRequest request) {
+        if (userDetails != null) {
+            return ResponseEntity.badRequest().body("Ya estás logueado");
+        }
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),request.getPassword()
-                    )
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
             return ResponseEntity.ok(service.doLogin(request.getUsername()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @Operation(
+            summary = "Completar datos de perfil",
+            description = "Permite completar nombre y apellido luego de la verificación del correo electrónico"
+    )
+    @PutMapping("/complete-data")
+    public ResponseEntity<String> completeData(
+            @RequestBody Map<String, String> payload) {
+        Optional<Credential> cred = credentialService.findByUsername(payload.get("username"));
+        System.out.println(cred.get().getId());
+        System.out.println(cred.get().getUsername());
+        update(cred.get().getId(),"first_name",payload.get("firstName"));
+        update(cred.get().getId(),"last_name",payload.get("lastName"));
+        return ResponseEntity.ok().body("Campos actualizados exitosamente");
     }
 
     @PostMapping("/logout")
@@ -113,59 +168,5 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         credentialService.verifyPassword(payload.get("password"));
         return update(service.getIdByUsername(userDetails.getUsername()), "password", passwordEncoder.encode(payload.get("password")));
     }
-
-
-    @Operation(
-            summary = "Verificar token por correo",
-            description = "Valida el código de verificación enviado por correo electrónico"
-    )
-    @PostMapping("/verify-token")
-    public ResponseEntity<String> verifyToken(@RequestBody Map<String,String> code) {
-        String email = code.get("email");
-        boolean ok = verificationService.verifyCode(email, code.get("code"));
-        if (ok){
-            Credential cred=new Credential(email, passwordEncoder.encode(code.get("password")),new Role("ROLE_USER"));
-            service.save(cred);
-            return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
-        } else {
-            return ResponseEntity.badRequest().body("Código inválido o expirado.");
-        }
-    }
-
-    @Operation(
-            summary = "Completar datos de perfil",
-            description = "Permite completar nombre y apellido luego de la verificación del correo electrónico"
-    )
-    @PutMapping("/complete-data")
-    public ResponseEntity<String> completeData(
-            @RequestBody Map<String, String> payload) {
-            Optional<Credential> cred = credentialService.findByUsername(payload.get("username"));
-            System.out.println(cred.get().getId());
-            System.out.println(cred.get().getUsername());
-            update(cred.get().getId(),"first_name",payload.get("firstName"));
-            update(cred.get().getId(),"last_name",payload.get("lastName"));
-            return ResponseEntity.ok().body("Campos actualizados exitosamente");
-        }
-
-    @Operation(
-            summary = "Registro de usuario",
-            description = "Crea una nueva credencial codificando la contraseña y enviando un código de verificación por correo"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Registro exitoso, código enviado por correo"),
-            @ApiResponse(responseCode = "400", description = "Error al registrar el usuario")
-    })
-    @PostMapping("/sign-up")
-    public ResponseEntity<String> createObject(@Valid @RequestBody Credential entity) throws UserException {
-        credentialService.verifyPassword(entity.getPassword());
-        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-
-        try{
-                return ResponseEntity.ok(verificationService.sendVerificationCode(entity.getUsername(), entity.getPassword()));
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
 
 }

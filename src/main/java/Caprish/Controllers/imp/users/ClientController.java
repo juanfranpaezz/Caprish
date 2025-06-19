@@ -59,6 +59,7 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
             @ApiResponse(responseCode = "200", description = "Cliente creado correctamente"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos o sin permisos")
     })
+
     @PostMapping("/create")
     public ResponseEntity<String> createClient(@Valid @RequestBody Client entity, @AuthenticationPrincipal UserDetails userDetails) {
         try {
@@ -69,7 +70,6 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 
     @Operation(
             summary = "Eliminar cliente",

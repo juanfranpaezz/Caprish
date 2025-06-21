@@ -5,6 +5,7 @@ import Caprish.Model.imp.messaging.Chat;
 import Caprish.Model.imp.sales.Cart;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class Client extends MyObject {
     private Integer phone;
 
     @Column(unique = true, nullable = false)
+    @NotBlank
     private String tax;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)

@@ -15,21 +15,14 @@ import Caprish.Service.imp.sales.CartService;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.sales.ItemService;
-import Caprish.Service.imp.users.ClientService;
-import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -105,16 +98,6 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     }
 
 
-    @Operation(
-            summary = "Ver mis ventas",
-            description = "Obtiene los carritos (ventas) relacionados con un usuario en especifico"
-    )
-    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
-    @GetMapping("/staff/view/my-sales")
-    public ResponseEntity<List<CartViewDTO>> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(service.getCartViewsByBusiness(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));
-    }
-
     @PutMapping("/staff/confirm-sale/{cartId}")
     public ResponseEntity<String> confirmSale(@PathVariable @Positive Long cartId,
                                               @AuthenticationPrincipal UserDetails userDetails) {
@@ -141,26 +124,40 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
 
     @Operation(
             summary = "Ver mis ventas",
-            description = "Obtiene los carritos (ventas) relacionados con una empresa específica, útil para vista del supervisor"
+            description = "Obtiene las ventas relacionadas con una empresa"
     )
     @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
-    @GetMapping("/staff/view/my-sales/{businessId}")
-    public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
-        return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
+    @GetMapping("/staff/view/my-sales")
+    public ResponseEntity<List<CartViewDTO>> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(service.getSalesByBusiness(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));
+    }
+
+
+    @Operation(
+            summary = "Ver mis carritos",
+            description = "Obtiene los carritos relacionados con una empresa"
+    )
+    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
+    @GetMapping("/staff/view/my-carts")
+    public ResponseEntity<List<CartViewDTO>> getMyCarts(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(service.getCartViewsByBusiness(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));
     }
 
     @GetMapping("/client/view/my-purchases")
     public ResponseEntity<List<ClientPurchaseDTO>> getMyPurchases(@AuthenticationPrincipal UserDetails userDetails) {
-
-        String username = userDetails.getUsername(); // viene del JWT
-        Long credentialId = credentialService.getIdByUsername(username);
+        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
         Client client = clientService.findByCredentialId(credentialId);
-
-        if (client == null) {
-            return ResponseEntity.notFound().build();
-        }
-
+        if (client == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername()));
+    }
+
+
+    @GetMapping("/client/view/my-carts")
+    public ResponseEntity<List<ClientPurchaseDTO>> getMyClientCart(@AuthenticationPrincipal UserDetails userDetails) {
+        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
+        Client client = clientService.findByCredentialId(credentialId);
+        if (client == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(service.getCartByClientUsername(client.getId(), userDetails.getUsername()));
     }
 
     @PutMapping("/client/confirm-purchase")

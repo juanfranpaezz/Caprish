@@ -88,7 +88,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
             service.save(cred);
             return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
         }
-        return ResponseEntity.badRequest().body("Codigo o mail incorrecto");
+        return ResponseEntity.badRequest().body("Uno a varios datos incorrectos");
     }
     @Operation(
             summary = "Iniciar sesión",

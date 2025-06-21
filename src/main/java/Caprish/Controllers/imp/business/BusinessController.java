@@ -154,14 +154,14 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return update(bizId, "tax", tax);
     }
 
-    @PutMapping("/updateActive/{active}")
-    public ResponseEntity<String> updateActive(
-            @PathVariable boolean active,
+    @PutMapping("/deleteMyBusiness")
+    public ResponseEntity<String> deleteMyBusiness(
             @AuthenticationPrincipal UserDetails userDetails) {
 
         Long bizId = service.resolveBusinessId(userDetails);
         try {
-            service.changeActiveStatus(bizId, active);
+            service.changeActiveStatus(bizId, false);
+            //que se bloqeen todos los staff
             return ResponseEntity.ok("Estado actualizado correctamente.");
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

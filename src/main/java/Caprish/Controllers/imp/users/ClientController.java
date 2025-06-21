@@ -63,7 +63,6 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     @PostMapping("/create")
     public ResponseEntity<String> createClient(@Valid @RequestBody Client entity, @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            if (entity == null || !userDetails.getAuthorities().toString().equals("ROLE_CLIENT")) return ResponseEntity.badRequest().build();
             entity.setId(credentialService.getIdByUsername(userDetails.getUsername()));
             return ResponseEntity.ok(String.valueOf(service.save(entity)));
         } catch (InvalidEntityException e) {

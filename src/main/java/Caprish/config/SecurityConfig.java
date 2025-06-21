@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/credential/complete-data").hasRole("USER")
                         .requestMatchers("/credential/updatePassword").hasRole("USER")
 
-                        .requestMatchers("/client/create").hasRole("CLIENT")
+                        .requestMatchers("/client/complete-data").hasRole("CLIENT")
                         .requestMatchers("/client/update-phone").hasRole("CLIENT")
                         .requestMatchers("/client/update-tax").hasRole("CLIENT")
                         .requestMatchers("/client/{username}").hasRole("EMPLOYEE")

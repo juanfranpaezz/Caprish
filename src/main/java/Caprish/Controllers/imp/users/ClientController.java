@@ -60,7 +60,7 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
             @ApiResponse(responseCode = "400", description = "Datos inválidos o sin permisos")
     })
 
-    @PostMapping("/create")
+    @PostMapping("/complete-data")
     public ResponseEntity<String> createClient(@Valid @RequestBody Client entity, @AuthenticationPrincipal UserDetails userDetails) {
         try {
             entity.setId(credentialService.getIdByUsername(userDetails.getUsername()));

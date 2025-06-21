@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +47,8 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     private StaffService staffService;
     @Autowired
     private CredentialController credentialController;
+    @Autowired private PasswordEncoder passwordEncoder;
+
 
 
     public StaffController(StaffService service) {
@@ -72,10 +75,11 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         String firstName = payload.get("firstName");
         String lastName = payload.get("lastName");
         String username = payload.get("username");
-        String password = payload.get("password");
+        String password = passwordEncoder.encode(payload.get("password"));
         if (username == null || password == null) {
             return ResponseEntity.badRequest().body("Faltan datos obligatorios: 'username' y/o 'password'.");
         }
+
         Credential newCred = new Credential();
         newCred.setFirst_name(firstName);
         newCred.setLast_name(lastName);

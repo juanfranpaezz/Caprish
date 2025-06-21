@@ -68,7 +68,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return create(entity);
     }
 
-
     @DeleteMapping("/delete/{name}")
     public ResponseEntity<String> deleteByName(@PathVariable @NotBlank String name,
                                                @AuthenticationPrincipal UserDetails userDetails) {
@@ -99,8 +98,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     }
 
     @GetMapping("/staff/name/{name}")
-    public ResponseEntity<List<Product>> findByNameFromBusiness(@PathVariable @NotBlank String name,
-                                                                @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<Product>> findByNameFromBusiness(@PathVariable @NotBlank String name,@AuthenticationPrincipal UserDetails userDetails) {
         Long businessId = staffService.getBusinessIdByCredentialId(
                 credentialService.getIdByUsername(userDetails.getUsername()));
         var optBusiness = businessService.findById(businessId);
@@ -113,7 +111,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return ResponseEntity.ok(matching);
     }
 
-
     @PostMapping("/show-product")
     public ResponseEntity<Product> findObjectByName(@RequestBody Map<String, String> request) {
         String name = request.get("name");
@@ -124,7 +121,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         }
     }
 
-            @GetMapping("/all-by-business/{businessName}")
+    @GetMapping("/all-by-business/{businessName}")
     public ResponseEntity<List<Product>> findAllByBusinessName(@PathVariable @NotBlank String businessName) {
         var optBusiness = businessService.findByBusinessName(businessName);
         if (optBusiness == null) {

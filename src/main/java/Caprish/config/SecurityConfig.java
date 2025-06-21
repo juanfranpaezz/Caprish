@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.sql.DataSource;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableAspectJAutoProxy(exposeProxy = true)
@@ -101,7 +102,7 @@ public class SecurityConfig {
                         .requestMatchers("/business/delete").hasRole("BOSS")
                         .requestMatchers("/business/{name}").hasRole("CLIENT")
                         .requestMatchers("/business/updateBusinessName/{name}").hasRole("BOSS")
-                        .requestMatchers("/business/updateDescription").hasRole("BOSS")
+                        .requestMatchers(HttpMethod.PUT, "/business/updateDescription").hasRole("BOSS")
                         .requestMatchers("/business/updateSlogan/{slogan}").hasRole("BOSS")
                         .requestMatchers("/business/updateTax/{tax}").hasRole("BOSS")
                         .requestMatchers("/business/updateActive").hasRole("BOSS")
@@ -115,8 +116,12 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(ex -> ex
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                )
                 .authenticationProvider(authenticationProvider(myUserDetailsService))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }

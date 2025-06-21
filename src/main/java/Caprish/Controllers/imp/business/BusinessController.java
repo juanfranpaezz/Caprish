@@ -126,15 +126,14 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return update(bizId, "businessName", name);
     }
 
-    @Operation(summary = "Actualizar eslogan del negocio")
+    @Operation(summary = "Actualizar descripción del negocio")
     @PutMapping("/updateDescription")
     public ResponseEntity<String> updateDescription(
-            @RequestParam String description,
+            @RequestBody String description,
             @AuthenticationPrincipal UserDetails userDetails) {
         Long bizId = service.resolveBusinessId(userDetails);
         return update(bizId, "description", description);
     }
-
 
     @Operation(summary = "Actualizar eslogan del negocio")
     @PutMapping("/updateSlogan/{slogan}")

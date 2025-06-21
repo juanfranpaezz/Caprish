@@ -34,7 +34,7 @@ public class Product extends MyObject {
     @Column(nullable=false,columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable=false,precision = 20, scale = 10)
+    @Column(nullable=false,precision = 20, scale = 2)
     private BigDecimal price;
 
     @Transient

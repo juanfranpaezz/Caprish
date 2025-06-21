@@ -2,6 +2,7 @@ package Caprish.Service.imp.users;
 
 import Caprish.Exception.ClientException;
 import Caprish.Model.imp.users.Client;
+import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.users.ClientRepository;
 import Caprish.Service.imp.MyObjectGenericService;
@@ -40,6 +41,14 @@ public class ClientService
             return client.get();
         }
     }
+
+    // Se usa cuando no hay seguridad de que haya persistencia del credential
+    public Optional<Client> findByCredential(Credential credential) {
+        return repository.findByCredential(credential);
+    }
+
+
+
 
 
     public Client findByCredentialId(Long credentialId) {

@@ -2,6 +2,7 @@ package Caprish.Repository.interfaces.users;
 
 
 import Caprish.Model.imp.users.Client;
+import Caprish.Model.imp.users.Credential;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,8 @@ public interface ClientRepository extends MyObjectGenericRepository<Client> {
    Optional<Client> findByPhone(Integer phone);
    Long findIdByCredential_Id(Long credentialId);
    Client findByCredential_Id(Long credentialId);
+   Optional<Client> findByCredential(Credential credential);
+
 
 //   @Query("SELECT c.id FROM Client c WHERE c.credential.id = :credentialId")
 //   Long findByCredential(@Param("credentialId")Long credential);

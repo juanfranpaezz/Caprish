@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -61,15 +62,28 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     })
 
     @PostMapping("/create")
-    public ResponseEntity<String> createClient(@Valid @RequestBody Client entity, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> createClient(@RequestBody Client entity, @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            if (entity == null || !userDetails.getAuthorities().toString().equals("ROLE_CLIENT")) return ResponseEntity.badRequest().build();
-            entity.setId(credentialService.getIdByUsername(userDetails.getUsername()));
-            return ResponseEntity.ok(String.valueOf(service.save(entity)));
+            if (entity == null) return ResponseEntity.badRequest().build();
+
+            Credential credential = credentialService.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+            if (service.findByCredential(credential).isPresent()) {
+                return ResponseEntity.badRequest().body("El cliente ya existe.");
+            }
+
+            entity.setCredential(credential);
+            Client saved = service.save(entity);
+
+            return ResponseEntity.ok("Cliente creado con ID: " + saved.getId());
+
+
         } catch (InvalidEntityException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @Operation(
             summary = "Eliminar cliente",

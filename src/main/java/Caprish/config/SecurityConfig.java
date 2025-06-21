@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/credential/complete-data").hasRole("USER")
                         .requestMatchers("/credential/updatePassword").hasRole("USER")
 
-                        .requestMatchers("/client/create").permitAll()
+                        .requestMatchers("/client/create").hasRole("CLIENT")
                         .requestMatchers("/client/update-phone").hasRole("CLIENT")
                         .requestMatchers("/client/update-tax").hasRole("CLIENT")
                         .requestMatchers("/client/{username}").hasRole("EMPLOYEE")
@@ -76,8 +76,10 @@ public class SecurityConfig {
 
                         .requestMatchers("/cart/create").hasRole("EMPLOYEE")
                         .requestMatchers("/cart/delete/{id}").hasRole("EMPLOYEE")
-                        .requestMatchers("/cart/staff/view/my-sales/{businessId}").hasRole("EMPLOYEE")
+                        .requestMatchers("/cart/staff/view/my-sales").hasRole("EMPLOYEE")
+                        .requestMatchers("/cart/staff/view/my-carts").hasRole("EMPLOYEE")
                         .requestMatchers("/cart/client/view/my-purchases").hasRole("CLIENT")
+                        .requestMatchers("/cart/client/view/my-carts").hasRole("CLIENT")
                         .requestMatchers("/cart/staff/confirm-sale/{cartId}").hasRole("EMPLOYEE")
                         .requestMatchers("/cart/client/confirm-purchase").hasRole("CLIENT")
 
@@ -106,8 +108,8 @@ public class SecurityConfig {
                         .requestMatchers("/business/updateTax/{tax}").hasRole("BOSS")
                         .requestMatchers("/business/updateActive").hasRole("BOSS")
 
-                        .requestMatchers("/staff/create").hasRole("BOSS")
-                        .requestMatchers("/staff/delete").hasRole("BOSS")
+                        .requestMatchers("/staff/create-employee").hasRole("BOSS")
+                        .requestMatchers("/staff/delete/{}").hasRole("BOSS")
                         .requestMatchers("/staff/promote").hasRole("BOSS")
                         .requestMatchers("/staff/view-my-account").hasRole("EMPLOYEE")
                         .requestMatchers("/staff/create-boss").hasRole("BOSS")

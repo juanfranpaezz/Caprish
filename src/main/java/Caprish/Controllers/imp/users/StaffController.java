@@ -155,9 +155,10 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return credentialController.update(credentialService.getIdByUsername(username), "id_role", "ROLE_SUPERVISOR");
     }
 
-    @GetMapping("/by-business/{businessId}")
-    public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@PathVariable Long businessId) {
-        List<StaffViewDTO> staff = service.getStaffByBusiness(businessId);
+
+    @GetMapping("/by-business")
+    public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@AuthenticationPrincipal UserDetails userDetails) {
+        List<StaffViewDTO> staff = service.getStaffByBusinessId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
         return ResponseEntity.ok(staff);
     }
 

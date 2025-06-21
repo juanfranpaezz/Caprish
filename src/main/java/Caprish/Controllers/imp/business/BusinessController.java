@@ -121,7 +121,6 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     public ResponseEntity<String> updateBusinessName(
             @PathVariable String name,
             @AuthenticationPrincipal UserDetails userDetails) {
-        System.out.println("CHOTA");
         Long bizId = service.resolveBusinessId(userDetails);
         return update(bizId, "businessName", name);
     }

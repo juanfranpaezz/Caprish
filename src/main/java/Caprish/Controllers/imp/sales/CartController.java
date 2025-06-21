@@ -160,7 +160,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return ResponseEntity.ok(service.getCartByClientUsername(client.getId(), userDetails.getUsername()));
     }
 
-    @PutMapping("/client/confirm-purchase")
+    @PostMapping("/client/confirm-purchase")//EDITAR ESTO
     public ResponseEntity<String> confirmPurchase(@RequestBody Map<String,String> payload,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
         Long clientId = clientService.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));

@@ -29,7 +29,7 @@ public class StaffService extends MyObjectGenericService<Staff, StaffRepository,
         return repository.getBusinessIdByCredentialId(id);
     }
 
-    public List<StaffViewDTO> getStaffByBusiness(Long businessId) {
+    public List<StaffViewDTO> getStaffByBusinessId(Long businessId) {
         return repository.findStaffByBusiness(businessId)
                 .stream()
                 .map(obj -> new StaffViewDTO(

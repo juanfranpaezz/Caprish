@@ -53,7 +53,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
                                              @AuthenticationPrincipal UserDetails userDetails) {
         Long businessId = staffService
                 .getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
-        Long productId = Long.valueOf(payload.get("productId"));
+        Long productId = productService.findIdByName(payload.get("productName"));
         Product product = productService.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Producto no encontrdo"));
         if (!product.getBusiness().getId().equals(businessId)) {
@@ -85,14 +85,13 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
             @RequestBody Map<String, String> payload) {
         Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
         Long clientId = clientService.getIdByCredentialId(credentialId);
-        Long productId = Long.valueOf(payload.get("productId"));
+        Long productId = productService.findIdByName(payload.get("productName"));
         Product product = productService.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Producto no encontrado"));
-        Long cartIdStr = Long.valueOf(payload.get("cartId"));
+        Long cartIdStr = cartService.findIdByClientId(clientService.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));//CAMBIAR ESTO
         Cart cart;
         if (cartIdStr != null && cartService.existsById(cartIdStr)) {
-            cart = cartService.findById(cartIdStr)
-                    .orElseThrow(() -> new EntityNotFoundCustomException("Carrito no encontrado"));
+            cart = cartService.findById(cartIdStr).get();
         } else {
             cart = new Cart();
             cart.setCart_type(new CartType("PURCHASE"));
@@ -205,6 +204,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         service.deleteById(itemId);
         return ResponseEntity.ok("Ítem eliminado");
     }
+
 
     @Operation(
             summary = "Eliminar ítem",

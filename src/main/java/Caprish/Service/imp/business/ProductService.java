@@ -75,6 +75,11 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
     public Product findByName(String name)throws EntityNotFoundException{
         return repository.findProductByName(name);
     }
+    public Long findIdByName(String name){
+        return repository.findIdProductByName(name);
+    }
+
+
     public Product findByIdWithImages(Long id) {
         Product product = repository.findById(id).orElse(null);
         if (product != null) {

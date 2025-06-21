@@ -10,6 +10,14 @@ import java.util.List;
 
 public interface CartRepository extends MyObjectGenericRepository<Cart> {
 
+    @Query(value = "SELECT " +
+            "c.id" +
+            "FROM cart c " +
+            "JOIN client cl ON cl.id = c.id_client " +
+            "WHERE cl.id = :clientId AND id_cart_type = 'PURCHASE' AND id_cart_status = 'OPEN'",
+            nativeQuery = true)
+    Long findIdOpenPurchaseCartByClientId(@Param("clientId") Long clientId);
+
     @Query(value =
             "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END " +
                     "FROM cart c " +
@@ -101,7 +109,7 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
             "CONCAT(cl_cred.first_name, ' ', cl_cred.last_name) AS client_name, " +
             "ct.id AS cart_type, " +
             "cs.id AS cart_status, " +
-            "COALESCE(CONCAT(st_cred.first_name, ' ', st_cred.last_name), 'Compra web') AS staff_name, " +
+            "COALESCE(CONCAT(st_cred.first_name, ' ', st_cred.last_name), 'Carro web') AS staff_name, " +
             "b.business_name AS business_name, " +
             "SUM(p.price * i.quantity) AS total " +
             "FROM cart c " +
@@ -114,7 +122,7 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
             "JOIN item i ON i.id_cart = c.id " +
             "JOIN product p ON p.id = i.id_product " +
             "JOIN business b ON b.id = p.id_business " +
-            "WHERE cs.id = 'OPEN' AND cl_cred.username = :username " +
+            "WHERE cs.id = 'OPEN' AND cl_cred.username = :username AND ct.id = 'PURCHASE'"+
             "GROUP BY c.id, cl_cred.first_name, cl_cred.last_name, ct.id, cs.id, st_cred.first_name, st_cred.last_name, b.id",
             nativeQuery = true)
     List<Object[]> findCartByClient(@Param("clientId") Long clientId, @Param("username") String user);

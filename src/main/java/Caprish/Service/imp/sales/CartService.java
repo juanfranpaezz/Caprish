@@ -58,6 +58,10 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
         }
     }
 
+    public Long findIdByClientId(Long clientId){
+        return repository.findIdOpenPurchaseCartByClientId(clientId);
+    }
+
     public List<ClientPurchaseDTO> getFinalizedCartsByClientUsername(Long clientId, String username) {
         return  repository.findFinalizedCartsByClient(clientId, username)
                 .stream()

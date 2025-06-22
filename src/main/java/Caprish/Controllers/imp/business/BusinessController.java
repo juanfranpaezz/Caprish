@@ -3,15 +3,11 @@ package Caprish.Controllers.imp.business;
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.CustomBadRequestException;
 import Caprish.Model.imp.business.Business;
-import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.business.BusinessRepository;
-import Caprish.Repository.interfaces.users.CredentialRepository;
-import Caprish.Repository.interfaces.users.StaffRepository;
 import Caprish.Service.imp.business.BusinessService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
-import Caprish.Service.others.GoogleGeocodingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,10 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -77,24 +71,6 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         Business saved = service.save(entity);
         staffService.save(new Staff(credentialService.findByUsername(userDetails.getUsername()).get(),saved));
         return ResponseEntity.ok("Guardado con ID: " + saved.getId());
-    }
-
-    @Operation(summary = "Eliminar un negocio", description = "Elimina un negocio a partir de su ID")
-    @ApiResponse(responseCode = "200", description = "Negocio eliminado correctamente")
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null || userDetails.getUsername() == null) {
-            throw new CustomBadRequestException("Usuario no autenticado o inválido.");
-        }
-        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
-        if (credentialId == null) {
-            throw new CustomBadRequestException("No se encontró el usuario en las credenciales.");
-        }
-        Long businessId = staffService.getBusinessIdByCredentialId(credentialId);
-        if (businessId == null) {
-            throw new CustomBadRequestException("El ID de negocio es inválido.");
-        }
-        return update(businessId, "active", false);
     }
 
     @Operation(summary = "Buscar negocio por nombre", description = "Obtiene un negocio usando su nombre")
@@ -153,14 +129,21 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return update(bizId, "tax", tax);
     }
 
-    @PutMapping("/deleteMyBusiness")
-    public ResponseEntity<String> deleteMyBusiness(
-            @AuthenticationPrincipal UserDetails userDetails) {
-
-        Long bizId = service.resolveBusinessId(userDetails);
+    @Operation(summary = "Eliminar un negocio", description = "Bloquea un negocio a partir de su ID")
+    @ApiResponse(responseCode = "200", description = "Negocio eliminado correctamente")
+    @DeleteMapping("/delete-my-business")
+    public ResponseEntity<String> deleteMyBusiness(@AuthenticationPrincipal UserDetails userDetails) {
+        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
+        if (credentialId == null) {
+            throw new CustomBadRequestException("No se encontró el usuario en las credenciales.");
+        }
+        Long businessId = staffService.getBusinessIdByCredentialId(credentialId);
+        if (businessId == null) {
+            throw new CustomBadRequestException("El ID de negocio es inválido.");
+        }
         try {
-            service.changeActiveStatus(bizId, false);
-            //que se bloqeen todos los staff
+            update(businessId, "active", false);
+            credentialService.blockStaff(businessId);
             return ResponseEntity.ok("Estado actualizado correctamente.");
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

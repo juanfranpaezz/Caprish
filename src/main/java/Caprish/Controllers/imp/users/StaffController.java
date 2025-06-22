@@ -69,6 +69,9 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         if (bossBusinessId == null) {
             return ResponseEntity.badRequest().body("No se encontró la empresa para el jefe actual.");
         }
+        if (credentialService.existsByUsername(payload.get("username"))) {
+            return ResponseEntity.badRequest().body("El usuario ya existe.");
+        }
         String firstName = payload.get("firstName");
         String lastName = payload.get("lastName");
         String username = payload.get("username");

@@ -82,6 +82,14 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
         return repository.findByUsername(username);
     }
 
+    public boolean existsByUsername(String username){
+        return repository.existsByUsername(username);
+    }
+
+    public void blockStaff(Long businessId){
+        repository.blockStaff(businessId);
+    }
+
 }
 
 

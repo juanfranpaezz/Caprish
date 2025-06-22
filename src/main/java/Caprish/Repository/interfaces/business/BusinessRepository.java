@@ -14,7 +14,7 @@ public interface BusinessRepository extends MyObjectGenericRepository<Business> 
     boolean existsByBusinessName(String businessName);
 
     boolean existsByTax(Long tax);
-
+    @Query("SELECT b.id FROM Business b WHERE b.businessName = :businessName")
     Long findIdByBusinessName(String businessName);
 
     Business findByBusinessName(String name);

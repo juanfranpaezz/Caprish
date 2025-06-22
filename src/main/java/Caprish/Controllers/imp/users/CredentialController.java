@@ -99,6 +99,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         } else  if(verificationService.verifyCode(email, code.get("code"))&& code.get("role").equals("CLIENT")){
             Credential cred=new Credential(email, passwordEncoder.encode(code.get("password")),new Role("ROLE_CLIENT"));
             service.save(cred);
+
             return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
         }
         return ResponseEntity.badRequest().body("Codigo o mail incorrecto");
@@ -118,14 +119,16 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         if (userDetails != null) {
             return ResponseEntity.badRequest().body("Ya estás logueado");
         }
-        try {
+
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
+        try {
             return ResponseEntity.ok(service.doLogin(request.getUsername()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (UserException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
+
     }
 
     @Operation(

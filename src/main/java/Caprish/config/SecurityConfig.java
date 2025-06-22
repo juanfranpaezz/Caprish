@@ -51,8 +51,8 @@ public class SecurityConfig {
                         .permitAll()
 
                         .requestMatchers("/credential/login").permitAll()
-                        .requestMatchers("/credential/logout").hasRole("USER")
                         .requestMatchers("/credential/sign-up").permitAll()
+                        .requestMatchers("/credential/logout").hasRole("USER")
                         .requestMatchers("/credential/updateFirstName").hasRole("USER")
                         .requestMatchers("/credential/updateLastName").hasRole("USER")
                         .requestMatchers("/credential/verify-token").permitAll()
@@ -62,10 +62,10 @@ public class SecurityConfig {
                         .requestMatchers("/client/create").hasRole("CLIENT")
                         .requestMatchers("/client/update-phone").hasRole("CLIENT")
                         .requestMatchers("/client/update-tax").hasRole("CLIENT")
-                        .requestMatchers("/client/{username}").hasRole("EMPLOYEE")
-                        .requestMatchers("/client/all").hasRole("EMPLOYEE")
                         .requestMatchers("/client/delete").hasRole("CLIENT")
                         .requestMatchers("/client/view-my-account").hasRole("CLIENT")
+                        .requestMatchers("/client/{username}").hasRole("EMPLOYEE")
+                        .requestMatchers("/client/all").hasRole("EMPLOYEE")
 
                         .requestMatchers("/item/staff/add-from-sale").hasRole("EMPLOYEE")
                         .requestMatchers("/item/staff/update-quantity/{itemId}/{quantity}").hasRole("EMPLOYEE")

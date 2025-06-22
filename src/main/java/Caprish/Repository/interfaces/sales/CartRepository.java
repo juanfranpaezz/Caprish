@@ -26,14 +26,17 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
     );
 
 
-    @Query(value = "SELECT " +
-            "cl.*" +
-            "FROM cart c " +
-            "JOIN client cl ON cl.id = c.id_client " +
-            "JOIN business b ON b.id = s.id_business " +
-            "WHERE b.id = :idBusiness ",
-            nativeQuery = true)
-    List<Client> findClientsByBusinessId(Long businessId);
+    @Query(value = """
+    SELECT DISTINCT cl.*
+    FROM cart ca
+    JOIN client cl ON cl.id = ca.id_client
+    JOIN staff st ON st.id = ca.id_staff
+    JOIN business b ON b.id = st.business_id
+    WHERE b.id = :businessId
+    """, nativeQuery = true)
+    List<Client> findClientsByBusinessId(@Param("businessId") Long businessId);
+
+
 
     @Query(value = "SELECT " +
             "c.id, " +

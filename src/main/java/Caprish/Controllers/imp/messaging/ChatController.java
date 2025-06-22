@@ -14,11 +14,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/chat")
@@ -57,22 +60,26 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
     })
     @GetMapping("/{name}")
     public ResponseEntity<Chat> findObjectById(@PathVariable String name, @AuthenticationPrincipal UserDetails userDetails) {
-        if(name == null) return ResponseEntity.badRequest().build();
-        if(userDetails.getAuthorities().toString().equals("ROLE_CLIENT")){
-            return ResponseEntity.ok(
-                        service.findByBusinessIdAndClientId(
-                            businessService.findIdByBusinessName(name),
-                            clientService.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))
-                            )
-                    );
-        } else{
-            return ResponseEntity.ok(
-                    service.findByBusinessIdAndClientId(
-                        staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())),
-                        clientService.getIdByCredentialId(credentialService.getIdByUsername(name))
-                        )
-                    );
+        if (name == null || userDetails == null) return ResponseEntity.badRequest().build();
+        if (userDetails.getAuthorities().toString().equals("[ROLE_CLIENT]")) {
+            Optional<Long> credIdOpt = Optional.ofNullable(credentialService.getIdByUsername(userDetails.getUsername()));
+            if (credIdOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+            Long credId = credIdOpt.get();
+            Long clientId = clientService.getIdByCredentialId(credId);
+            if (clientId == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+            Long businessId = businessService.findIdByBusinessName(name);
+            if (businessId == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+            Chat chat = service.findByBusinessIdAndClientId(businessId, clientId);
+            if (chat == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+            return ResponseEntity.ok(chat);
         }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
+
 
 }

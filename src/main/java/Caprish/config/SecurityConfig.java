@@ -97,15 +97,17 @@ public class SecurityConfig {
                         .requestMatchers("/product/all-by-business/{businessName}").permitAll()
                         .requestMatchers("/product/show-product").hasRole("USER")
 
-                        .requestMatchers("/business/create").hasRole("BOSS")
-                        .requestMatchers("/business/view-my").hasRole("EMPLOYEE")
-                        .requestMatchers("/business/delete").hasRole("BOSS")
-                        .requestMatchers("/business/{name}").hasRole("CLIENT")
-                        .requestMatchers("/business/updateBusinessName/{name}").hasRole("BOSS")
+
                         .requestMatchers(HttpMethod.PUT, "/business/updateDescription").hasRole("BOSS")
-                        .requestMatchers("/business/updateSlogan/{slogan}").hasRole("BOSS")
-                        .requestMatchers("/business/updateTax/{tax}").hasRole("BOSS")
-                        .requestMatchers("/business/updateActive").hasRole("BOSS")
+                        .requestMatchers(HttpMethod.PUT, "/business/updateBusinessName").hasRole("BOSS")
+                        .requestMatchers(HttpMethod.PUT, "/business/updateSlogan").hasRole("BOSS")
+                        .requestMatchers(HttpMethod.PUT, "/business/updateTax").hasRole("BOSS")
+                        .requestMatchers(HttpMethod.PUT, "/business/updateActive").hasRole("BOSS")
+
+                        .requestMatchers("/business/create").hasRole("BOSS")
+                        .requestMatchers("/business/delete").hasRole("BOSS")
+                        .requestMatchers("/business/view-my").hasRole("EMPLOYEE")
+                        .requestMatchers("/business/{name}").hasRole("CLIENT")
 
                         .requestMatchers("/staff/create").hasRole("BOSS")
                         .requestMatchers("/staff/delete").hasRole("BOSS")

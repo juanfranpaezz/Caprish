@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -117,55 +118,96 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     }
 
     @Operation(summary = "Actualizar nombre del negocio")
-    @PutMapping("/updateBusinessName/{name}")
+    @PutMapping("/updateBusinessName")
     public ResponseEntity<String> updateBusinessName(
-            @PathVariable String name,
+            @RequestBody Map<String, String> payload,
             @AuthenticationPrincipal UserDetails userDetails) {
-        System.out.println("CHOTA");
+
+        if (!payload.containsKey("businessName")) {
+            return ResponseEntity.badRequest().body("El campo businessName es requerido");
+        }
+        if (payload.size() != 1) {
+            return ResponseEntity.badRequest().body("Sólo se permite el campo 'businessName'");
+        }
         Long bizId = service.resolveBusinessId(userDetails);
-        return update(bizId, "businessName", name);
+        return update(bizId, "businessName", payload.get("businessName"));
     }
 
-    @Operation(summary = "Actualizar descripción del negocio")
+    @Operation(summary = "Actualizar descripcion del negocio ")
     @PutMapping("/updateDescription")
     public ResponseEntity<String> updateDescription(
-            @RequestBody String description,
+            @RequestBody Map<String, String> payload,
             @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (!payload.containsKey("description")) {
+            return ResponseEntity.badRequest().body("El campo description es requerido");
+        }
+        if (payload.size() != 1) {
+            return ResponseEntity.badRequest().body("Sólo se permite el campo 'description'");
+        }
         Long bizId = service.resolveBusinessId(userDetails);
-        return update(bizId, "description", description);
+        return update(bizId, "description", payload.get("description"));
     }
 
     @Operation(summary = "Actualizar eslogan del negocio")
-    @PutMapping("/updateSlogan/{slogan}")
+    @PutMapping("/updateSlogan")
     public ResponseEntity<String> updateSlogan(
-            @PathVariable String slogan,
+            @RequestBody Map<String,String> payload,
             @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (!payload.containsKey("slogan")) {
+            return ResponseEntity.badRequest().body("El campo slogan es requerido");
+        }
+        if (payload.size() != 1) {
+            return ResponseEntity.badRequest().body("Sólo se permite el campo 'slogan'");
+        }
         Long bizId = service.resolveBusinessId(userDetails);
-        return update(bizId, "slogan", slogan);
+        return update(bizId, "slogan", payload.get("slogan"));
     }
 
     @Operation(summary = "Actualizar valor del impuesto del negocio")
-    @PutMapping("/updateTax/{tax}")
+    @PutMapping("/updateTax")
     public ResponseEntity<String> updateTax(
-            @PathVariable @Positive long tax,
+            @RequestBody Map<String, Object> payload,
             @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (!payload.containsKey("tax")) {
+            return ResponseEntity.badRequest().body("El campo 'tax' es requerido");
+        }
+
+        if (payload.size() != 1) {
+            return ResponseEntity.badRequest().body("Sólo se permite el campo 'tax'");
+        }
+        Object taxObj = payload.get("tax");
+        Long tax;
+        try {
+            tax = Long.parseLong(taxObj.toString());
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("El campo 'tax' debe ser un número válido");
+        }
         Long bizId = service.resolveBusinessId(userDetails);
         return update(bizId, "tax", tax);
     }
 
-    @PutMapping("/updateActive/{active}")
-    public ResponseEntity<String> updateActive(
-            @PathVariable boolean active,
-            @AuthenticationPrincipal UserDetails userDetails) {
 
+    @Operation(summary= "Actualizar si el negocio esta activo o no")
+    @PutMapping("/updateActive")
+    public ResponseEntity<String> updateActive(
+            @RequestBody Map <String,String> payload,
+            @AuthenticationPrincipal UserDetails userDetails) {
         Long bizId = service.resolveBusinessId(userDetails);
+        if (!payload.containsKey("active")) {
+            return ResponseEntity.badRequest().body("El campo active es requerido");
+        }
+        if (payload.size() != 1) {
+            return ResponseEntity.badRequest().body("Sólo se permite el campo 'active'");
+        }
         try {
-            service.changeActiveStatus(bizId, active);
+            service.changeActiveStatus(bizId, Boolean.parseBoolean(payload.get("active")));
             return ResponseEntity.ok("Estado actualizado correctamente.");
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 }
 

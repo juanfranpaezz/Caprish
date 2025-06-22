@@ -61,17 +61,30 @@ public class CredentialController extends MyObjectGenericController<Credential, 
             @ApiResponse(responseCode = "400", description = "Error al registrar el usuario")
     })
     @PostMapping("/sign-up")
-    public ResponseEntity<String> createObject(@Valid @RequestBody Map <String,String> payload) {
-        if(credentialService.findByUsername(payload.get("username")).isPresent()) return ResponseEntity.badRequest().body("El usuario ya existe");
-        String password=payload.get("password");
-        try{
+    public ResponseEntity<String> createObject(@Valid @RequestBody Map<String, String> payload) {
+        String username = payload.get("username");
+        String password = payload.get("password");
+
+        if (username == null || password == null) {
+            return ResponseEntity.badRequest().body("Los campos 'username' y 'password' son requeridos");
+        }
+        if (!username.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            return ResponseEntity.badRequest().body("El campo 'username' debe ser un correo válido");
+        }
+
+        if (credentialService.findByUsername(username).isPresent()) {
+            return ResponseEntity.badRequest().body("El usuario ya existe");
+        }
+
+        try {
             credentialService.verifyPassword(password);
             passwordEncoder.encode(password);
-            return ResponseEntity.ok(verificationService.sendVerificationCode(payload.get("username"),password));
-        }catch (Exception e){
+            return ResponseEntity.ok(verificationService.sendVerificationCode(username, password));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @Operation(
             summary = "Verificar token por correo",
             description = "Valida el código de verificación enviado por correo electrónico"

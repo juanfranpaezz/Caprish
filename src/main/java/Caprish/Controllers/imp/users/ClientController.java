@@ -130,19 +130,21 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     )
     @ApiResponse(responseCode = "200", description = "Cliente encontrado")
     @GetMapping
-    public ResponseEntity<Client> findObjectByUsername(@RequestParam String username, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> findObjectByUsername(@RequestParam String username, @AuthenticationPrincipal UserDetails userDetails) {
         try {
             Long clientId = service.getIdByCredentialId(credentialService.getIdByUsername(username));
             Long staffId = credentialService.getIdByUsername(userDetails.getUsername());
             Long businessId = staffService.getBusinessIdByCredentialId(staffId);
 
             if (!cartService.existsByBusinessIdAndClientId(businessId, clientId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Cliente no está asociado al negocio del staff"));
             }
 
             return findByIdCustom(clientId);
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Cliente no encontrado"));
         }
     }
 

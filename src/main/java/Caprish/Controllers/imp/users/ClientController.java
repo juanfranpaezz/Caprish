@@ -17,6 +17,7 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -130,14 +131,21 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     @ApiResponse(responseCode = "200", description = "Cliente encontrado")
     @GetMapping
     public ResponseEntity<Client> findObjectByUsername(@RequestParam String username, @AuthenticationPrincipal UserDetails userDetails) {
-        Long clientId = service.getIdByCredentialId(credentialService.getIdByUsername(username));
-        if (!cartService.existsByBusinessIdAndClientId(
-                staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())),
-                clientId)) {
-            return ResponseEntity.badRequest().build();
+        try {
+            Long clientId = service.getIdByCredentialId(credentialService.getIdByUsername(username));
+            Long staffId = credentialService.getIdByUsername(userDetails.getUsername());
+            Long businessId = staffService.getBusinessIdByCredentialId(staffId);
+
+            if (!cartService.existsByBusinessIdAndClientId(businessId, clientId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            }
+
+            return findByIdCustom(clientId);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return findById(clientId);
     }
+
 
     @GetMapping("/view-my-account")
     public ResponseEntity<Client> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {

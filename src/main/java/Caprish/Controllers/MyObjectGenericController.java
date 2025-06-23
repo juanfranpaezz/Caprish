@@ -2,6 +2,7 @@ package Caprish.Controllers;
 
 import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.MyObject;
+import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import jakarta.validation.Valid;
@@ -41,6 +42,20 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    public ResponseEntity<Client> findByIdCustom(Long id) {
+        return service.findById(id)
+                .map(obj -> {
+                    Client client = (Client) obj;
+                    if (client.getCredential() != null) {
+                        client.getCredential().setPassword(null);
+                    }
+                    client.setChats(null);
+                    return ResponseEntity.ok(client);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 
     public ResponseEntity<String> update(Long id, String fieldName, Object objectValue) {
         System.out.println("Ejecutando update con id: " + id + ", campo: " + fieldName + ", valor: " + objectValue);

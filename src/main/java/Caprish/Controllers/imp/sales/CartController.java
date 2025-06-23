@@ -79,6 +79,9 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         entity.setCart_status(new CartStatus("OPEN"));
         entity.setClient(clientService.getByCredentialId(
                 credentialService.getIdByUsername(payload.get("client"))));
+
+        entity.setSale_date(LocalDate.now());
+
         return create(entity);
     }
 

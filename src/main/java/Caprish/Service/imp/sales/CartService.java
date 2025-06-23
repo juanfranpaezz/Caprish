@@ -56,7 +56,8 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
     protected void verifySpecificAttributes(Cart entity) {}
 
     public boolean existsByBusinessIdAndClientId(Long businessId, Long clientId){
-        return repository.existsByBusinessIdAndClientId(businessId, clientId);
+        Long founded=repository.existsByBusinessIdAndClientId(businessId, clientId);
+        return founded==1;
     }
 
     public List<Client> findClientsByBusinessId(Long businessId){

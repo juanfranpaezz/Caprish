@@ -128,10 +128,14 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
             description = "Obtiene un cliente por su identificador"
     )
     @ApiResponse(responseCode = "200", description = "Cliente encontrado")
-    @GetMapping("/{username}")
-    public ResponseEntity<Client> findObjectById(@Positive @PathVariable String username, @AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping
+    public ResponseEntity<Client> findObjectByUsername(@RequestParam String username, @AuthenticationPrincipal UserDetails userDetails) {
         Long clientId = service.getIdByCredentialId(credentialService.getIdByUsername(username));
-        if (!cartService.existsByBusinessIdAndClientId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), clientId)) return ResponseEntity.badRequest().build();
+        if (!cartService.existsByBusinessIdAndClientId(
+                staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())),
+                clientId)) {
+            return ResponseEntity.badRequest().build();
+        }
         return findById(clientId);
     }
 

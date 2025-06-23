@@ -4,11 +4,10 @@ import Caprish.Model.enums.CartStatus;
 import Caprish.Model.enums.CartType;
 import Caprish.Model.enums.SenderType;
 import Caprish.Model.enums.Role;
-import Caprish.Model.imp.users.Credential;
 import Caprish.Repository.enums.CartStatusRepository;
 import Caprish.Repository.enums.CartTypeRepository;
-import Caprish.Repository.enums.SenderTypeRepository;
 import Caprish.Repository.enums.RoleRepository;
+import Caprish.Repository.enums.SenderTypeRepository;
 import Caprish.Repository.interfaces.users.CredentialRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class DatabaseInitializer {
 
     @PostConstruct
     public void init() {
-        // Roles
+//         Roles
         createIfNotExists(roleRepository, Role::new, "ROLE_USER");
         createIfNotExists(roleRepository, Role::new, "ROLE_BOSS");
         createIfNotExists(roleRepository, Role::new, "ROLE_CLIENT");

@@ -15,12 +15,12 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
                     "FROM cart c " +
                     "JOIN client cl ON cl.id = c.id_client " +
                     "JOIN staff s  ON s.id  = c.id_staff " +
-                    "JOIN business b ON b.id = s.id_business " +
+                    "JOIN business b ON b.id = s.business_id " +
                     "WHERE b.id   = :idBusiness " +
                     "  AND cl.id  = :idClient",
             nativeQuery = true
     )
-    boolean existsByBusinessIdAndClientId(
+    Long existsByBusinessIdAndClientId(
             @Param("idBusiness") Long businessId,
             @Param("idClient")   Long clientId
     );
@@ -51,13 +51,13 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
             "JOIN cart_type ct ON ct.id = c.id_cart_type " +
             "JOIN cart_status cs ON cs.id = c.id_cart_status " +
             "JOIN staff s ON s.id = c.id_staff " +
-            "JOIN business b ON b.id = s.id_business " +
+            "JOIN business b ON b.id = s.business_id " +
             "JOIN item i ON i.id_cart = c.id " +
             "JOIN product p ON p.id = i.id_product " +
             "WHERE cs.value = 'FINALIZADO' AND b.id = :idBusiness " +
             "GROUP BY c.id, cl.first_name, cl.last_name, ct.value, cs.value, s.first_name, s.last_name, b.id",
             nativeQuery = true)
-    List<Object[]> getCartViewsByBusinessId(@Param("idBusiness") Long idBusiness);
+    List<Object[]> getCartViewsByBusinessId(@Param("businessId") Long idBusiness);
 
     @Query(value = "SELECT " +
             "c.id, " +
@@ -76,7 +76,7 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
             "LEFT JOIN credential st_cred ON st.id_credential = st_cred.id " +
             "JOIN item i ON i.id_cart = c.id " +
             "JOIN product p ON p.id = i.id_product " +
-            "JOIN business b ON b.id = p.id_business " +
+            "JOIN business b ON b.id = p.business_id " +
             "WHERE cs.id = 'FINALIZADO' AND cl_cred.username = :username " +
             "GROUP BY c.id, cl_cred.first_name, cl_cred.last_name, ct.id, cs.id, st_cred.first_name, st_cred.last_name, b.id",
             nativeQuery = true)

@@ -6,6 +6,7 @@ import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import jakarta.persistence.criteria.CriteriaUpdate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +43,9 @@ public abstract class MyObjectGenericController<M extends MyObject, R extends My
     }
 
     public ResponseEntity<String> update(Long id, String fieldName, Object objectValue) {
+        System.out.println("Ejecutando update con id: " + id + ", campo: " + fieldName + ", valor: " + objectValue);
         if (!service.existsById(id)) {
+            System.out.println("No existe entidad con id: " + id);
             return ResponseEntity.notFound().build();
         }
         service.changeField(id, fieldName, objectValue);

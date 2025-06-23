@@ -50,6 +50,9 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         if (!BeanUtils.getPropertyNames(getEntityClass()).contains(fieldName)) {
             throw new IllegalArgumentException("Campo inválido: " + fieldName);
         }
+
+        System.out.println("Llamando a updateField con fieldName = " + fieldName + ", valor = " + value);
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaUpdate<M> update = cb.createCriteriaUpdate(getEntityClass());
         Root<M> root = update.from(getEntityClass());

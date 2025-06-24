@@ -19,5 +19,4 @@ public class CartViewDTO {
     private String cartStatus;
     private String staffName;
     private Long idBusiness;
-    private Double totalAmount;
 }

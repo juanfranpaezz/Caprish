@@ -145,15 +145,15 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return ResponseEntity.ok("Venta confirmada");
     }
 
-//    @Operation(
-//            summary = "Ver mis ventas",
-//            description = "Obtiene los carritos (ventas) relacionados con una empresa específica, útil para vista del supervisor"
-//    )
-//    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
-//    @GetMapping("/staff/view/my-sales/{businessId}")
-//    public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
-//        return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
-//    }
+    @Operation(
+            summary = "Ver mis ventas",
+            description = "Obtiene los carritos (ventas) relacionados con una empresa específica, útil para vista del supervisor"
+    )
+    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
+    @GetMapping("/staff/view/my-sales/{businessId}")
+    public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
+        return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
+    }
 
     @GetMapping("/client/view/my-purchases")
     public ResponseEntity<List<ClientPurchaseDTO>> getMyPurchases(@AuthenticationPrincipal UserDetails userDetails) {

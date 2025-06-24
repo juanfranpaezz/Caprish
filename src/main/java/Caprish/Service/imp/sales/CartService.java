@@ -21,7 +21,7 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
 
     public List<CartViewDTO> getSalesByBusiness(Long businessId) {
         try {
-            return repository.getSalesByBusinessId(businessId)
+            return repository.getCartViewsByBusinessId(businessId)
                     .stream()
                     .map(obj -> new CartViewDTO(
                             ((Number) obj[0]).longValue(),             // idCart
@@ -29,8 +29,8 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
                             (String) obj[2],                           // cartType
                             (String) obj[3],                           // cartStatus
                             (String) obj[4],                           // staffName (first + last)
-                            ((Number) obj[5]).longValue(),             // idBusiness
-                            ((Number) obj[6]).doubleValue()            // totalAmount
+                            ((Number) obj[5]).longValue()
+                            // totalAmount
                     ))
                     .collect(Collectors.toList());
         }catch (Exception e){
@@ -49,8 +49,7 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
                             (String) obj[2],                           // cartType
                             (String) obj[3],                           // cartStatus
                             (String) obj[4],                           // staffName (first + last)
-                            ((Number) obj[5]).longValue(),             // idBusiness
-                            ((Number) obj[6]).doubleValue()            // totalAmount
+                            ((Number) obj[5]).longValue()             // idBusiness
                     ))
                     .collect(Collectors.toList());
         }catch (Exception e){

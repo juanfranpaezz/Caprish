@@ -112,26 +112,12 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
 
     @Operation(
             summary = "Ver mis ventas",
-            description = "Obtiene los carritos (ventas) relacionados con un usuario en especifico"
+            description = "Obtiene las ventas relacionadas con una empresa"
     )
     @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
     @GetMapping("/staff/view/my-sales")
-    public ResponseEntity<?> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
-        try {
-            if (userDetails == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
-            }
-
-            String username = userDetails.getUsername();
-            Long credentialId = credentialService.getIdByUsername(username);
-            Long businessId = staffService.getBusinessIdByCredentialId(credentialId);
-            List<CartViewDTO> views = service.getCartViewsByBusiness(businessId);
-
-            return ResponseEntity.ok(views);
-        } catch (Exception e) {
-            e.printStackTrace(); // o usa un logger si tienes uno
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error getting cart views: " + e.getMessage());
-        }
+    public ResponseEntity<List<CartViewDTO>> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(service.getSalesByBusiness(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));
     }
 
 
@@ -159,15 +145,15 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return ResponseEntity.ok("Venta confirmada");
     }
 
-    @Operation(
-            summary = "Ver mis ventas",
-            description = "Obtiene los carritos (ventas) relacionados con una empresa específica, útil para vista del supervisor"
-    )
-    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
-    @GetMapping("/staff/view/my-sales/{businessId}")
-    public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
-        return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
-    }
+//    @Operation(
+//            summary = "Ver mis ventas",
+//            description = "Obtiene los carritos (ventas) relacionados con una empresa específica, útil para vista del supervisor"
+//    )
+//    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
+//    @GetMapping("/staff/view/my-sales/{businessId}")
+//    public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
+//        return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
+//    }
 
     @GetMapping("/client/view/my-purchases")
     public ResponseEntity<List<ClientPurchaseDTO>> getMyPurchases(@AuthenticationPrincipal UserDetails userDetails) {

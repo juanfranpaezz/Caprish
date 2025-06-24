@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -114,9 +115,24 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     )
     @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
     @GetMapping("/staff/view/my-sales")
-    public ResponseEntity<List<CartViewDTO>> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(service.getCartViewsByBusiness(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));
+    public ResponseEntity<?> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            if (userDetails == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+            }
+
+            String username = userDetails.getUsername();
+            Long credentialId = credentialService.getIdByUsername(username);
+            Long businessId = staffService.getBusinessIdByCredentialId(credentialId);
+            List<CartViewDTO> views = service.getCartViewsByBusiness(businessId);
+
+            return ResponseEntity.ok(views);
+        } catch (Exception e) {
+            e.printStackTrace(); // o usa un logger si tienes uno
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error getting cart views: " + e.getMessage());
+        }
     }
+
 
     @PutMapping("/staff/confirm-sale/{cartId}")
     public ResponseEntity<String> confirmSale(@PathVariable @Positive Long cartId,

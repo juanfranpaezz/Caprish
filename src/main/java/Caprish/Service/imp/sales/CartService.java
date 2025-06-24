@@ -42,7 +42,7 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
         return repository.findByClientIdAndTypeAndStatus(clientId, typeId, statusId);
     }
     public List<ClientPurchaseDTO> getFinalizedCartsByClientUsername(Long clientId, String username) {
-        return  repository.findFinalizedCartsByClient(clientId, username)
+        return  repository.findFinalizedCartsByClient(username)
                 .stream()
                 .map(row -> new ClientPurchaseDTO(
                 ((Number) row[0]).longValue(),
@@ -58,9 +58,9 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
     @Override
     protected void verifySpecificAttributes(Cart entity) {}
 
-    public boolean existsByBusinessIdAndClientId(Long businessId, Long clientId){
-        Long founded=repository.existsByBusinessIdAndClientId(businessId, clientId);
-        return founded==1;
+    public boolean existsByBusinessIdAndClientIdService(Long businessId, Long clientId){
+        Integer found = repository.existsByBusinessIdAndClientId(businessId, clientId);
+        return found != null && found == 1;
     }
 
     public List<Client> findClientsByBusinessId(Long businessId){

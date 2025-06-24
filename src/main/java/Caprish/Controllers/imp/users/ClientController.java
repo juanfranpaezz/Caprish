@@ -3,7 +3,6 @@ package Caprish.Controllers.imp.users;
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.imp.users.Client;
-import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.users.ClientRepository;
 import Caprish.Service.imp.sales.CartService;
 import Caprish.Service.imp.users.ClientService;
@@ -13,9 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.security.PermitAll;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.MediaType;
 
 import java.util.List;
 import java.util.Map;
@@ -47,6 +42,8 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     CartService cartService;
     @Autowired
     private ClientService clientService;
+    @Autowired
+    CredentialController credentialController;
 
     public ClientController(ClientService childService) {
         super(childService);
@@ -98,7 +95,7 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
         Optional<Credential> c = credentialService.findById(credentialService.getIdByUsername(userDetails.getUsername()));
         if(c.isEmpty()) return ResponseEntity.badRequest().build();
-        update(c.get().getId(), "enabled", false);
+        credentialController.update(c.get().getId(), "enabled", false);
         return ResponseEntity.ok("Borrado exitosamente");
     }
 
@@ -136,7 +133,7 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
             Long staffId = credentialService.getIdByUsername(userDetails.getUsername());
             Long businessId = staffService.getBusinessIdByCredentialId(staffId);
 
-            if (!cartService.existsByBusinessIdAndClientId(businessId, clientId)) {
+            if (!cartService.existsByBusinessIdAndClientIdService(businessId, clientId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(Map.of("error", "Cliente no está asociado al negocio del staff"));
             }

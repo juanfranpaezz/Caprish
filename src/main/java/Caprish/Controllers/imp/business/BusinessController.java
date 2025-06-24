@@ -80,13 +80,10 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return ResponseEntity.ok("Guardado con ID: " + saved.getId());
     }
 
-    @Operation(summary = "Eliminar un negocio", description = "Elimina un negocio a partir de su ID")
+    @Operation(summary = "Eliminar un negocio", description = "Bloquea un negocio a partir de su ID")
     @ApiResponse(responseCode = "200", description = "Negocio eliminado correctamente")
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null || userDetails.getUsername() == null) {
-            throw new CustomBadRequestException("Usuario no autenticado o inválido.");
-        }
+    @DeleteMapping("/delete-my-business")
+    public ResponseEntity<String> deleteMyBusiness(@AuthenticationPrincipal UserDetails userDetails) {
         Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
         if (credentialId == null) {
             throw new CustomBadRequestException("No se encontró el usuario en las credenciales.");
@@ -95,8 +92,14 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         if (businessId == null) {
             throw new CustomBadRequestException("El ID de negocio es inválido.");
         }
-        return update(businessId, "active", false);
+        try {
+            update(businessId, "active", false);
+            credentialService.blockStaff(businessId);
+            return ResponseEntity.ok("Estado actualizado correctamente.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
     }
+}
 
     @Operation(summary = "Buscar negocio por nombre", description = "Obtiene un negocio usando su nombre")
     @ApiResponses({

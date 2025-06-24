@@ -25,5 +25,18 @@ public interface CredentialRepository extends MyObjectGenericRepository<Credenti
 
     int disableCredentialsForBusiness(@Param("businessId") Long BusinessId);
 
+    @Modifying
+    @Transactional
+    @Query("""
+    UPDATE Credential c
+    SET c.enabled = false
+    WHERE c IN (
+        SELECT s.credential
+        FROM Staff s
+        WHERE s.business.id = :businessId
+    )
+        """)
+    void blockStaff(@Param("businessId") Long BusinessId);
+
 
 }

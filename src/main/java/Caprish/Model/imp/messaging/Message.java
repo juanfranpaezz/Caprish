@@ -26,7 +26,6 @@ public class Message extends MyObject {
     @JoinColumn(name = "id_chat", nullable = false)
     private Chat chat;
 
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_sender_type", nullable = false)
     @JsonIgnoreProperties("messages")  // ignora la lista de mensajes dentro de sender_type

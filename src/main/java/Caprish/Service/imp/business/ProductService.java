@@ -89,4 +89,10 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
         }
         return product;
     }
+    public void delete(Long entity) {
+        repository.deleteById(entity);
+    }
+    public void deleteProductById(Long entity) {
+        repository.deleteByIdProduct(entity);
+    }
 }

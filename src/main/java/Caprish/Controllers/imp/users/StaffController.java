@@ -3,6 +3,7 @@ package Caprish.Controllers.imp.users;
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Exception.EntityNotFoundCustomException;
 import Caprish.Exception.InvalidEntityException;
+import Caprish.Exception.UserException;
 import Caprish.Model.enums.Role;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.imp.users.Credential;
@@ -79,6 +80,11 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         String firstName = payload.get("firstName");
         String lastName = payload.get("lastName");
         String username = payload.get("username");
+        try {
+            credentialService.verifyPassword(payload.get("password"));
+        } catch (UserException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         String password = passwordEncoder.encode(payload.get("password"));
         if (username == null || password == null) {
             return ResponseEntity.badRequest().body("Faltan datos obligatorios: 'username' y/o 'password'.");
@@ -142,6 +148,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
 
     @GetMapping("/view-my-account")
     public ResponseEntity<Staff> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
+
         return ResponseEntity.ok(staffService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())).get());
     }
 

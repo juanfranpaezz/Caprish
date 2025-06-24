@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +48,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     public ProductController(ProductService service) {
         super(service);
     }
-
 
 
     @Operation(summary = "Crear nuevo producto", description = "Crea un nuevo producto con nombre, descripción y precio.")
@@ -83,7 +84,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         if (toDelete == null) {
             return ResponseEntity.badRequest().body("El producto '" + name + "' no existe.");
         }
-        service.deleteById(toDelete.getId());
+        service.deleteProductById(toDelete.getId());
         return ResponseEntity.ok("Producto '" + name + "' eliminado correctamente.");
     }
 
@@ -98,18 +99,36 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     }
 
     @GetMapping("/staff/name/{name}")
-    public ResponseEntity<List<Product>> findByNameFromBusiness(@PathVariable @NotBlank String name,@AuthenticationPrincipal UserDetails userDetails) {
-        Long businessId = staffService.getBusinessIdByCredentialId(
-                credentialService.getIdByUsername(userDetails.getUsername()));
+    public ResponseEntity<?> findByNameFromBusiness(
+            @PathVariable @NotBlank String name,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
+
+        Long businessId = staffService.getBusinessIdByCredentialId(credentialId);
+
         var optBusiness = businessService.findById(businessId);
         if (businessId == null || optBusiness.isEmpty()) {
-            return ResponseEntity.badRequest().body(Collections.emptyList());
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "No se encontró un negocio asociado al usuario");
+            return ResponseEntity.badRequest().body(error);
         }
+
         List<Product> matching = optBusiness.get().getProducts().stream()
                 .filter(p -> p.getName().equalsIgnoreCase(name))
                 .toList();
+
+        if (matching.isEmpty()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "No se encontraron productos con el nombre especificado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+
         return ResponseEntity.ok(matching);
     }
+
+
+
 
     @PostMapping("/show-product")
     public ResponseEntity<Product> findObjectByName(@RequestBody Map<String, String> request) {
@@ -122,20 +141,20 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     }
 
     @GetMapping("/all-by-business/{businessName}")
-    public ResponseEntity<List<Product>> findAllByBusinessName(@PathVariable @NotBlank String businessName) {
+    public ResponseEntity<?> findAllByBusinessName(@PathVariable @NotBlank String businessName) {
         var optBusiness = businessService.findByBusinessName(businessName);
         if (optBusiness == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Collections.emptyList());
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "No se encontró un negocio con ese nombre");
+            return ResponseEntity.badRequest().body(error);
         }
-
         List<Product> products = optBusiness.getProducts();
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(products);
     }
+
 
     @Operation(summary = "Actualizar nombre", description = "Actualiza el nombre del producto.")
     @PutMapping("/updateName/{oldName}/{newName}")
@@ -166,10 +185,12 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     }
 
     @Operation(summary = "Actualizar descripción", description = "Actualiza la descripción del producto.")
-    @PutMapping("/updateDescription/{name}/{description}")
-    public ResponseEntity<String> updateDescription(@PathVariable @NotBlank String name,
-                                                    @PathVariable @NotBlank String description,
+    @PutMapping("/updateDescription")
+    public ResponseEntity<String> updateDescription(
+                                                    @RequestBody Map <String, String> request,
                                                     @AuthenticationPrincipal UserDetails userDetails) {
+        String name = request.get("name");
+        String description = request.get("description");
         Long businessId = staffService.getBusinessIdByCredentialId(
                 credentialService.getIdByUsername(userDetails.getUsername()));
         var optBusiness = businessService.findById(businessId);

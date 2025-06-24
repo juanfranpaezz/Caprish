@@ -99,30 +99,27 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         return ResponseEntity.ok("Borrado exitosamente");
     }
 
-
     @Operation(
             summary = "Actualizar teléfono",
             description = "Actualiza el número de teléfono del cliente autenticado"
     )
-    @PutMapping("/update-phone")
+    @PutMapping("/update-phone/{phone}")
     public ResponseEntity<String> updatePhone(@AuthenticationPrincipal UserDetails userDetails,
-                                              @RequestBody Map<String,String> payload) {
-        return update(service.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "phone", payload.get("phone"));
+                                              @PathVariable String phone) {
+        return update(service.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "phone", phone);
     }
-
     @Operation(
             summary = "Actualizar identificación fiscal",
             description = "Actualiza el número de identificación fiscal del cliente autenticado"
     )
-    @PutMapping("/update-tax")
+    @PutMapping("/update-tax/{tax}")
     public ResponseEntity<String> updateTax(@AuthenticationPrincipal UserDetails userDetails,
-                                            @RequestBody Map<String,String> payload) {
-        return update(service.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "tax", payload.get("tax"));
+                                            @PathVariable String tax) {
+        return update(service.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "tax", tax);
     }
 
-
     @Operation(
-            summary = "Buscar cliente por ID",
+            summary = "Buscar cliente por nombre",
             description = "Obtiene un cliente por su identificador"
     )
     @ApiResponse(responseCode = "200", description = "Cliente encontrado")
@@ -146,12 +143,18 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     }
 
 
+    @Operation(
+            summary = "Ver propia cuenta de cliente",
+            description = "Permite a un cliente ver sus datos "
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente mostrado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o sin permisos")
+    })
     @GetMapping("/view-my-account")
     public ResponseEntity<Client> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(clientService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
     }
-
-
     @Operation(
             summary = "Listar todos los clientes",
             description = "Devuelve una lista con todos los clientes registrados"

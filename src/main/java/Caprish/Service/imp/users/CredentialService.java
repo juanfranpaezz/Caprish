@@ -33,9 +33,8 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
         try{
             stringVerificator(entity.getFirst_name());
             stringVerificator(entity.getLast_name());
-            verifyPassword(entity.getPassword());
         } catch (UserException e){
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 
@@ -46,7 +45,7 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
     }
 
     public void verifyPassword(String password) throws UserException {
-        if (password == null) throw new UserException("La contrasenia no puede ser nula");
+        if (password == null) throw new UserException("La contraseña no puede ser nula");
         if (password.length() < 8 || password.length() > 20) {
             throw new UserException("La contraseña debe tener minimo 8 caracteres y maximo 20");
         }
@@ -54,13 +53,13 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
         String upperCase = ".*[A-Z].*";
         String number = ".*\\d.*";
         if (!password.matches(lowerCase)) {
-            throw new UserException("La contrasenia tiene que tener minimo una minuscula");
+            throw new UserException("La contraseña tiene que tener minimo una minuscula");
         }
         if (!password.matches(upperCase)) {
-            throw new UserException("La contrasenia tiene que tener minimo una mayuscula");
+            throw new UserException("La contraseña tiene que tener minimo una mayuscula");
         }
         if (!password.matches(number)) {
-            throw new UserException("La contrasenia tiene que tener minimo un numero");
+            throw new UserException("La contraseña tiene que tener minimo un numero");
         }
     }
 

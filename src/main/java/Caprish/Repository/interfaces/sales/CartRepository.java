@@ -113,7 +113,7 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
             "LEFT JOIN credential st_cred ON st.id_credential = st_cred.id " +
             "JOIN item i ON i.id_cart = c.id " +
             "JOIN product p ON p.id = i.id_product " +
-            "JOIN business b ON b.id = p.business_id " +
+            "JOIN business b ON b.id = p.id_business " +
             "WHERE cs.id = 'CONFIRMED' AND cl_cred.username = :username " +
             "GROUP BY c.id, cl_cred.first_name, cl_cred.last_name, ct.id, cs.id, st_cred.first_name, st_cred.last_name, b.id",
             nativeQuery = true)

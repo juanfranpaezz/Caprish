@@ -74,13 +74,14 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     public ResponseEntity<String> createObject(@RequestBody Map<String,String> payload,
                                                @AuthenticationPrincipal UserDetails userDetails) {
         Cart entity = new Cart();
+        Cart cart = new Cart();
         entity.setStaff(staffService.findByCredentialId(
                 credentialService.getIdByUsername(userDetails.getUsername())).orElse(null));
         entity.setCart_type(new CartType("SALE"));
         entity.setCart_status(new CartStatus("OPEN"));
         entity.setClient(clientService.getByCredentialId(
                 credentialService.getIdByUsername(payload.get("client"))));
-
+        entity.setItems(null);
         entity.setSale_date(LocalDate.now());
 
         return create(entity);

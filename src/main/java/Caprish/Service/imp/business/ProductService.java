@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -73,7 +74,8 @@ public class ProductService extends MyObjectGenericService<Product, ProductRepos
 
     }
     public Product findByName(String name)throws EntityNotFoundException{
-        return repository.findProductByName(name);
+        return repository.findProductByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
     }
     public Product findByIdWithImages(Long id) {
         Product product = repository.findById(id).orElse(null);

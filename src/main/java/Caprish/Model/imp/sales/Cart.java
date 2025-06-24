@@ -44,7 +44,7 @@ public class Cart extends MyObject {
     private List<Item> items = new ArrayList<>();
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="id_staff")
+    @JoinColumn(name="id_staff", nullable = true)
     @JsonBackReference("cart-staff")
     private Staff staff;
 

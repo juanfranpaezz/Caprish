@@ -25,7 +25,7 @@ public interface ProductRepository extends MyObjectGenericRepository<Product> {
                 nativeQuery = true)
     List<Object[]> getProductByBusiness(@Param("businessName") String businessName);
 
-    Product findProductByName(String name);
+    Optional<Product> findProductByName(String name);
 
     List<Product> findByNameAndBusiness_Id(String name, Long businessId);
 }

@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/item")
@@ -83,28 +86,57 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
     public ResponseEntity<?> addItemFromPurchase(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody Map<String, String> payload) {
+
         Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
         Long clientId = clientService.getIdByCredentialId(credentialId);
-        Long productId = Long.valueOf(payload.get("productId"));
-        Product product = productService.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundCustomException("Producto no encontrado"));
-        Long cartIdStr = Long.valueOf(payload.get("cartId"));
+
+        String productName = payload.get("productName");
+        if (productName == null || productName.isBlank()) {
+            return ResponseEntity.badRequest().body("Falta el parámetro productName");
+        }
+
+        Product product;
+        try {
+            product = productService.findByName(productName);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
+        }
+
+        String cartIdStr = payload.get("cartId");
         Cart cart;
-        if (cartIdStr != null && cartService.existsById(cartIdStr)) {
-            cart = cartService.findById(cartIdStr)
-                    .orElseThrow(() -> new EntityNotFoundCustomException("Carrito no encontrado"));
+        if (cartIdStr != null) {
+            try {
+                Long cartId = Long.valueOf(cartIdStr);
+                if (cartService.existsById(cartId)) {
+                    cart = cartService.findById(cartId)
+                            .orElseThrow(() -> new EntityNotFoundCustomException("Carrito no encontrado"));
+                } else {
+
+                    cart = null;
+                }
+            } catch (NumberFormatException e) {
+                return ResponseEntity.badRequest().body("El parámetro cartId no es un número válido");
+            }
         } else {
+            cart = null;
+        }
+
+        if (cart == null) {
             cart = new Cart();
             cart.setCart_type(new CartType("PURCHASE"));
             cart.setCart_status(new CartStatus("OPEN"));
             cart.setClient(clientService.findById(clientId)
                     .orElseThrow(() -> new EntityNotFoundCustomException("Cliente no encontrado")));
+            cart.setSale_date(LocalDate.now());
+            cart.setStaff(null);
             cart = cartService.save(cart);
         }
+
         if (!"PURCHASE".equals(cart.getCart_type().getId())
                 || !"OPEN".equals(cart.getCart_status().getId())) {
             return ResponseEntity.badRequest().body("El carrito no está abierto o no es de tipo compra.");
         }
+
         if (!cart.getItems().isEmpty()) {
             Long existingBiz = cart.getItems().get(0)
                     .getProduct().getBusiness().getId();
@@ -114,15 +146,21 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
                         .body("El carrito ya contiene ítems de otra empresa. Vacíalo antes de agregar este producto.");
             }
         }
+
         int quantity = payload.get("quantity") == null ? 1 : Integer.parseInt(payload.get("quantity"));
-        if (productService.findById(productId).get().getStock() < quantity) return ResponseEntity.badRequest().body("No hay suficiente stock este producto.");
+        if (product.getStock() < quantity) {
+            return ResponseEntity.badRequest().body("No hay suficiente stock de este producto.");
+        }
+
         Item item = new Item();
         item.setQuantity(quantity);
         item.setProduct(product);
         item.setCart(cart);
+
         Item saved = service.save(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
+
 
     @Operation(
             summary = "Actualizar cantidad de un ítem",

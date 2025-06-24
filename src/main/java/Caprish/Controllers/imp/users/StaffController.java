@@ -163,7 +163,8 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     @PutMapping("/promote")
     public ResponseEntity<String> updateWorkRole(@RequestBody Map <String,String> payload, @AuthenticationPrincipal UserDetails userDetails) {
         String username = payload.get("username");
-        if (username == null) return ResponseEntity.badRequest().build();
+        if (username == null || credentialService.findByUsername(username).isEmpty()) return ResponseEntity.badRequest().build();
+        if(!credentialService.findByUsername(username).get().getRole().getId().equals("ROLE_EMPLOYEE"))return ResponseEntity.badRequest().body("Solo se pueden ascender usuarios que sean de tipo EMPLOYEE");
         Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
         Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
         if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("El staff no existe");

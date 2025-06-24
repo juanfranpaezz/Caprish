@@ -44,7 +44,9 @@ public class SecurityConfig {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 
+
                         .requestMatchers("/credential/login").permitAll()
+                        .requestMatchers("/client/delete").hasRole("CLIENT")
                         .requestMatchers("/client/create").hasRole("CLIENT")
                         .requestMatchers("/client/view-my-account").hasRole("CLIENT")
                         .requestMatchers("/business/delete-my-business").hasRole("BOSS")
@@ -78,10 +80,6 @@ public class SecurityConfig {
                         .requestMatchers("/business/view-my").hasRole("EMPLOYEE")
                         .requestMatchers("/staff/view-my-account").hasRole("EMPLOYEE")
 
-                        .requestMatchers("/client/delete").hasRole("CLIENT")
-
-
-
                         .requestMatchers("/item/client/add-from-purchase").hasRole("CLIENT")
                         .requestMatchers("/item/client/update-quantity/{itemId}/{quantity}").hasRole("CLIENT")
                         .requestMatchers("/client/update-phone/{phone}").hasRole("CLIENT")
@@ -91,6 +89,7 @@ public class SecurityConfig {
                         .requestMatchers("/cart/client/confirm-purchase").hasRole("CLIENT")
                         .requestMatchers("/product/client/name/{name}").hasRole("CLIENT")
                         .requestMatchers("/business/{name}").hasRole("CLIENT")
+
 
 
                         .requestMatchers("/credential/logout").hasRole("USER")

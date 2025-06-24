@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -82,7 +83,6 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         }
     }
 
-
     @Operation(
             summary = "Eliminar cliente",
             description = "Elimina un cliente por su ID"
@@ -91,7 +91,7 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
             @ApiResponse(responseCode = "200", description = "Cliente eliminado correctamente"),
             @ApiResponse(responseCode = "400", description = "ID inválido")
     })
-    @DeleteMapping("/delete")
+    @PutMapping("/delete")
     public ResponseEntity<String> deleteObject(@AuthenticationPrincipal UserDetails userDetails) {
         Optional<Credential> c = credentialService.findById(credentialService.getIdByUsername(userDetails.getUsername()));
         if(c.isEmpty()) return ResponseEntity.badRequest().build();
@@ -162,7 +162,12 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     @ApiResponse(responseCode = "200", description = "Lista devuelta correctamente")
     @GetMapping("/all")
     public ResponseEntity<List<Client>> findAllObjects(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(cartService.findClientsByBusinessId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));
+        List<Client> clients = cartService.findClientsByBusinessId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
+        for(Client client : clients) {
+            client.setChats(null);
+            client.getCredential().setPassword(null);
+        }
+        return ResponseEntity.ok(clients);
     }
 
 }

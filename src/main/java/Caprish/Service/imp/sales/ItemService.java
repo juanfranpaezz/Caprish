@@ -33,4 +33,9 @@ public class ItemService extends MyObjectGenericService<Item, ItemRepository, It
     public Long findIdByProductId(Long productId){
         return repository.findIdByProductId(productId);
     }
+
+    public boolean deleteMyItem(Long itemId) {
+        int affected = repository.deleteMyItem(itemId);
+        return affected > 0;
+    }
 }

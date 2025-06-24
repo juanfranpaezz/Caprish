@@ -19,9 +19,9 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
         super(childRepository);
     }
 
-    public List<CartViewDTO> getSalesByBusiness(Long businessId) {
+    public List<CartViewDTO> getCartsByBusinessAndStatus(Long businessId, String cartStatus) {
         try {
-            return repository.getCartViewsByBusinessId(businessId)
+            return repository.getCartViewsByBusinessId(businessId, cartStatus)
                     .stream()
                     .map(obj -> new CartViewDTO(
                             ((Number) obj[0]).longValue(),             // idCart
@@ -39,9 +39,9 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
         }
     }
 
-    public List<CartViewDTO> getCartViewsByBusiness(Long businessId) {
+    public List<CartViewDTO> getCartViewsByBusiness(Long businessId, String cartStatus) {
         try {
-            return repository.getCartViewsByBusinessId(businessId)
+            return repository.getCartViewsByBusinessId(businessId, cartStatus)
                     .stream()
                     .map(obj -> new CartViewDTO(
                             ((Number) obj[0]).longValue(),             // idCart
@@ -66,8 +66,8 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
         return repository.findByClientIdAndTypeAndStatus(clientId, typeId, statusId);
     }
 
-    public List<ClientPurchaseDTO> getFinalizedCartsByClientUsername(Long clientId, String username) {
-        return  repository.findFinalizedCartsByClient(clientId, username)
+    public List<ClientPurchaseDTO> getFinalizedCartsByClientUsername(Long clientId, String username, String cartStatus) {
+        return  repository.findFinalizedCartsByClient(clientId, username, cartStatus)
                 .stream()
                 .map(row -> new ClientPurchaseDTO(
                         ((Number) row[0]).longValue(),
@@ -80,19 +80,19 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
                 )).collect(Collectors.toList());
     }
 
-    public List<ClientPurchaseDTO> getCartByClientUsername(Long clientId, String username) {
-        return  repository.findCartByClient(clientId, username)
-                .stream()
-                .map(row -> new ClientPurchaseDTO(
-                ((Number) row[0]).longValue(),
-                (String) row[1],
-                (String) row[2],
-                (String) row[3],
-                (String) row[4],
-                (String)row[5],
-                ((Number) row[6]).doubleValue()
-        )).collect(Collectors.toList());
-    }
+//    public List<ClientPurchaseDTO> getCartByClientUsername(Long clientId, String username) {
+//        return  repository.findCartByClient(clientId, username)
+//                .stream()
+//                .map(row -> new ClientPurchaseDTO(
+//                ((Number) row[0]).longValue(),
+//                (String) row[1],
+//                (String) row[2],
+//                (String) row[3],
+//                (String) row[4],
+//                (String)row[5],
+//                ((Number) row[6]).doubleValue()
+//        )).collect(Collectors.toList());
+//    }
 
     @Override
     protected void verifySpecificAttributes(Cart entity) {}

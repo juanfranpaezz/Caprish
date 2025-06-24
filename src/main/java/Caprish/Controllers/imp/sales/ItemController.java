@@ -277,6 +277,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
             @ApiResponse(responseCode = "200", description = "Ítem eliminado correctamente"),
             @ApiResponse(responseCode = "400", description = "ID inválido")
     })
+
     @DeleteMapping("/client/delete")
     public ResponseEntity<?> deleteItemClient(
             @RequestBody Map<String, String> payload,
@@ -302,9 +303,11 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
 
         Item item = itemOpt.get();
 
-        service.deleteById(item.getId());
-
-        return ResponseEntity.ok("Ítem eliminado");
+        if (service.deleteMyItem(item.getId())) {
+            return ResponseEntity.ok("Item eliminado");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        }
     }
 
 }

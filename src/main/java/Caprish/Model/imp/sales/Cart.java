@@ -41,7 +41,7 @@ public class Cart extends MyObject {
     @JsonManagedReference("item-cart")
     private List<Item> items = new ArrayList<>();
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name="id_staff", nullable = true)
     @JsonBackReference("cart-staff")
     private Staff staff;

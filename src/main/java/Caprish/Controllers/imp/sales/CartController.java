@@ -15,22 +15,14 @@ import Caprish.Service.imp.sales.CartService;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.sales.ItemService;
-import Caprish.Service.imp.users.ClientService;
-import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -117,9 +109,19 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
     @GetMapping("/staff/view/my-sales")
     public ResponseEntity<List<CartViewDTO>> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(service.getSalesByBusiness(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()))));
+        return ResponseEntity.ok(service.getCartsByBusinessAndStatus(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "CONFIRMED"));
     }
 
+
+    @Operation(
+            summary = "Ver mis ventas",
+            description = "Obtiene las ventas relacionadas con una empresa"
+    )
+    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
+    @GetMapping("/staff/view/my-carts")
+    public ResponseEntity<List<CartViewDTO>> getMyCarts(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(service.getCartsByBusinessAndStatus(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "OPEN"));
+    }
 
     @PutMapping("/staff/confirm-sale/{cartId}")
     public ResponseEntity<String> confirmSale(@PathVariable @Positive Long cartId,
@@ -145,20 +147,20 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return ResponseEntity.ok("Venta confirmada");
     }
 
-    @Operation(
-            summary = "Ver mis ventas",
-            description = "Obtiene los carritos (ventas) relacionados con una empresa específica, útil para vista del supervisor"
-    )
-    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
-    @GetMapping("/staff/view/my-sales/{businessId}")
-    public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
-        return ResponseEntity.ok(service.getCartViewsByBusiness(businessId));
-    }
+//    @Operation(
+//            summary = "Ver mis ventas",
+//            description = "Obtiene los carritos (ventas) relacionados con una empresa específica, útil para vista del supervisor"
+//    )
+//    @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
+//    @GetMapping("/staff/view/my-sales/{businessId}")
+//    public ResponseEntity<List<CartViewDTO>> getMySales(@PathVariable Long businessId) {
+//        return ResponseEntity.ok(service.getCartViewsByBusiness(businessId, "CONFIRMED"));
+//    }
 
     @GetMapping("/client/view/my-purchases")
     public ResponseEntity<List<ClientPurchaseDTO>> getMyPurchases(@AuthenticationPrincipal UserDetails userDetails) {
 
-        String username = userDetails.getUsername(); // viene del JWT
+        String username = userDetails.getUsername();
         Long credentialId = credentialService.getIdByUsername(username);
         Client client = clientService.findByCredentialId(credentialId);
 
@@ -166,8 +168,19 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername()));
+        return ResponseEntity.ok(service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername(), "CONFIRMED"));
     }
+
+    @GetMapping("/client/view/my-cart")
+    public ResponseEntity<List<ClientPurchaseDTO>> viewMyCart(@AuthenticationPrincipal UserDetails userDetails) {
+        Client client = clientService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
+        if (client == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<ClientPurchaseDTO> carts = service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername(), "OPEN");
+        return ResponseEntity.ok(carts);
+    }
+
 
     @PutMapping("/client/confirm-purchase")
     public ResponseEntity<String> confirmPurchase(@RequestBody Map<String,String> payload,
@@ -181,7 +194,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
                 || !"OPEN".equals(cart.getCart_status().getId())) {
             return ResponseEntity.badRequest().body("No puedes confirmar esta compra.");
         }
-        if(!businessService.isActiveById(cart.getStaff().getBusiness().getId()))
+        if(!businessService.isActiveById(cart.getItems().get(1).getProduct().getBusiness().getId()))
             return ResponseEntity.badRequest().body("No se puede realizar la venta ya que la empresa está dada de baja");
 
         cart.setCart_status(new CartStatus("CONFIRMED"));

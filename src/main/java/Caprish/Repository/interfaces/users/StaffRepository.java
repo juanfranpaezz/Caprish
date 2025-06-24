@@ -20,6 +20,7 @@ public interface StaffRepository extends MyObjectGenericRepository<Staff> {
     Staff findByCredentialId(Long credentialId);
     Optional<Staff> findByCredential(Credential credential);
 
+
     @Query(value = """
         SELECT 
             s.id AS staff_id,

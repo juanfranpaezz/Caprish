@@ -27,5 +27,7 @@ public interface ProductRepository extends MyObjectGenericRepository<Product> {
 
     Optional<Product> findProductByName(String name);
 
+    Long findIdProductByName(String name);
+
     List<Product> findByNameAndBusiness_Id(String name, Long businessId);
 }

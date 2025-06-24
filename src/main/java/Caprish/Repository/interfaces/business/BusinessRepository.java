@@ -35,8 +35,7 @@ public interface BusinessRepository extends MyObjectGenericRepository<Business> 
             LEFT JOIN staff s ON s.business_id = b.id
             WHERE b.id = :businessId
             """, nativeQuery = true)
-    BusinessViewDTO findByBusinessId(@Param("businessId") Integer businessId);
-
+    BusinessViewDTO findByBusinessId(@Param("businessId") Long businessId);
 
 
 

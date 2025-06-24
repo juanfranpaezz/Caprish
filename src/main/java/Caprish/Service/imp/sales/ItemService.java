@@ -29,4 +29,8 @@ public class ItemService extends MyObjectGenericService<Item, ItemRepository, It
             throw new IllegalArgumentException("La cantidad debe ser mayor a cero");
         }
     }
+
+    public Long findIdByProductId(Long productId){
+        return repository.findIdByProductId(productId);
+    }
 }

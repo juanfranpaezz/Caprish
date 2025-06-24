@@ -65,6 +65,10 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         String username = payload.get("username");
         String password = payload.get("password");
 
+        if (credentialService.existsByUsername(username)) {
+            return ResponseEntity.badRequest().body("El usuario ya existe.");
+        }
+
         if (username == null || password == null) {
             return ResponseEntity.badRequest().body("Los campos 'username' y 'password' son requeridos");
         }
@@ -102,7 +106,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
 
             return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
         }
-        return ResponseEntity.badRequest().body("Codigo o mail incorrecto");
+        return ResponseEntity.badRequest().body("Uno a varios datos incorrectos");
     }
     @Operation(
             summary = "Iniciar sesión",

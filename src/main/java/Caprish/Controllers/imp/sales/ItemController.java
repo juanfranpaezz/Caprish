@@ -56,7 +56,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
                                              @AuthenticationPrincipal UserDetails userDetails) {
         Long businessId = staffService
                 .getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
-        Long productId = Long.valueOf(payload.get("productId"));
+        Long productId = productService.findIdByName(payload.get("productName"));
         Product product = productService.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Producto no encontrdo"));
         if (!product.getBusiness().getId().equals(businessId)) {
@@ -170,6 +170,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
                 .orElseThrow(() -> new EntityNotFoundCustomException("Item no encontrado"));
         if (item.getProduct().getStock() < item.getQuantity()) return ResponseEntity.badRequest().body("No hay suficiente stock este producto.");
         Cart cart = item.getCart();
+
         if (!cart.getStaff().getBusiness().getId().equals(businessId)
                 || !"SALE".equals(cart.getCart_type().getId())
                 || !"OPEN".equals(cart.getCart_status().getId())) {
@@ -266,6 +267,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         service.deleteById(itemId);
         return ResponseEntity.ok("Ítem eliminado");
     }
+
 
     @Operation(
             summary = "Eliminar ítem",

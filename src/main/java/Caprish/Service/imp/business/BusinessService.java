@@ -105,7 +105,7 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
     public boolean addresValidation(String address) throws RuntimeException{
         return geocodingService.validateAddress(address);
     }
-    public BusinessViewDTO findByBusinessId(Integer businessName) throws EntityNotFoundException{
+    public BusinessViewDTO findByBusinessId(Long businessName) throws EntityNotFoundException{
         return repository.findByBusinessId(businessName);
     }
 

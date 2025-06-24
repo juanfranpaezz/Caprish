@@ -73,6 +73,9 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         if (bossBusinessId == null) {
             return ResponseEntity.badRequest().body("No se encontró la empresa para el jefe actual.");
         }
+        if (credentialService.existsByUsername(payload.get("username"))) {
+            return ResponseEntity.badRequest().body("El usuario ya existe.");
+        }
         String firstName = payload.get("firstName");
         String lastName = payload.get("lastName");
         String username = payload.get("username");
@@ -160,11 +163,11 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return credentialController.update(credentialService.getIdByUsername(username), "id_role", "ROLE_SUPERVISOR");
     }
 
-    @GetMapping("/by-business-name/{businessName}")
-    public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@PathVariable String businessName) {
-        Business business = businessService.findByBusinessName(businessName);
-        List<StaffViewDTO> staff = service.getStaffByBusiness(business.getId());
+    @GetMapping("/by-business")
+    public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@AuthenticationPrincipal UserDetails userDetails) {
+        List<StaffViewDTO> staff = service.getStaffByBusinessId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
         return ResponseEntity.ok(staff);
     }
+
 
 }

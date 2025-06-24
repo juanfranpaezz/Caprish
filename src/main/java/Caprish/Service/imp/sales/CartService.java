@@ -10,6 +10,7 @@ import Caprish.Service.imp.MyObjectGenericService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +38,9 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
             throw new RuntimeException("Error getting cart views", e);
         }
     }
-
+    public Optional<Cart> findByClientIdAndTypeAndStatus(Long clientId, String typeId, String statusId) {
+        return repository.findByClientIdAndTypeAndStatus(clientId, typeId, statusId);
+    }
     public List<ClientPurchaseDTO> getFinalizedCartsByClientUsername(Long clientId, String username) {
         return  repository.findFinalizedCartsByClient(clientId, username)
                 .stream()

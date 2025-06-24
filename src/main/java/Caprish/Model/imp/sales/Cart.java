@@ -33,8 +33,6 @@ public class Cart extends MyObject {
     @JoinColumn(name = "id_client",nullable = false)
     private Client client;
 
-
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_cart_status",nullable = false)
     private CartStatus cart_status;

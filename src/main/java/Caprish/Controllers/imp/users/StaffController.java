@@ -1,6 +1,7 @@
 package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
+import Caprish.Exception.EntityNotFoundCustomException;
 import Caprish.Exception.InvalidEntityException;
 import Caprish.Model.enums.Role;
 import Caprish.Model.imp.business.Business;
@@ -159,11 +160,11 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         return credentialController.update(credentialService.getIdByUsername(username), "id_role", "ROLE_SUPERVISOR");
     }
 
-    @GetMapping("/by-business/{businessId}")
-    public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@PathVariable Long businessId) {
-        List<StaffViewDTO> staff = service.getStaffByBusiness(businessId);
+    @GetMapping("/by-business-name/{businessName}")
+    public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@PathVariable String businessName) {
+        Business business = businessService.findByBusinessName(businessName);
+        List<StaffViewDTO> staff = service.getStaffByBusiness(business.getId());
         return ResponseEntity.ok(staff);
     }
-
 
 }

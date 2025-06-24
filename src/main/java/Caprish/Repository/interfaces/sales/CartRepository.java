@@ -6,6 +6,7 @@ import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface CartRepository extends MyObjectGenericRepository<Cart> {
@@ -83,5 +84,14 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
             "GROUP BY c.id, cl_cred.first_name, cl_cred.last_name, ct.id, cs.id, st_cred.first_name, st_cred.last_name, b.id",
             nativeQuery = true)
     List<Object[]> findFinalizedCartsByClient(@Param("clientId") Long clientId, @Param("username") String user);
+    @Query("SELECT c FROM Cart c " +
+            "WHERE c.client.id = :clientId " +
+            "AND c.cart_type.id = :typeId " +
+            "AND c.cart_status.id = :statusId")
+    Optional<Cart> findByClientIdAndTypeAndStatus(
+            @Param("clientId") Long clientId,
+            @Param("typeId") String typeId,
+            @Param("statusId") String statusId
+    );
 }
 

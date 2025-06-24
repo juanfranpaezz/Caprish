@@ -71,8 +71,8 @@ public class SecurityConfig {
                         .requestMatchers("/item/staff/update-quantity/{itemId}/{quantity}").hasRole("EMPLOYEE")
                         .requestMatchers("/item/staff/delete/{itemId}").hasRole("EMPLOYEE")
                         .requestMatchers("/item/client/add-from-purchase").hasRole("CLIENT")
-                        .requestMatchers("/item/client/update-quantity/{itemId}/{quantity}").hasRole("CLIENT")
-                        .requestMatchers("/item/client/delete/{itemId}").hasRole("CLIENT")
+                        .requestMatchers("/item/client/update-quantity/{quantity}").hasRole("CLIENT")
+                        .requestMatchers("/item/client/delete").hasRole("CLIENT")
 
 
                         .requestMatchers("/cart/create").hasRole("EMPLOYEE")
@@ -114,7 +114,7 @@ public class SecurityConfig {
                         .requestMatchers("/staff/promote").hasRole("BOSS")
                         .requestMatchers("/staff/view-my-account").hasRole("EMPLOYEE")
                         .requestMatchers("/staff/create-boss").hasRole("BOSS")
-                        .requestMatchers("/staff/by-business/{businessId}").hasRole("BOSS")
+                        .requestMatchers("/staff/by-business/{businessName}").hasRole("BOSS")
 
                         .anyRequest().authenticated()
                 )

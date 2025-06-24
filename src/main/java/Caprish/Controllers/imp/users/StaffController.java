@@ -167,7 +167,9 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
         Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
         if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("El staff no existe");
-        return credentialController.update(credentialService.getIdByUsername(username), "id_role", new Role("4"));
+        Long credentialId = credentialService.getIdByUsername(username);
+        credentialService.promoteStaff(credentialId);
+        return ResponseEntity.ok("Staff promovido correctamente");
     }
 
     @GetMapping("/by-business")

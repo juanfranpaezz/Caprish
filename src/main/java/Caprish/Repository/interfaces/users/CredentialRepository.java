@@ -1,6 +1,7 @@
 package Caprish.Repository.interfaces.users;
 
 import Caprish.Model.imp.users.Credential;
+import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,7 +25,7 @@ public interface CredentialRepository extends MyObjectGenericRepository<Credenti
 """, nativeQuery = true)
     int disableCredentialsForBusiness(@Param("businessId") Long BusinessId);
 
-    boolean existsByUsername(String username);
+        boolean existsByUsername(String username);
 
     @Modifying
     @Transactional
@@ -38,6 +39,9 @@ public interface CredentialRepository extends MyObjectGenericRepository<Credenti
     )
         """)
     void blockStaff(@Param("businessId") Long BusinessId);
-
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE credential SET id_role = 'ROLE_SUPERVISOR' WHERE id = :staff", nativeQuery = true)
+    void promoteStaff(@Param("staff") Long staff);
 
 }

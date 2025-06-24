@@ -88,8 +88,9 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
     public void blockStaff(Long businessId){
         repository.blockStaff(businessId);
     }
-
-
+    public void promoteStaff(Long staffId){
+        repository.promoteStaff(staffId);
+    }
 }
 
 

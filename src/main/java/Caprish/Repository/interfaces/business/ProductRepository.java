@@ -29,7 +29,9 @@ public interface ProductRepository extends MyObjectGenericRepository<Product> {
 
     Optional<Product> findProductByName(String name);
 
-    Long findIdProductByName(String name);
+    @Query("SELECT p.id FROM Product p WHERE p.name = :name")
+    Long findIdProductByName(@Param("name") String name);
+
 
     List<Product> findByNameAndBusiness_Id(String name, Long businessId);
     @Transactional

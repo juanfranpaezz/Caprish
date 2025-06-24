@@ -15,10 +15,12 @@ public interface StaffRepository extends MyObjectGenericRepository<Staff> {
     Long getBusinessIdByCredentialId(@Param("credentialId") Long credentialId);
 
     @Query("SELECT s FROM Staff s WHERE s.credential.id = :credentialId")
-    Staff findAllByCredentialId(Long credentialId);
+//    Staff findAllByCredentialId(Long credentialId);
+
 
     Staff findByCredentialId(Long credentialId);
-    Optional<Staff> findByCredential(Credential credential);
+
+//    Optional<Staff> findByCredential(Long credentialId);
 
 
     @Query(value = """

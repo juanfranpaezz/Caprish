@@ -59,6 +59,7 @@ public class SecurityConfig {
                         .requestMatchers("/staff/delete").hasRole("BOSS")
                         .requestMatchers("/staff/promote").hasRole("BOSS")
                         .requestMatchers("/staff/create-boss").hasRole("BOSS")
+                        .requestMatchers("/staff/fire-staff").hasRole("BOSS")
                         .requestMatchers("/staff/by-business/{businessId}").hasRole("BOSS")
 
                         .requestMatchers("/product/updateName/{oldName}/{newName}").hasRole("SUPERVISOR")

@@ -17,6 +17,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -83,15 +84,25 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     })
     @GetMapping("/{name}")
     public ResponseEntity<Business> findObjectByName(@PathVariable String name) {
+        if (name.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
         Business business = service.findByBusinessName(name);
+        if (business == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         business.setChats(null);
         business.setStaff(null);
         return ResponseEntity.ok(business);
     }
 
+
     @GetMapping("/view-my")
-    public ResponseEntity<Business> findObjectByBoss(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> findObjectByBoss(@AuthenticationPrincipal UserDetails userDetails) {
         Optional<Business> a = service.findById(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
+        if(a.isPresent()) {
+            return ResponseEntity.badRequest().body("No existe una empresa vinculada a vos ");
+        }
         return ResponseEntity.ok(a.get());
     }
 

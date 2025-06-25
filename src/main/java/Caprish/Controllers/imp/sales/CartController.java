@@ -201,6 +201,5 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return ResponseEntity.ok("Compra confirmada");
     }
 
-
 }
 

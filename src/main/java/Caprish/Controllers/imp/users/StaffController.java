@@ -162,9 +162,9 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
             @ApiResponse(responseCode = "400", description = "Usuario inválido o no pertenece a la empresa")
     })
     @PutMapping("/promote")
-    public ResponseEntity<String> updateWorkRole(@RequestBody Map <String,String> payload, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> updateWorkRole(@RequestBody Map <String,String> payload, @AuthenticationPrincipal UserDetails userDetails) {
         String username = payload.get("username");
-        if (username == null || credentialService.findByUsername(username).isEmpty()) return ResponseEntity.badRequest().build();
+        if (username == null || credentialService.findByUsername(username).isEmpty()) return ResponseEntity.badRequest().body("Error, usuario nulo o no encontrado");
         if(!credentialService.findByUsername(username).get().getRole().getId().equals("ROLE_EMPLOYEE"))return ResponseEntity.badRequest().body("Solo se pueden ascender usuarios que sean de tipo EMPLOYEE");
         Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
         Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
@@ -173,11 +173,31 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         credentialService.promoteStaff(credentialId);
         return ResponseEntity.ok("Staff promovido correctamente");
     }
-
+    @Operation(
+            summary = "Ver empleados de una empresa ",
+            description = "Devuelve los empleados de una empresa"
+    )
     @GetMapping("/by-business")
     public ResponseEntity<List<StaffViewDTO>> getStaffByBusiness(@AuthenticationPrincipal UserDetails userDetails) {
         List<StaffViewDTO> staff = service.getStaffByBusinessId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
         return ResponseEntity.ok(staff);
     }
-
+    @Operation(
+            summary = "Despedir a un empleado",
+            description = "Encuentra a un empleado y deja de estar habilitado"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Staff despedido correctamente"),
+            @ApiResponse(responseCode = "400",description = "Usuario invalido o no pertenece a la empresa")
+    })
+    @PutMapping("/fire-staff")
+    public ResponseEntity<?>fireStaff(@RequestBody Map <String,String> payload, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = payload.get("username");
+        if(username ==null || credentialService.findByUsername(username).isEmpty()) return ResponseEntity.badRequest().body("Error, usuario nulo o no encontrado");
+        Long bossId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
+        Long staffId = service.getBusinessIdByCredentialId(credentialService.getIdByUsername(username));
+        if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("El staff no existe");
+        credentialController.update(credentialService.getIdByUsername(username),"enabled",false);
+        return ResponseEntity.ok("Staff despedido correctamente");
+    }
 }

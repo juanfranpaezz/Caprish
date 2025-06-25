@@ -3,7 +3,6 @@ package Caprish.Repository.interfaces.business;
 import Caprish.Model.imp.business.Business;
 import Caprish.Model.imp.business.dto.BusinessViewDTO;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
-import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 

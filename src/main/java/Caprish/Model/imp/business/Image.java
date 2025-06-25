@@ -4,8 +4,6 @@ import Caprish.Model.imp.MyObject;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Arrays;
-
 @Getter
 @Setter
 @NoArgsConstructor

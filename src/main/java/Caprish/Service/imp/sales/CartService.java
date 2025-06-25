@@ -33,34 +33,12 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
                             // totalAmount
                     ))
                     .collect(Collectors.toList());
-        }catch (Exception e){
+        }catch (RuntimeException e){
             e.printStackTrace();
             throw new RuntimeException("Error getting cart views", e);
         }
     }
 
-    public List<CartViewDTO> getCartViewsByBusiness(Long businessId, String cartStatus) {
-        try {
-            return repository.getCartViewsByBusinessId(businessId, cartStatus)
-                    .stream()
-                    .map(obj -> new CartViewDTO(
-                            ((Number) obj[0]).longValue(),             // idCart
-                            (String) obj[1],                           // clientName (first + last)
-                            (String) obj[2],                           // cartType
-                            (String) obj[3],                           // cartStatus
-                            (String) obj[4],                           // staffName (first + last)
-                            ((Number) obj[5]).longValue()             // idBusiness
-                    ))
-                    .collect(Collectors.toList());
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException("Error getting cart views", e);
-        }
-    }
-
-    public Long findIdByClientId(Long clientId){
-        return repository.findIdOpenPurchaseCartByClientId(clientId);
-    }
 
     public Optional<Cart> findByClientIdAndTypeAndStatus(Long clientId, String typeId, String statusId) {
         return repository.findByClientIdAndTypeAndStatus(clientId, typeId, statusId);
@@ -79,20 +57,6 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
                         ((Number) row[6]).doubleValue()
                 )).collect(Collectors.toList());
     }
-
-//    public List<ClientPurchaseDTO> getCartByClientUsername(Long clientId, String username) {
-//        return  repository.findCartByClient(clientId, username)
-//                .stream()
-//                .map(row -> new ClientPurchaseDTO(
-//                ((Number) row[0]).longValue(),
-//                (String) row[1],
-//                (String) row[2],
-//                (String) row[3],
-//                (String) row[4],
-//                (String)row[5],
-//                ((Number) row[6]).doubleValue()
-//        )).collect(Collectors.toList());
-//    }
 
     @Override
     protected void verifySpecificAttributes(Cart entity) {}

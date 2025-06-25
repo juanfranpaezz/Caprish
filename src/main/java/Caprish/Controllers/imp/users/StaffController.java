@@ -1,7 +1,6 @@
 package Caprish.Controllers.imp.users;
 
 import Caprish.Controllers.MyObjectGenericController;
-import Caprish.Exception.EntityNotFoundCustomException;
 import Caprish.Exception.InvalidEntityException;
 import Caprish.Exception.UserException;
 import Caprish.Model.enums.Role;
@@ -39,10 +38,6 @@ import Caprish.Model.imp.users.dto.StaffViewDTO;
 public class StaffController extends MyObjectGenericController<Staff, StaffRepository, StaffService> {
     @Autowired
     CredentialService credentialService;
-    @Autowired
-    private CartService cartService;
-    @Autowired
-    private ClientService clientService;
     @Autowired
     private BusinessService businessService;
     @Autowired

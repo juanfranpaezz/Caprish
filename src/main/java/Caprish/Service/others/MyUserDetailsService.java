@@ -1,8 +1,5 @@
 package Caprish.Service.others;
 
-import Caprish.Repository.interfaces.users.ClientRepository;
-import Caprish.Repository.interfaces.users.CredentialRepository;
-import Caprish.Repository.interfaces.users.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;

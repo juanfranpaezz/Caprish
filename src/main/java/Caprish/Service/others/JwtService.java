@@ -55,7 +55,6 @@ public class JwtService {
         if (value == null) {
             return null;
         }
-        // Si pidieron Long pero vino Integer (u otro Number), lo convertimos:
         if (requiredType == Long.class && value instanceof Number) {
             Number num = (Number) value;
             return requiredType.cast(Long.valueOf(num.longValue()));

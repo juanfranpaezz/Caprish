@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
-import java.time.Instant;
 import java.util.Objects;
 
 @NoArgsConstructor

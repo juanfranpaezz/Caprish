@@ -58,7 +58,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if (jwtService.isTokenValid(token, userDetails)) {
-                // Comprueba versión
                 Long tokenVer = jwtService.extractClaim(token, "ver", Long.class);
                 Credential cred = credentialService.findByUsername(username).get();
                 if (tokenVer != null && tokenVer.equals(cred.getTokenVersion())) {

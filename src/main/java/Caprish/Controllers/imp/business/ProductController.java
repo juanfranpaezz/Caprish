@@ -2,7 +2,6 @@ package Caprish.Controllers.imp.business;
 
 import Caprish.Controllers.MyObjectGenericController;
 import Caprish.Model.imp.business.Product;
-import Caprish.Model.imp.business.dto.ProductViewDTO;
 import Caprish.Repository.interfaces.business.ProductRepository;
 import Caprish.Service.imp.business.BusinessService;
 import Caprish.Service.imp.business.ProductService;
@@ -10,7 +9,6 @@ import Caprish.Service.imp.users.CredentialService;
 import Caprish.Service.imp.users.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
@@ -24,7 +22,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,19 +124,6 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         return ResponseEntity.ok(matching);
     }
 
-
-//
-//
-//    @PostMapping("/show-product")
-//    public ResponseEntity<Product> findObjectByName(@RequestBody Map<String, String> request) {
-//        String name = request.get("name");
-//        try {
-//            return ResponseEntity.ok(service.findByName(name));
-//        } catch (Exception e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
     @GetMapping("/all-by-business/{businessName}")
     public ResponseEntity<?> findAllByBusinessName(@PathVariable @NotBlank String businessName) {
         var optBusiness = businessService.findByBusinessName(businessName);
@@ -158,7 +142,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     @GetMapping("/all-by-my-business")
     public ResponseEntity<?> findAllByBusinessName(@AuthenticationPrincipal UserDetails userDetails) {
         var optBusiness = businessService.findById(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
-        if (optBusiness == null) {
+        if (optBusiness.isEmpty()) {
             Map<String, String> error = new HashMap<>();
             error.put("error", "No se encontró un negocio con ese nombre");
             return ResponseEntity.badRequest().body(error);

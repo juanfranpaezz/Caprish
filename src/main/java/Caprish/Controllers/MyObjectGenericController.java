@@ -5,9 +5,6 @@ import Caprish.Model.imp.MyObject;
 import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import Caprish.Service.imp.MyObjectGenericService;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
-import jakarta.persistence.criteria.CriteriaUpdate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

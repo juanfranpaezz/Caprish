@@ -14,6 +14,7 @@ public interface BusinessRepository extends MyObjectGenericRepository<Business> 
     boolean existsByBusinessName(String businessName);
 
     boolean existsByTax(Long tax);
+
     @Query("SELECT b.id FROM Business b WHERE b.businessName = :businessName")
     Long findIdByBusinessName(String businessName);
 
@@ -21,8 +22,6 @@ public interface BusinessRepository extends MyObjectGenericRepository<Business> 
 
     @Query(value = "SELECT active FROM business WHERE id = :id", nativeQuery = true)
     boolean getActiveById(@Param("id") Long id);
-
-    boolean existsByTax(int tax);
 
     @Query(value = """
             SELECT 
@@ -36,9 +35,6 @@ public interface BusinessRepository extends MyObjectGenericRepository<Business> 
             WHERE b.id = :businessId
             """, nativeQuery = true)
     BusinessViewDTO findByBusinessId(@Param("businessId") Long businessId);
-
-
-
 
 
 }

@@ -79,6 +79,7 @@ public class SecurityConfig {
                         .requestMatchers("/product/staff/name/{name}").hasRole("EMPLOYEE")
                         .requestMatchers("/business/view-my").hasRole("EMPLOYEE")
                         .requestMatchers("/staff/view-my-account").hasRole("EMPLOYEE")
+                        .requestMatchers("/product/all-by-my-business").hasRole("EMPLOYEE")
 
                         .requestMatchers("/item/client/add-from-purchase").hasRole("CLIENT")
                         .requestMatchers("/item/client/update-quantity/{itemId}/{quantity}").hasRole("CLIENT")

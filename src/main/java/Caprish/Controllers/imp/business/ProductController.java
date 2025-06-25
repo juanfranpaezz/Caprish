@@ -128,17 +128,17 @@ public class ProductController extends MyObjectGenericController<Product, Produc
     }
 
 
-
-
-    @PostMapping("/show-product")
-    public ResponseEntity<Product> findObjectByName(@RequestBody Map<String, String> request) {
-        String name = request.get("name");
-        try {
-            return ResponseEntity.ok(service.findByName(name));
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//
+//
+//    @PostMapping("/show-product")
+//    public ResponseEntity<Product> findObjectByName(@RequestBody Map<String, String> request) {
+//        String name = request.get("name");
+//        try {
+//            return ResponseEntity.ok(service.findByName(name));
+//        } catch (Exception e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     @GetMapping("/all-by-business/{businessName}")
     public ResponseEntity<?> findAllByBusinessName(@PathVariable @NotBlank String businessName) {
@@ -149,6 +149,21 @@ public class ProductController extends MyObjectGenericController<Product, Produc
             return ResponseEntity.badRequest().body(error);
         }
         List<Product> products = optBusiness.getProducts();
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/all-by-my-business")
+    public ResponseEntity<?> findAllByBusinessName(@AuthenticationPrincipal UserDetails userDetails) {
+        var optBusiness = businessService.findById(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
+        if (optBusiness == null) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "No se encontró un negocio con ese nombre");
+            return ResponseEntity.badRequest().body(error);
+        }
+        List<Product> products = optBusiness.get().getProducts();
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

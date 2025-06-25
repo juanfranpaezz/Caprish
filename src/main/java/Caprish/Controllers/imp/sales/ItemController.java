@@ -54,46 +54,52 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
     @PostMapping("/staff/add-from-sale")
     public ResponseEntity<?> addItemFromSale(@RequestBody Map<String, String> payload,
                                              @AuthenticationPrincipal UserDetails userDetails) {
+
         Long businessId = staffService
                 .getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
         Long productId = productService.findIdByName(payload.get("productName"));
         Product product = productService.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundCustomException("Producto no encontrdo"));
+                .orElseThrow(() -> new EntityNotFoundCustomException("Producto no encontrado"));
         if (!product.getBusiness().getId().equals(businessId)) {
             return ResponseEntity.badRequest().body("El producto no pertenece a tu negocio.");
         }
         Long cartId = Long.valueOf(payload.get("cartId"));
         Cart cart = cartService.findById(cartId)
-                .orElseThrow(() -> new EntityNotFoundCustomException("Carrito no encontrdo"));
-        if (!cart.getCart_type().getId().equals("SALE") || !cart.getCart_status().getId().equals("OPEN")) {
+                .orElseThrow(() -> new EntityNotFoundCustomException("Carrito no encontrado"));
+        if (cart.getStaff() == null
+                || !cart.getStaff().getBusiness().getId().equals(businessId)) {
+            return ResponseEntity.badRequest().body("No tienes permiso para agregar ítems a ese carrito.");
+        }
+        if (!"SALE".equals(cart.getCart_type().getId()) || !"OPEN".equals(cart.getCart_status().getId())) {
             return ResponseEntity.badRequest().body("El carrito no está abierto o no es de tipo venta.");
         }
         if (cart.getClient() == null) {
             return ResponseEntity.badRequest().body("El carrito no tiene un cliente asignado.");
         }
-        int quantity = payload.get("quantity") == null ? 1 : Integer.parseInt(payload.get("quantity"));
-        if (productService.findById(productId).get().getStock() < quantity) return ResponseEntity.badRequest().body("No hay suficiente stock este producto.");
-        Item item = new Item();
-        item.setQuantity(quantity);
-        item.setProduct(product);
-        item.setCart(cart);
+        int quantityToAdd = payload.get("quantity") == null ? 1 : Integer.parseInt(payload.get("quantity"));
+        if (product.getStock() < quantityToAdd) {
+            return ResponseEntity.badRequest().body("No hay suficiente stock de este producto.");
+        }
+        Optional<Item> existing = cart.getItems().stream()
+                .filter(i -> i.getProduct().getId().equals(productId))
+                .findFirst();
+        Item item;
+        if (existing.isPresent()) {
+            item = existing.get();
+            item.setQuantity(item.getQuantity() + quantityToAdd);
+        } else {
+            item = new Item();
+            item.setProduct(product);
+            item.setCart(cart);
+            item.setQuantity(quantityToAdd);
+        }
         Item saved = service.save(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    @Operation(
-            summary = "Agregar productos",
-            description = "Agrega un producto, crea un carrito si no tiene ninguno asociado"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Producto agregado correctamente"),
-            @ApiResponse(responseCode = "400", description = "Parámetros inválidos")
-    })
-
     @PostMapping("/client/add-from-purchase")
-    public ResponseEntity<?> addItemFromPurchase(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody Map<String, String> payload) {
+    public ResponseEntity<?> addItemFromPurchase(@AuthenticationPrincipal UserDetails userDetails,
+                                                 @RequestBody Map<String, String> payload) {
 
         Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
         Long clientId = clientService.getIdByCredentialId(credentialId);
@@ -102,52 +108,50 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         if (productName == null || productName.isBlank()) {
             return ResponseEntity.badRequest().body("Falta el parámetro productName");
         }
-
         Product product;
         try {
             product = productService.findByName(productName);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
         }
-
-        Cart cart = cartService.findByClientIdAndTypeAndStatus(
-                clientId, "PURCHASE", "OPEN").orElse(null);
-
-        if (cart == null) {
-            cart = new Cart();
-            cart.setCart_type(new CartType("PURCHASE"));
-            cart.setCart_status(new CartStatus("OPEN"));
-            cart.setClient(clientService.findById(clientId)
-                    .orElseThrow(() -> new EntityNotFoundCustomException("Cliente no encontrado")));
-            cart.setSale_date(LocalDate.now());
-            cart.setStaff(null);
-            cart = cartService.save(cart);
-        }
-
-        if (!"PURCHASE".equals(cart.getCart_type().getId())
-                || !"OPEN".equals(cart.getCart_status().getId())) {
+        Cart cart = cartService.findByClientIdAndTypeAndStatus(clientId, "PURCHASE", "OPEN")
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setCart_type(new CartType("PURCHASE"));
+                    newCart.setCart_status(new CartStatus("OPEN"));
+                    newCart.setClient(clientService.findById(clientId)
+                            .orElseThrow(() -> new EntityNotFoundCustomException("Cliente no encontrado")));
+                    newCart.setSale_date(LocalDate.now());
+                    newCart.setStaff(null);
+                    return cartService.save(newCart);
+                });
+        if (!"PURCHASE".equals(cart.getCart_type().getId()) || !"OPEN".equals(cart.getCart_status().getId())) {
             return ResponseEntity.badRequest().body("El carrito no está abierto o no es de tipo compra.");
         }
-
         if (!cart.getItems().isEmpty()) {
             Long existingBiz = cart.getItems().get(0).getProduct().getBusiness().getId();
-            Long newBiz = product.getBusiness().getId();
-            if (!existingBiz.equals(newBiz)) {
+            if (!existingBiz.equals(product.getBusiness().getId())) {
                 return ResponseEntity.badRequest()
                         .body("El carrito ya contiene ítems de otra empresa. Vacíalo antes de agregar este producto.");
             }
         }
-
-        int quantity = payload.get("quantity") == null ? 1 : Integer.parseInt(payload.get("quantity"));
-        if (product.getStock() < quantity) {
+        int quantityToAdd = payload.get("quantity") == null ? 1 : Integer.parseInt(payload.get("quantity"));
+        if (product.getStock() < quantityToAdd) {
             return ResponseEntity.badRequest().body("No hay suficiente stock de este producto.");
         }
-
-        Item item = new Item();
-        item.setQuantity(quantity);
-        item.setProduct(product);
-        item.setCart(cart);
-
+        Optional<Item> existing = cart.getItems().stream()
+                .filter(i -> i.getProduct().getId().equals(product.getId()))
+                .findFirst();
+        Item item;
+        if (existing.isPresent()) {
+            item = existing.get();
+            item.setQuantity(item.getQuantity() + quantityToAdd);
+        } else {
+            item = new Item();
+            item.setProduct(product);
+            item.setCart(cart);
+            item.setQuantity(quantityToAdd);
+        }
         Item saved = service.save(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }

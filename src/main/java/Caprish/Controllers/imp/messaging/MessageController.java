@@ -61,19 +61,13 @@ public class MessageController extends MyObjectGenericController<Message, Messag
     public ResponseEntity<String> sendMessage(@AuthenticationPrincipal UserDetails userDetails,
                                               @RequestBody Map<String,String> payload) {
 
-        String businessName = payload.get("businessName");
+        String businessName = payload.get("name");
         String content      = payload.get("content");
-        if (businessName == null || content == null) {
+        if (businessName == null || content == null || content.isBlank()) {
             return ResponseEntity
                     .badRequest()
                     .body("Faltan businessName o content.");
         }
-        if (!businessService.existsByBusinessName(businessName)) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Negocio inexistente.");
-        }
-
         Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
         boolean isClient = userDetails.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_CLIENT"));

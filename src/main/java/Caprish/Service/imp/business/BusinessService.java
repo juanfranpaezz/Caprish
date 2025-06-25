@@ -125,7 +125,9 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
         }
     }
 
-
+    public boolean existsByTax(Long tax){
+        return repository.existsByTax(tax);
+    }
 
 
 

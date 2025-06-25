@@ -42,15 +42,14 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
         super(service);
     }
 
+
     @Operation(
             summary = "Obtener chat activo",
             description = """
-            Obtiene el chat activo entre un cliente y una empresa.
+        Obtiene el chat activo entre un cliente y una empresa.
 
-            - Si el usuario autenticado es un cliente, `name` representa el nombre del negocio.
-            - Si el usuario autenticado es personal (staff), `name` representa el nombre de usuario del cliente.
-
-            Requiere autenticación y un rol válido (`CLIENT` o `STAFF`).
+        - Si el usuario autenticado es un CLIENT, `name` representa el nombre del negocio.
+        - Si el usuario autenticado es STAFF, `name` representa el nombre de usuario del cliente.
         """
     )
     @ApiResponses(value = {
@@ -59,27 +58,40 @@ public class ChatController extends MyObjectGenericController<Chat, ChatReposito
             @ApiResponse(responseCode = "404", description = "Chat no encontrado")
     })
     @GetMapping("/{name}")
-    public ResponseEntity<Chat> findObjectById(@PathVariable String name, @AuthenticationPrincipal UserDetails userDetails) {
-        if (name == null || userDetails == null) return ResponseEntity.badRequest().build();
-        if (userDetails.getAuthorities().toString().equals("[ROLE_CLIENT]")) {
-            Optional<Long> credIdOpt = Optional.ofNullable(credentialService.getIdByUsername(userDetails.getUsername()));
-            if (credIdOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
-            Long credId = credIdOpt.get();
-            Long clientId = clientService.getIdByCredentialId(credId);
-            if (clientId == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-            Long businessId = businessService.findIdByBusinessName(name);
-            if (businessId == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-            Chat chat = service.findByBusinessIdAndClientId(businessId, clientId);
-            if (chat == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-            return ResponseEntity.ok(chat);
+    public ResponseEntity<Chat> findChat(@PathVariable String name,
+                                         @AuthenticationPrincipal UserDetails userDetails) {
+        if (name == null || name.isBlank() || userDetails == null) {
+            return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    }
+        boolean isClient = userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_CLIENT"));
 
+        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
+        Long clientId;
+        Long businessId;
+
+        if (isClient) {
+            clientId = clientService.getIdByCredentialId(credentialId);
+            Optional<Long> bizOpt = Optional.ofNullable(businessService.findIdByBusinessName(name));
+            if (bizOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            businessId = bizOpt.get();
+        } else {
+            businessId = staffService.getBusinessIdByCredentialId(credentialId);
+            Long clientCredId = credentialService.getIdByUsername(name);
+            if (clientCredId == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            clientId = clientService.getIdByCredentialId(clientCredId);
+        }
+
+        Chat chat = service.findByBusinessIdAndClientId(businessId, clientId);
+        if (chat == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(chat);
+    }
 
 }

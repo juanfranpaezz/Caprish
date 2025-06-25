@@ -148,8 +148,9 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
 
     @GetMapping("/view-my-account")
     public ResponseEntity<Staff> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
-
-        return ResponseEntity.ok(staffService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())).get());
+        Staff staff = staffService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())).get();
+        staff.getCredential().setPassword(null);
+        return ResponseEntity.ok(staff);
     }
 
     @Operation(

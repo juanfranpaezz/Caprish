@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -100,7 +101,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
             @RequestBody Map<String, String> payload,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        if (!payload.containsKey("businessName")) {
+        if (!payload.containsKey("businessName") || payload.get("businessName").isBlank()) {
             return ResponseEntity.badRequest().body("El campo businessName es requerido");
         }
         if (payload.size() != 1) {
@@ -129,7 +130,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
     @Operation(summary = "Actualizar eslogan del negocio")
     @PutMapping("/updateSlogan")
     public ResponseEntity<String> updateSlogan(
-            @RequestBody Map<String, String> payload,
+            @Valid @RequestBody Map<String, String> payload,
             @AuthenticationPrincipal UserDetails userDetails) {
 
         if (!payload.containsKey("slogan")) {
@@ -151,7 +152,6 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         if (!payload.containsKey("tax")) {
             return ResponseEntity.badRequest().body("El campo 'tax' es requerido");
         }
-
         if (payload.size() != 1) {
             return ResponseEntity.badRequest().body("Sólo se permite el campo 'tax'");
         }
@@ -163,6 +163,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
             return ResponseEntity.badRequest().body("El campo 'tax' debe ser un número válido");
         }
         Long bizId = service.resolveBusinessId(userDetails);
+        if(service.existsByTax(tax)) return ResponseEntity.badRequest().body("Ya existe una empresa con ese tax");
         return update(bizId, "tax", tax);
     }
 

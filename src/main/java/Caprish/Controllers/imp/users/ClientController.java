@@ -153,7 +153,10 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     })
     @GetMapping("/view-my-account")
     public ResponseEntity<Client> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(clientService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
+        Client client = clientService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
+        client.getCredential().setPassword(null);
+        client.setChats(null);
+        return ResponseEntity.ok(client);
     }
     @Operation(
             summary = "Listar todos los clientes",
@@ -169,5 +172,7 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
         }
         return ResponseEntity.ok(clients);
     }
+
+
 
 }

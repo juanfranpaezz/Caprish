@@ -5,6 +5,7 @@ import Caprish.Model.imp.messaging.Chat;
 import Caprish.Model.imp.users.Staff;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 @Entity
 @Table(name="business")
 public class Business extends MyObject {
+    @NotBlank
     @Column(unique=true,columnDefinition="TEXT",nullable=false)
     private String businessName;
 

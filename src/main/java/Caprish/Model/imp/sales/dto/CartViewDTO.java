@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Getter
 @Setter
 @Data
@@ -17,4 +20,5 @@ public class CartViewDTO {
     private String cartStatus;
     private String staffName;
     private Long idBusiness;
+    private List<CartItemViewDTO> items;
 }

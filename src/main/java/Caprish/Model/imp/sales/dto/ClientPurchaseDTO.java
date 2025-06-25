@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,4 +18,5 @@ public class ClientPurchaseDTO {
     private String staffName;
     private String businessName;
     private Double totalAmount;
+    private List<CartItemViewDTO> items;
 }

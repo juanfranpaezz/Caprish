@@ -64,20 +64,14 @@ public class ClientController extends MyObjectGenericController<Client, ClientRe
     public ResponseEntity<String> createClient(@RequestBody Client entity, @AuthenticationPrincipal UserDetails userDetails) {
         try {
             if (entity == null) return ResponseEntity.badRequest().build();
-
             Credential credential = credentialService.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-
             if (service.findByCredential(credential).isPresent()) {
                 return ResponseEntity.badRequest().body("El cliente ya existe.");
             }
-
             entity.setCredential(credential);
             Client saved = service.save(entity);
-
             return ResponseEntity.ok("Cliente creado con ID: " + saved.getId());
-
-
         } catch (InvalidEntityException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

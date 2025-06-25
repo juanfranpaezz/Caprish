@@ -71,21 +71,22 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
             @AuthenticationPrincipal UserDetails userDetails) {
         Long bossCredId = credentialService.getIdByUsername(userDetails.getUsername());
         Long bossBusinessId = service.getBusinessIdByCredentialId(bossCredId);
+        String username = payload.get("username");
         if (bossBusinessId == null) {
             return ResponseEntity.badRequest().body("No se encontró la empresa para el jefe actual.");
         }
-        if (credentialService.existsByUsername(payload.get("username"))) {
+        if (credentialService.existsByUsername(username)) {
             return ResponseEntity.badRequest().body("El usuario ya existe.");
         }
         String firstName = payload.get("firstName");
         String lastName = payload.get("lastName");
-        String username = payload.get("username");
+        String password = payload.get("password");
         try {
-            credentialService.verifyPassword(payload.get("password"));
+            credentialService.verifyPassword(password);
         } catch (UserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        String password = passwordEncoder.encode(payload.get("password"));
+       passwordEncoder.encode(password);
         if (username == null || password == null) {
             return ResponseEntity.badRequest().body("Faltan datos obligatorios: 'username' y/o 'password'.");
         }

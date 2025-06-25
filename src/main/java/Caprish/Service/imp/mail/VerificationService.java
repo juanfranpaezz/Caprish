@@ -5,7 +5,8 @@ import Caprish.Repository.interfaces.mail.EmailTokenRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -46,17 +47,18 @@ public class VerificationService extends MyObjectGenericService<EmailToken,Email
         return "Correo con token enviado correctamente, por favor verifique su corre, tiene 5 minutos";
     }
 
-    public String getUsernameByUserDetails(UserDetails userDetails) {
-        return userDetails.getUsername();
-    }
-
     public Optional<EmailToken> findByEmail(String userDetails) {
         return repo.findByEmail(userDetails);
     }
+    public void deleteByEmail(String userDetails) {
+        repo.deleteById(findByEmail(userDetails).get().getId());
+    }
 
-    public boolean verifyCode(String email, String code) {
+    public boolean verifyCode(String email, String code, String password) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return repo.findByEmailAndToken(email, code)
                 .filter(e -> e.getExpiration().isAfter(LocalDateTime.now()))
+                .filter(e -> passwordEncoder.matches(password, e.getPassword()))
                 .map(e -> {
                     e.setVerified(true);
                     repo.save(e);
@@ -64,6 +66,8 @@ public class VerificationService extends MyObjectGenericService<EmailToken,Email
                 })
                 .orElse(false);
     }
+
+
 
     @Override
     protected void verifySpecificAttributes(EmailToken entity) {

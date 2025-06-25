@@ -15,7 +15,6 @@ import Caprish.Service.imp.business.ProductService;
 import Caprish.Service.imp.sales.CartService;
 import Caprish.Service.imp.users.ClientService;
 import Caprish.Service.imp.users.CredentialService;
-import Caprish.Service.imp.sales.ItemService;
 import Caprish.Service.imp.users.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,8 +42,6 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     private ClientService clientService;
     @Autowired
     private CredentialService credentialService;
-    @Autowired
-    private ItemService itemService;
     @Autowired
     private ProductService productService;
     @Autowired

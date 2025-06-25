@@ -21,7 +21,4 @@ public class ChatService extends MyObjectGenericService<Chat, ChatRepository, Ch
         return repository.findByBusinessIdAndClientId(businessId, clientId);
     }
 
-    public Long findIdByBusinessIdAndClientId(Long businessId, Long clientId){
-        return repository.findIdByBusinessIdAndClientId(businessId, clientId);
-    }
 }

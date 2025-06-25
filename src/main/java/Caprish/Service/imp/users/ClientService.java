@@ -1,6 +1,5 @@
 package Caprish.Service.imp.users;
 
-import Caprish.Exception.ClientException;
 import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Repository.interfaces.users.ClientRepository;
@@ -31,29 +30,12 @@ public class ClientService
         return repository.findByCredential_Id(id);
     }
 
-
-    public Client searchByPhone(Integer phone) {
-        Optional<Client> client = repository.findByPhone(phone);
-        if (client.isEmpty() || client.get().getId() == null) {
-            throw new ClientException("No existe ningun cliente con ese numero de telefono.");
-        }else{
-            return client.get();
-        }
-    }
-
-    // Se usa cuando no hay seguridad de que haya persistencia del credential
     public Optional<Client> findByCredential(Credential credential) {
         return repository.findByCredential(credential);
     }
-
-
-
-
-
     public Client findByCredentialId(Long credentialId) {
         return repository.findByCredential_Id(credentialId);
     }
-
 
 
 }

@@ -14,9 +14,4 @@ public interface ClientRepository extends MyObjectGenericRepository<Client> {
    Long findIdByCredential_Id(Long credentialId);
    Client findByCredential_Id(Long credentialId);
    Optional<Client> findByCredential(Credential credential);
-
-
-
-
-
 }

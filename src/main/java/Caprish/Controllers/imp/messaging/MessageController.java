@@ -82,7 +82,6 @@ public class MessageController extends MyObjectGenericController<Message, Messag
                 credentialService.getIdByUsername(businessName)
         );
 
-        // Obtener o crear chat
         Chat chat = chatService.findByBusinessIdAndClientId(businessId, clientId);
         if (chat == null) {
             chat = new Chat();

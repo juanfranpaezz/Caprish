@@ -9,7 +9,6 @@ import Caprish.Service.imp.MyObjectGenericService;
 import Caprish.Service.others.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +20,6 @@ public class CredentialService extends MyObjectGenericService<Credential, Creden
     @Autowired
     @Qualifier("myUserDetailsService")
     private UserDetailsService userDetailsService;
-    @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtService jwtService;
 
     protected CredentialService(CredentialRepository childRepository) {

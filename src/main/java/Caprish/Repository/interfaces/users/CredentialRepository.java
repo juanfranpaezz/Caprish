@@ -11,19 +11,8 @@ import java.util.Optional;
 
 public interface CredentialRepository extends MyObjectGenericRepository<Credential> {
     Optional<Credential> findByUsername(String username);
-    @Modifying
-    @Transactional
-    @Query(value = """
-    UPDATE credential c
-    JOIN staff s ON c.id = s.id_credential
-    JOIN business b ON s.business_id = b.id
-    SET c.enabled = false
-    WHERE b.id = :businessId
-      AND c.id_role IN ('ROLE_BOSS', 'ROLE_EMPLOYEE', 'ROLE_SUPERVISOR')
-""", nativeQuery = true)
-    int disableCredentialsForBusiness(@Param("businessId") Long BusinessId);
 
-        boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
     @Modifying
     @Transactional

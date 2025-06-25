@@ -109,5 +109,4 @@ public abstract class MyObjectGenericService<M extends MyObject, R extends MyObj
         repository.deleteById(id);
     }
 
-
 }

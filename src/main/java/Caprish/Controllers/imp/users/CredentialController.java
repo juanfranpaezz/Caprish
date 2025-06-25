@@ -5,7 +5,6 @@ import Caprish.Exception.UserException;
 import Caprish.Model.enums.Role;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.LoginRequest;
-import Caprish.Repository.interfaces.mail.EmailTokenRepository;
 import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.mail.VerificationService;
 import Caprish.Service.imp.users.CredentialService;
@@ -37,8 +36,6 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private VerificationService verificationService;
     @Autowired private CredentialService credentialService;
-    @Autowired
-    private EmailTokenRepository emailTokenRepository;
 
     public CredentialController(CredentialService service) {
         super(service);

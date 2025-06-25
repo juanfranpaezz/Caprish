@@ -21,16 +21,6 @@ public class JwtService {
         this.secretKey = secretKey;
     }
 
-    /**
-     * Genera un token JWT estándar sin campos adicionales.
-     */
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(userDetails, null);
-    }
-
-    /**
-     * Genera un token JWT incluyendo un claim de versión.
-     */
     public String generateToken(UserDetails userDetails, Long tokenVersion) {
         var builder = Jwts.builder()
                 .setSubject(userDetails.getUsername())
@@ -46,9 +36,6 @@ public class JwtService {
                 .compact();
     }
 
-    /**
-     * Extrae un claim genérico del token por nombre y tipo.
-     */
     public <T> T extractClaim(String token, String claimName, Class<T> requiredType) {
         Claims claims = extractAllClaims(token);
         Object value = claims.get(claimName);

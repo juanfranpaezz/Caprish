@@ -8,38 +8,18 @@ import Caprish.Repository.enums.CartStatusRepository;
 import Caprish.Repository.enums.CartTypeRepository;
 import Caprish.Repository.enums.RoleRepository;
 import Caprish.Repository.enums.SenderTypeRepository;
-import Caprish.Repository.interfaces.business.BusinessRepository;
-import Caprish.Repository.interfaces.business.ProductRepository;
-import Caprish.Repository.interfaces.messaging.ChatRepository;
-import Caprish.Repository.interfaces.messaging.MessageRepository;
-import Caprish.Repository.interfaces.sales.CartRepository;
-import Caprish.Repository.interfaces.sales.ItemRepository;
-import Caprish.Repository.interfaces.users.ClientRepository;
-import Caprish.Repository.interfaces.users.CredentialRepository;
-import Caprish.Repository.interfaces.users.StaffRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseInitializer {
 
-    @Autowired private CredentialRepository credentialRepository;
     @Autowired private RoleRepository roleRepository;
     @Autowired private CartStatusRepository cartStatusRepository;
     @Autowired private CartTypeRepository cartTypeRepository;
     @Autowired private SenderTypeRepository senderTypeRepository;
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private BusinessRepository businessRepository;
-    @Autowired private ProductRepository productRepository;
-    @Autowired private CartRepository cartRepository;
-    @Autowired private StaffRepository staffRepository;
-    @Autowired private ClientRepository clientRepository;
-    @Autowired private ChatRepository chatRepository;
-    @Autowired private ItemRepository itemRepository;
-    @Autowired private MessageRepository messageRepository;
     @PostConstruct
     public void init() {
 //         Roles

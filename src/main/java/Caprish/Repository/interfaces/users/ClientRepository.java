@@ -5,7 +5,6 @@ import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 

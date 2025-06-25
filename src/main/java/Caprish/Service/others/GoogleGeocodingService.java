@@ -1,11 +1,9 @@
 package Caprish.Service.others;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -39,20 +37,17 @@ public class GoogleGeocodingService {
 
             Map firstResult = results.get(0);
 
-            // 1. Verificar partial_match
             Boolean partialMatch = (Boolean) firstResult.get("partial_match");
             if (partialMatch != null && partialMatch) {
                 return false;
             }
 
-            // 2. Verificar location_type
             Map geometry = (Map) firstResult.get("geometry");
             String locationType = (String) geometry.get("location_type");
             if (!"ROOFTOP".equals(locationType)) {
                 return false;
             }
 
-            // 3. (Opcional) Comparar con formatted_address
             String formatted = (String) firstResult.get("formatted_address");
             if (formatted == null || !formatted.toLowerCase().contains(inputAddress.split(",")[0].toLowerCase())) {
                 return false;

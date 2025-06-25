@@ -4,16 +4,6 @@ import Caprish.Model.enums.CartStatus;
 import Caprish.Model.enums.CartType;
 import Caprish.Model.enums.SenderType;
 import Caprish.Model.enums.Role;
-import Caprish.Model.imp.business.Address;
-import Caprish.Model.imp.business.Business;
-import Caprish.Model.imp.business.Product;
-import Caprish.Model.imp.messaging.Chat;
-import Caprish.Model.imp.messaging.Message;
-import Caprish.Model.imp.sales.Cart;
-import Caprish.Model.imp.sales.Item;
-import Caprish.Model.imp.users.Client;
-import Caprish.Model.imp.users.Credential;
-import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.enums.CartStatusRepository;
 import Caprish.Repository.enums.CartTypeRepository;
 import Caprish.Repository.enums.RoleRepository;
@@ -32,10 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Component
 public class DatabaseInitializer {
@@ -93,47 +79,6 @@ public class DatabaseInitializer {
         senderTypeRepository.save(new SenderType("CLIENT"));
         senderTypeRepository.save(new SenderType("STAFF"));
 
-//        // Business
-//        Business b1 = new Business("TechZone", new Address("Av. Siempre Viva 742","mar del plata","buenos aires","argentina"),"alta empresa","para unir al mundo", 123L,true,null,null,null);
-//        Business b2 = new Business("GamerHouse", new Address("Av. Siempre Viva 742","mar del plata","buenos aires","argentina"),"alta empresa bro","para ser feliz", 123L,true,null,null,null);
-//        businessRepository.save(b1);
-//        businessRepository.save(b2);
-//
-//        // Credentials
-//        Credential boss = new Credential("admin@example.com", passwordEncoder.encode("1234"), "Admin", "Boss", true, roleRepository.findById("ROLE_BOSS").get(), 1L);
-//        Credential staff = new Credential ("staff1@example.com", passwordEncoder.encode("1234"), "Juan", "Pérez", true, roleRepository.findById("ROLE_EMPLOYEE").get(), 2L);
-//        Credential client = new Credential("client1@example.com", passwordEncoder.encode("1234"), "Lucía", "Gómez", true, roleRepository.findById("ROLE_CLIENT").get(), 1L);
-//        credentialRepository.save(boss);
-//        credentialRepository.save(staff);
-//        credentialRepository.save(client);
-//
-//        // Staff
-//        staffRepository.save(new Staff(staff, b1, null));
-//
-//        // Client
-//        Client clientito=new Client( client, 123,"la concha de mi madre",null,null);
-//        clientRepository.save(clientito);
-//
-//
-//        // Cart
-//        Cart cart = new Cart(new CartType("PURCHASE"), clientito,
-//                new CartStatus("OPEN"), null,null,LocalDate.now());
-//        cartRepository.save(cart);
-//
-//        // Products
-//        Product p1 = new Product(b1,"Auriculares Bluetooth","tremendo",new BigDecimal("9999.99"), null,2);
-//        Product p2 = new Product(b2,"Teclado Mecánico", "util",new BigDecimal("19.99"), null,5);
-//        productRepository.save(p1);
-//        productRepository.save(p2);
-//
-//        // Item
-//        itemRepository.save(new Item(cart, p1, 3));
-//
-//        // Chat y Message
-//        Chat chat = new Chat(b1, clientito,null);
-//        chatRepository.save(chat);
-//        messageRepository.save(new Message( chat, new SenderType("AAA"), "hola", LocalDateTime.now()));
-//        messageRepository.save(new Message(chat,new SenderType("a"), "chat", LocalDateTime.now()));
     }
 
 

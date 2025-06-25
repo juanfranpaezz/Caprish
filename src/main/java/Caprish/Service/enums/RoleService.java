@@ -1,8 +1,6 @@
 package Caprish.Service.enums;
 
-import Caprish.Model.enums.CartType;
 import Caprish.Model.enums.Role;
-import Caprish.Repository.enums.CartTypeRepository;
 //import Caprish.Repository.enums.RoleRepository;
 import Caprish.Repository.enums.RoleRepository;
 import lombok.extern.slf4j.Slf4j;

@@ -6,8 +6,6 @@ import Caprish.Service.imp.MyObjectGenericService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Slf4j
 @Service
 public class ItemService extends MyObjectGenericService<Item, ItemRepository, ItemService> {

@@ -28,9 +28,6 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
     @Autowired
     private StaffService staffService;
     private GoogleGeocodingService geocodingService;
-    @Autowired
-    private CredentialRepository credentialRepository;
-
 
     protected BusinessService(BusinessRepository childRepository, GoogleGeocodingService geocodingService) {
         super(childRepository);
@@ -86,18 +83,6 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
     }
 
 
-    public void changeAddress(Long id, String address) {
-        if(address== null || address.isBlank()) {
-            throw new IllegalArgumentException("la direccion no puede estar vacia");
-        }
-        boolean direccionValida = geocodingService.validateAddress(address);
-        if (!direccionValida) {
-            throw new IllegalArgumentException("la direccion no es valida segun Google Maps");
-        }
-        updateField(id, "address",  address);
-    }
-
-
     public boolean isActiveById(Long id){
         return repository.getActiveById(id);
     }
@@ -105,25 +90,7 @@ public class BusinessService extends MyObjectGenericService<Business, BusinessRe
     public boolean addresValidation(String address) throws RuntimeException{
         return geocodingService.validateAddress(address);
     }
-    public BusinessViewDTO findByBusinessId(Long businessName) throws EntityNotFoundException{
-        return repository.findByBusinessId(businessName);
-    }
 
-    public void changeActiveStatus(Long businessId, boolean newStatus) {
-        Business business = repository.findById(businessId)
-                .orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
-
-        if (business.isActive() == newStatus) {
-            throw new IllegalStateException("El estado del negocio ya es " + newStatus);
-        }
-
-        business.setActive(newStatus);
-        repository.save(business);
-
-        if (!newStatus) {
-            credentialRepository.disableCredentialsForBusiness(businessId);
-        }
-    }
 
     public boolean existsByTax(Long tax){
         return repository.existsByTax(tax);

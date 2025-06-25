@@ -3,7 +3,6 @@ package Caprish.Service.imp.users;
 import Caprish.Exception.ClientException;
 import Caprish.Model.imp.users.Client;
 import Caprish.Model.imp.users.Credential;
-import Caprish.Model.imp.users.Staff;
 import Caprish.Repository.interfaces.users.ClientRepository;
 import Caprish.Service.imp.MyObjectGenericService;
 import lombok.extern.slf4j.Slf4j;

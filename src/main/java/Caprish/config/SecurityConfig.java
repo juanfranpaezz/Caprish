@@ -101,7 +101,6 @@ public class SecurityConfig {
                         .requestMatchers("/credential/updatePassword").hasRole("USER")
                         .requestMatchers("/chat/{name}").hasRole("USER")
                         .requestMatchers("/message/send").hasRole("USER")
-                        .requestMatchers("/product/show-product").hasRole("USER")
 
                         .requestMatchers("/swagger-ui/*", "/v3/api-docs/", "/swagger-resources/", "/webjars/*","/auth/login")
                         .permitAll()

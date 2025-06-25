@@ -7,6 +7,7 @@ import Caprish.Model.imp.mail.EmailToken;
 import Caprish.Model.imp.users.Credential;
 import Caprish.Model.imp.users.LoginRequest;
 import Caprish.Model.imp.users.LoginResponse;
+import Caprish.Repository.interfaces.mail.EmailTokenRepository;
 import Caprish.Repository.interfaces.users.CredentialRepository;
 import Caprish.Service.imp.mail.VerificationService;
 import Caprish.Service.imp.users.CredentialService;
@@ -47,6 +48,8 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private VerificationService verificationService;
     @Autowired private CredentialService credentialService;
+    @Autowired
+    private EmailTokenRepository emailTokenRepository;
 
     public CredentialController(CredentialService service) {
         super(service);
@@ -68,7 +71,9 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         if (credentialService.existsByUsername(username)) {
             return ResponseEntity.badRequest().body("El usuario ya existe.");
         }
-
+        if(verificationService.findByEmail(username).isPresent()) {
+            return ResponseEntity.badRequest().body("El usuario ya ha le han mandado un token, por favor verifiquelo.");
+        }
         if (username == null || password == null) {
             return ResponseEntity.badRequest().body("Los campos 'username' y 'password' son requeridos");
         }
@@ -76,14 +81,10 @@ public class CredentialController extends MyObjectGenericController<Credential, 
             return ResponseEntity.badRequest().body("El campo 'username' debe ser un correo válido");
         }
 
-        if (credentialService.findByUsername(username).isPresent()) {
-            return ResponseEntity.badRequest().body("El usuario ya existe");
-        }
-
         try {
             credentialService.verifyPassword(password);
-            passwordEncoder.encode(password);
-            return ResponseEntity.ok(verificationService.sendVerificationCode(username, password));
+            return ResponseEntity.ok(verificationService.sendVerificationCode(username,passwordEncoder.encode(password)
+            ));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -94,20 +95,28 @@ public class CredentialController extends MyObjectGenericController<Credential, 
             description = "Valida el código de verificación enviado por correo electrónico"
     )
     @PostMapping("/verify-token")
-    public ResponseEntity<String> verifyToken(@RequestBody Map<String,String> code) {
+    public ResponseEntity<String> verifyToken(@RequestBody Map<String, String> code) {
         String email = code.get("email");
-        if (verificationService.verifyCode(email, code.get("code"))&& code.get("role").equals("BOSS")){
-            Credential cred=new Credential(email, passwordEncoder.encode(code.get("password")),new Role("ROLE_BOSS"));
-            service.save(cred);
-            return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
-        } else  if(verificationService.verifyCode(email, code.get("code"))&& code.get("role").equals("CLIENT")){
-            Credential cred=new Credential(email, passwordEncoder.encode(code.get("password")),new Role("ROLE_CLIENT"));
-            service.save(cred);
+        String password = code.get("password");
+        String codee = code.get("code");
+        String role = code.get("role");
 
+        boolean isVerified = verificationService.verifyCode(email, codee, password);
+
+        if (isVerified && role.equals("BOSS")) {
+            Credential cred = new Credential(email, passwordEncoder.encode(password), new Role("ROLE_BOSS"));
+            service.save(cred);
+            verificationService.deleteByEmail(email);
+            return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
+        } else if (isVerified && role.equals("CLIENT")) {
+            Credential cred = new Credential(email, passwordEncoder.encode(password), new Role("ROLE_CLIENT"));
+            service.save(cred);
+            verificationService.deleteByEmail(email);
             return ResponseEntity.ok("¡Verificado correctamente! Por favor ingrese para completar sus datos");
         }
-        return ResponseEntity.badRequest().body("Uno a varios datos incorrectos");
+        return ResponseEntity.badRequest().body("Uno o varios datos incorrectos");
     }
+
     @Operation(
             summary = "Iniciar sesión",
             description = "Autentica al usuario mediante su nombre de usuario y contraseña"
@@ -123,7 +132,6 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         if (userDetails != null) {
             return ResponseEntity.badRequest().body("Ya estás logueado");
         }
-
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
@@ -143,9 +151,6 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     public ResponseEntity<String> completeData(
             @RequestBody Map<String, String> payload, @AuthenticationPrincipal UserDetails userDetails) {
         Optional<Credential> cred = credentialService.findByUsername(userDetails.getUsername());
-
-        System.out.println(cred.get().getId());
-        System.out.println(cred.get().getUsername());
         update(cred.get().getId(),"first_name",payload.get("firstName"));
         update(cred.get().getId(),"last_name",payload.get("lastName"));
         return ResponseEntity.ok().body("Campos actualizados exitosamente");
@@ -154,7 +159,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@AuthenticationPrincipal UserDetails userDetails) {
         Credential cred = service.findByUsername(userDetails.getUsername()).get();
-        cred.setTokenVersion(cred.getTokenVersion() + 1);
+        cred.setTokenVersion(0L);
         service.save(cred);
         return ResponseEntity.ok("Logout exitoso");
     }

@@ -99,29 +99,30 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         service.deleteById(id);
         return ResponseEntity.ok("Carrito eliminada");
     }
-
-
     @Operation(
             summary = "Ver mis ventas",
             description = "Obtiene las ventas relacionadas con una empresa"
     )
     @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
     @GetMapping("/staff/view/my-sales")
-    public ResponseEntity<List<CartViewDTO>> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(service.getCartsByBusinessAndStatus(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "CONFIRMED"));
+    public ResponseEntity<?> getMySales(@AuthenticationPrincipal UserDetails userDetails) {
+        List<CartViewDTO>carts= service.getCartsByBusinessAndStatus(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "CONFIRMED");
+        if(carts.isEmpty()) return ResponseEntity.badRequest().body("No se han encontrado carritos");
+        return ResponseEntity.ok(carts);
     }
-
-
     @Operation(
             summary = "Ver mis ventas",
             description = "Obtiene las ventas relacionadas con una empresa"
     )
     @ApiResponse(responseCode = "200", description = "Ventas devueltas correctamente")
     @GetMapping("/staff/view/my-carts")
-    public ResponseEntity<List<CartViewDTO>> getMyCarts(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(service.getCartsByBusinessAndStatus(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "OPEN"));
+    public ResponseEntity<?> getMyCarts(@AuthenticationPrincipal UserDetails userDetails) {
+        List<CartViewDTO> carts= service.getCartsByBusinessAndStatus(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "OPEN");
+            if(carts.isEmpty()){
+                return ResponseEntity.badRequest().body("No hay carritos");
+            }
+        return ResponseEntity.ok(carts);
     }
-
 
     @PutMapping("/staff/confirm-sale/{cartId}")
     public ResponseEntity<String> confirmSale(@PathVariable @Positive Long cartId,
@@ -149,29 +150,29 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     }
 
     @GetMapping("/client/view/my-purchases")
-    public ResponseEntity<List<ClientPurchaseDTO>> getMyPurchases(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> getMyPurchases(@AuthenticationPrincipal UserDetails userDetails) {
 
         String username = userDetails.getUsername();
         Long credentialId = credentialService.getIdByUsername(username);
         Client client = clientService.findByCredentialId(credentialId);
 
         if (client == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body("No hay ventas");
         }
 
         return ResponseEntity.ok(service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername(), "CONFIRMED"));
     }
 
     @GetMapping("/client/view/my-cart")
-    public ResponseEntity<List<ClientPurchaseDTO>> viewMyCart(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> viewMyCart(@AuthenticationPrincipal UserDetails userDetails) {
         Client client = clientService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
-        if (client == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if(client == null) return ResponseEntity.notFound().build();
         List<ClientPurchaseDTO> carts = service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername(), "OPEN");
+        if (carts.isEmpty()) {
+            return ResponseEntity.badRequest().body("No hay un carrito abierto");
+        }
         return ResponseEntity.ok(carts);
     }
-
 
     @PutMapping("/client/confirm-purchase")
     public ResponseEntity<String> confirmPurchase(@RequestBody Map<String,String> payload,
@@ -211,6 +212,4 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         service.save(newCart);
         return ResponseEntity.ok("Compra confirmada");
     }
-
 }
-

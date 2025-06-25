@@ -5,6 +5,7 @@ import Caprish.Exception.EntityNotFoundCustomException;
 import Caprish.Model.enums.CartStatus;
 import Caprish.Model.enums.CartType;
 import Caprish.Model.imp.sales.Cart;
+import Caprish.Model.imp.sales.Item;
 import Caprish.Model.imp.sales.dto.CartViewDTO;
 import Caprish.Model.imp.sales.dto.ClientPurchaseDTO;
 import Caprish.Model.imp.users.Client;
@@ -48,6 +49,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     private ProductService productService;
     @Autowired
     private BusinessService businessService;
+
 
     public CartController(CartService service) {
         super(service);
@@ -98,7 +100,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
             return ResponseEntity.badRequest().body("No tienes permiso para eliminar esta venta.");
         }
         service.deleteById(id);
-        return ResponseEntity.ok("Venta eliminada");
+        return ResponseEntity.ok("Carrito eliminada");
     }
 
 
@@ -123,12 +125,13 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         return ResponseEntity.ok(service.getCartsByBusinessAndStatus(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())), "OPEN"));
     }
 
+
     @PutMapping("/staff/confirm-sale/{cartId}")
     public ResponseEntity<String> confirmSale(@PathVariable @Positive Long cartId,
                                               @AuthenticationPrincipal UserDetails userDetails) {
         Long businessId = staffService.getBusinessIdByCredentialId(
                 credentialService.getIdByUsername(userDetails.getUsername()));
-        if(!businessService.isActiveById(businessId))
+        if (!businessService.isActiveById(businessId))
             return ResponseEntity.badRequest().body("No se puede realizar la venta ya que la empresa está dada de baja");
         Cart cart = service.findById(cartId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Carrito no encontrado"));
@@ -140,10 +143,11 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         cart.setCart_status(new CartStatus("CONFIRMED"));
         cart.setSale_date(LocalDate.now());
         service.save(cart);
-        cart.getItems().forEach(item ->
-                update(item.getProduct().getId(),
-                        "stock",
-                        (item.getProduct().getStock() - item.getQuantity())));
+        cart.getItems().forEach(item -> {
+            Long prodId = item.getProduct().getId();
+            int newStock = item.getProduct().getStock() - item.getQuantity();
+            productService.changeField(prodId, "stock", newStock);
+        });
         return ResponseEntity.ok("Venta confirmada");
     }
 
@@ -175,8 +179,9 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
     @PutMapping("/client/confirm-purchase")
     public ResponseEntity<String> confirmPurchase(@RequestBody Map<String,String> payload,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
-        Long clientId = clientService.getIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
-        Long cartId = Long.valueOf(payload.get("cartId"));
+        Long credentialId = credentialService.getIdByUsername(userDetails.getUsername());
+        Long clientId     = clientService.getIdByCredentialId(credentialId);
+        Long cartId       = Long.valueOf(payload.get("cartId"));
         Cart cart = service.findById(cartId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Carrito no encontrado"));
         if (!cart.getClient().getId().equals(clientId)
@@ -184,23 +189,31 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
                 || !"OPEN".equals(cart.getCart_status().getId())) {
             return ResponseEntity.badRequest().body("No puedes confirmar esta compra.");
         }
-        if(!businessService.isActiveById(cart.getItems().get(1).getProduct().getBusiness().getId()))
-            return ResponseEntity.badRequest().body("No se puede realizar la venta ya que la empresa está dada de baja");
-
+        for (Item item : cart.getItems()) {
+            Long bizId = item.getProduct().getBusiness().getId();
+            if (!businessService.isActiveById(bizId)) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("No se puede realizar la compra: la empresa \""
+                                + item.getProduct().getBusiness().getBusinessName()
+                                + "\" está dada de baja");
+            }
+        }
         cart.setCart_status(new CartStatus("CONFIRMED"));
         cart.setSale_date(LocalDate.now());
         service.save(cart);
-        cart.getItems().forEach(item ->
-                update(item.getProduct().getId(),
-                        "stock",
-                        (item.getProduct().getStock() - item.getQuantity())));
-                Cart newCart = new Cart();
+        for (Item item : cart.getItems()) {
+            Long   prodId   = item.getProduct().getId();
+            int    newStock = item.getProduct().getStock() - item.getQuantity();
+            productService.changeField(prodId, "stock", newStock);
+        }
+        Cart newCart = new Cart();
         newCart.setCart_type(new CartType("PURCHASE"));
         newCart.setCart_status(new CartStatus("OPEN"));
-        newCart.setClient(clientService.findById(clientId).get());
+        newCart.setClient(cart.getClient());
+        service.save(newCart);
         return ResponseEntity.ok("Compra confirmada");
     }
-
 
 }
 

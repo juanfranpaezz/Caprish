@@ -164,35 +164,6 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
             @ApiResponse(responseCode = "200", description = "Cantidad actualizada correctamente"),
             @ApiResponse(responseCode = "400", description = "Parámetros inválidos")
     })
-    @PutMapping("/staff/update-quantity/{itemId}/{quantity}")
-    public ResponseEntity<?> updateQuantityStaff(@PathVariable @Positive Long itemId,
-                                                 @PathVariable @Positive int quantity,
-                                                 @AuthenticationPrincipal UserDetails userDetails) {
-        Long businessId = staffService.getBusinessIdByCredentialId(
-                credentialService.getIdByUsername(userDetails.getUsername()));
-        Item item = service.findById(itemId)
-                .orElseThrow(() -> new EntityNotFoundCustomException("Item no encontrado"));
-        if (item.getProduct().getStock() < item.getQuantity()) return ResponseEntity.badRequest().body("No hay suficiente stock este producto.");
-        Cart cart = item.getCart();
-
-        if (!cart.getStaff().getBusiness().getId().equals(businessId)
-                || !"SALE".equals(cart.getCart_type().getId())
-                || !"OPEN".equals(cart.getCart_status().getId())) {
-            return ResponseEntity.badRequest().body("No tienes permiso para modificar este ítem.");
-        }
-        item.setQuantity(quantity);
-        service.save(item);
-        return ResponseEntity.ok("Cantidad actualizada");
-    }
-
-    @Operation(
-            summary = "Actualizar cantidad de un ítem",
-            description = "Modifica el valor del campo 'quantity' para el ítem con el ID dado"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cantidad actualizada correctamente"),
-            @ApiResponse(responseCode = "400", description = "Parámetros inválidos")
-    })
 
     @PutMapping("/client/update-quantity")
     public ResponseEntity<?> updateQuantityClient(
@@ -246,27 +217,47 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         return ResponseEntity.ok("Cantidad actualizada");
     }
 
-
-    @Operation(
-            summary = "Eliminar ítem",
-            description = "Elimina un ítem existente por su ID"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ítem eliminado correctamente"),
-            @ApiResponse(responseCode = "400", description = "ID inválido")
-    })
-    @DeleteMapping("/staff/delete/{itemId}")
-    public ResponseEntity<?> deleteItemStaff(@PathVariable @Positive Long itemId,
-                                             @AuthenticationPrincipal UserDetails userDetails) {
-        Long businessId = staffService.getBusinessIdByCredentialId(
-                credentialService.getIdByUsername(userDetails.getUsername()));
+    @PutMapping("/staff/update-quantity/{itemId}/{quantity}")
+    public ResponseEntity<?> updateQuantityStaff(
+            @PathVariable @Positive Long itemId,
+            @PathVariable @Positive int quantity,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long businessId = staffService
+                .getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
         Item item = service.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundCustomException("Item no encontrado"));
         Cart cart = item.getCart();
-        if (!cart.getStaff().getBusiness().getId().equals(businessId)
+        if (cart.getStaff() == null
+                || !cart.getStaff().getBusiness().getId().equals(businessId)
                 || !"SALE".equals(cart.getCart_type().getId())
                 || !"OPEN".equals(cart.getCart_status().getId())) {
-            return ResponseEntity.badRequest().body("No tienes permiso para eliminar este ítem.");
+            return ResponseEntity.badRequest()
+                    .body("No tienes permiso para modificar este ítem.");
+        }
+        if (item.getProduct().getStock() < quantity) {
+            return ResponseEntity.badRequest()
+                    .body("No hay suficiente stock para este producto.");
+        }
+        item.setQuantity(quantity);
+        service.save(item);
+        return ResponseEntity.ok("Cantidad actualizada");
+    }
+
+    @DeleteMapping("/staff/delete/{itemId}")
+    public ResponseEntity<?> deleteItemStaff(
+            @PathVariable @Positive Long itemId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long businessId = staffService
+                .getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
+        Item item = service.findById(itemId)
+                .orElseThrow(() -> new EntityNotFoundCustomException("Item no encontrado"));
+        Cart cart = item.getCart();
+        if (cart.getStaff() == null
+                || !cart.getStaff().getBusiness().getId().equals(businessId)
+                || !"SALE".equals(cart.getCart_type().getId())
+                || !"OPEN".equals(cart.getCart_status().getId())) {
+            return ResponseEntity.badRequest()
+                    .body("No tienes permiso para eliminar este ítem.");
         }
         service.deleteById(itemId);
         return ResponseEntity.ok("Ítem eliminado");
@@ -306,7 +297,6 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         }
 
         Item item = itemOpt.get();
-
         if (service.deleteMyItem(item.getId())) {
             return ResponseEntity.ok("Item eliminado");
         } else {

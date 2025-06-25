@@ -86,7 +86,6 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         } catch (UserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-       passwordEncoder.encode(password);
         if (username == null || password == null) {
             return ResponseEntity.badRequest().body("Faltan datos obligatorios: 'username' y/o 'password'.");
         }
@@ -95,7 +94,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         newCred.setFirst_name(firstName);
         newCred.setLast_name(lastName);
         newCred.setUsername(username);
-        newCred.setPassword(password);
+        newCred.setPassword(passwordEncoder.encode(password));
         newCred.setRole(new Role("ROLE_EMPLOYEE"));
         Credential savedCred = credentialService.save(newCred);
         Business bossBusiness = businessService.findById(bossBusinessId)
@@ -180,6 +179,5 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         List<StaffViewDTO> staff = service.getStaffByBusinessId(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));
         return ResponseEntity.ok(staff);
     }
-
 
 }

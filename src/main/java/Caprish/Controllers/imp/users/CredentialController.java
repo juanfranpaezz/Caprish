@@ -129,19 +129,16 @@ public class CredentialController extends MyObjectGenericController<Credential, 
     @PostMapping("/login")
     public ResponseEntity<?> login(@AuthenticationPrincipal UserDetails userDetails,
                                    @RequestBody LoginRequest request) {
-        if (userDetails != null) {
-            return ResponseEntity.badRequest().body("Ya estás logueado");
-        }
+        try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
-        try {
             return ResponseEntity.ok(service.doLogin(request.getUsername()));
         } catch (UserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
+
 
     @Operation(
             summary = "Completar datos de perfil",

@@ -101,47 +101,51 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
             @RequestBody Map<String, String> payload,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        if (!payload.containsKey("businessName") || payload.get("businessName").isBlank()) {
-            return ResponseEntity.badRequest().body("El campo businessName es requerido");
+        String businessName = payload.get("businessName");
+        if (businessName == null || businessName.isBlank()) {
+            return ResponseEntity.badRequest().body("El campo 'businessName' es requerido y no puede ser vacío");
         }
         if (payload.size() != 1) {
             return ResponseEntity.badRequest().body("Sólo se permite el campo 'businessName'");
         }
         Long bizId = service.resolveBusinessId(userDetails);
-        return update(bizId, "businessName", payload.get("businessName"));
+        return update(bizId, "businessName", businessName);
     }
 
-    @Operation(summary = "Actualizar descripcion del negocio ")
+    @Operation(summary = "Actualizar descripción del negocio")
     @PutMapping("/updateDescription")
     public ResponseEntity<String> updateDescription(
             @RequestBody Map<String, String> payload,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        if (!payload.containsKey("description")) {
-            return ResponseEntity.badRequest().body("El campo description es requerido");
+        String description = payload.get("description");
+        if (description == null || description.isBlank()) {
+            return ResponseEntity.badRequest().body("El campo 'description' es requerido y no puede ser vacío");
         }
         if (payload.size() != 1) {
             return ResponseEntity.badRequest().body("Sólo se permite el campo 'description'");
         }
         Long bizId = service.resolveBusinessId(userDetails);
-        return update(bizId, "description", payload.get("description"));
+        return update(bizId, "description", description);
     }
 
     @Operation(summary = "Actualizar eslogan del negocio")
     @PutMapping("/updateSlogan")
     public ResponseEntity<String> updateSlogan(
-            @Valid @RequestBody Map<String, String> payload,
+            @RequestBody Map<String, String> payload,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        if (!payload.containsKey("slogan")) {
-            return ResponseEntity.badRequest().body("El campo slogan es requerido");
+        String slogan = payload.get("slogan");
+        if (slogan == null || slogan.isBlank()) {
+            return ResponseEntity.badRequest().body("El campo 'slogan' es requerido y no puede ser vacío");
         }
         if (payload.size() != 1) {
             return ResponseEntity.badRequest().body("Sólo se permite el campo 'slogan'");
         }
         Long bizId = service.resolveBusinessId(userDetails);
-        return update(bizId, "slogan", payload.get("slogan"));
+        return update(bizId, "slogan", slogan);
     }
+
 
     @Operation(summary = "Actualizar valor del impuesto del negocio")
     @PutMapping("/updateTax")

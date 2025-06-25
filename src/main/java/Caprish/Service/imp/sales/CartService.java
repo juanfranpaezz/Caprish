@@ -84,9 +84,6 @@ public List<CartViewDTO> getCartsByBusinessAndStatus(Long businessId, String car
         }
     }
 
-    public Long findIdByClientId(Long clientId){
-        return repository.findIdOpenPurchaseCartByClientId(clientId);
-    }
 
     public Optional<Cart> findByClientIdAndTypeAndStatus(Long clientId, String typeId, String statusId) {
         return repository.findByClientIdAndTypeAndStatus(clientId, typeId, statusId);
@@ -95,15 +92,29 @@ public List<CartViewDTO> getCartsByBusinessAndStatus(Long businessId, String car
     public List<ClientPurchaseDTO> getFinalizedCartsByClientUsername(Long clientId, String username, String cartStatus) {
         return repository.findFinalizedCartsByClient(clientId, username, cartStatus)
                 .stream()
-                .map(row -> new ClientPurchaseDTO(
-                        ((Number) row[0]).longValue(),
-                        (String) row[1],
-                        (String) row[2],
-                        (String) row[3],
-                        (String) row[4],
-                        (String)row[5],
-                        ((Number) row[6]).doubleValue()
-                )).collect(Collectors.toList());
+                .map(row -> {
+                    Long cartId = ((Number) row[0]).longValue();
+
+                    List<CartItemViewDTO> items = repository.findItemsByCartId(cartId)
+                            .stream()
+                            .map(item -> new CartItemViewDTO(
+                                    (String) item[0],
+                                    ((Number) item[1]).intValue()
+                            ))
+                            .collect(Collectors.toList());
+
+                    return new ClientPurchaseDTO(
+                            cartId,
+                            (String) row[1],
+                            (String) row[2],
+                            (String) row[3],
+                            (String) row[4],
+                            (String) row[5],
+                            ((Number) row[6]).doubleValue(),
+                            items
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
 //    public List<ClientPurchaseDTO> getCartByClientUsername(Long clientId, String username) {

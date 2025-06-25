@@ -127,5 +127,12 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
     group by c.id,client_name,cart_type,cart_status,staff_name,business_id
 """, nativeQuery = true)
     List<Object[]> getCartViewsByBusinessId(@Param("idBusiness") Long idBusiness, @Param("cartStatus") String cartStatus);
+
+
+    @Query(value = "SELECT p.name, i.quantity " +
+            "FROM item i " +
+            "JOIN product p ON p.id = i.id_product " +
+            "WHERE i.id_cart = :idCart", nativeQuery = true)
+    List<Object[]> findItemsByCartId(@Param("idCart") Long idCart);
 }
 

@@ -2,6 +2,7 @@ package Caprish.Service.imp.sales;
 
 
 import Caprish.Model.imp.sales.Cart;
+import Caprish.Model.imp.sales.dto.CartItemViewDTO;
 import Caprish.Model.imp.sales.dto.CartViewDTO;
 import Caprish.Model.imp.sales.dto.ClientPurchaseDTO;
 import Caprish.Model.imp.users.Client;
@@ -19,40 +20,65 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
         super(childRepository);
     }
 
-    public List<CartViewDTO> getCartsByBusinessAndStatus(Long businessId, String cartStatus) {
-        try {
-            return repository.getCartViewsByBusinessId(businessId, cartStatus)
-                    .stream()
-                    .map(obj -> new CartViewDTO(
-                            ((Number) obj[0]).longValue(),             // idCart
-                            (String) obj[1],                           // clientName (first + last)
-                            (String) obj[2],                           // cartType
-                            (String) obj[3],                           // cartStatus
-                            (String) obj[4],                           // staffName (first + last)
-                            ((Number) obj[5]).longValue()
-                            // totalAmount
-                    ))
-                    .collect(Collectors.toList());
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException("Error getting cart views", e);
-        }
+
+public List<CartViewDTO> getCartsByBusinessAndStatus(Long businessId, String cartStatus) {
+    try {
+        return repository.getCartViewsByBusinessId(businessId, cartStatus)
+                .stream()
+                .map(obj -> {
+                    Long idCart = ((Number) obj[0]).longValue();
+
+                    List<CartItemViewDTO> items = repository.findItemsByCartId(idCart)
+                            .stream()
+                            .map(item -> new CartItemViewDTO(
+                                    (String) item[0],
+                                    ((Number) item[1]).intValue()))
+                            .collect(Collectors.toList());
+
+                    return new CartViewDTO(
+                            idCart,
+                            (String) obj[1],
+                            (String) obj[2],
+                            (String) obj[3],
+                            (String) obj[4],
+                            ((Number) obj[5]).longValue(),
+                            items
+                    );
+                })
+                .collect(Collectors.toList());
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Error getting cart views", e);
     }
+}
 
     public List<CartViewDTO> getCartViewsByBusiness(Long businessId, String cartStatus) {
         try {
             return repository.getCartViewsByBusinessId(businessId, cartStatus)
                     .stream()
-                    .map(obj -> new CartViewDTO(
-                            ((Number) obj[0]).longValue(),             // idCart
-                            (String) obj[1],                           // clientName (first + last)
-                            (String) obj[2],                           // cartType
-                            (String) obj[3],                           // cartStatus
-                            (String) obj[4],                           // staffName (first + last)
-                            ((Number) obj[5]).longValue()             // idBusiness
-                    ))
+                    .map(obj -> {
+                        Long idCart = ((Number) obj[0]).longValue();
+
+                        List<CartItemViewDTO> items = repository.findItemsByCartId(idCart)
+                                .stream()
+                                .map(item -> new CartItemViewDTO(
+                                        (String) item[0],
+                                        ((Number) item[1]).intValue()
+                                ))
+                                .collect(Collectors.toList());
+
+                        return new CartViewDTO(
+                                idCart,
+                                (String) obj[1],
+                                (String) obj[2],
+                                (String) obj[3],
+                                (String) obj[4],
+                                ((Number) obj[5]).longValue(),
+                                items
+                        );
+                    })
                     .collect(Collectors.toList());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error getting cart views", e);
         }
@@ -67,31 +93,59 @@ public class CartService extends MyObjectGenericService<Cart, CartRepository, Ca
     }
 
     public List<ClientPurchaseDTO> getFinalizedCartsByClientUsername(Long clientId, String username, String cartStatus) {
-        return  repository.findFinalizedCartsByClient(clientId, username, cartStatus)
+        return repository.findFinalizedCartsByClient(clientId, username, cartStatus)
                 .stream()
-                .map(row -> new ClientPurchaseDTO(
-                        ((Number) row[0]).longValue(),
-                        (String) row[1],
-                        (String) row[2],
-                        (String) row[3],
-                        (String) row[4],
-                        (String)row[5],
-                        ((Number) row[6]).doubleValue()
-                )).collect(Collectors.toList());
+                .map(row -> {
+                    Long cartId = ((Number) row[0]).longValue();
+
+                    List<CartItemViewDTO> items = repository.findItemsByCartId(cartId)
+                            .stream()
+                            .map(item -> new CartItemViewDTO(
+                                    (String) item[0],
+                                    ((Number) item[1]).intValue()
+                            )).collect(Collectors.toList());
+
+                    return new ClientPurchaseDTO(
+                            cartId,
+                            (String) row[1],
+                            (String) row[2],
+                            (String) row[3],
+                            (String) row[4],
+                            (String) row[5],
+                            ((Number) row[6]).doubleValue(),
+                            items
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
 //    public List<ClientPurchaseDTO> getCartByClientUsername(Long clientId, String username) {
-//        return  repository.findCartByClient(clientId, username)
+//        return repository.findCartByClient(clientId, username)
 //                .stream()
-//                .map(row -> new ClientPurchaseDTO(
-//                ((Number) row[0]).longValue(),
-//                (String) row[1],
-//                (String) row[2],
-//                (String) row[3],
-//                (String) row[4],
-//                (String)row[5],
-//                ((Number) row[6]).doubleValue()
-//        )).collect(Collectors.toList());
+//                .map(row -> {
+//                    Long cartId = ((Number) row[0]).longValue();
+//
+//
+//                    List<CartItemViewDTO> items = repository.findItemsByCartId(cartId)
+//                            .stream()
+//                            .map(item -> new CartItemViewDTO(
+//                                    (String) item[0],
+//                                    ((Number) item[1]).intValue()
+//                            ))
+//                            .collect(Collectors.toList());
+//
+//                    return new ClientPurchaseDTO(
+//                            cartId,
+//                            (String) row[1],
+//                            (String) row[2],
+//                            (String) row[3],
+//                            (String) row[4],
+//                            (String) row[5],
+//                            ((Number) row[6]).doubleValue(),
+//                            items
+//                    );
+//                })
+//                .collect(Collectors.toList());
 //    }
 
     @Override

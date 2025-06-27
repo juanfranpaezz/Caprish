@@ -103,7 +103,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
-
+    @Operation(summary = "Crear un jefe", description = "Crea un jefe con sus respectivos atributos")
     @PostMapping("/create-boss")
     public ResponseEntity<String> createBoss(
             @Valid @RequestBody Staff entity,
@@ -121,7 +121,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
     }
 
     @Operation(
-            summary = "Eliminar un empleado por ID",
+            summary = "Eliminar un empleado por nombre",
             description = "Elimina un registro Staff usando su identificador único"
     )
     @ApiResponses(value = {
@@ -137,8 +137,7 @@ public class StaffController extends MyObjectGenericController<Staff, StaffRepos
         if (bossId == null || !bossId.equals(staffId)) return ResponseEntity.badRequest().body("La empresa no existe");
         return credentialController.update(credentialService.getIdByUsername(username),"enabled",false);
     }
-
-
+    @Operation(summary = "Ver mi cuenta", description = "Muestra la cuenta del empleado, con todos sus datos")
     @GetMapping("/view-my-account")
     public ResponseEntity<Staff> viewMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
         Staff staff = staffService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())).get();

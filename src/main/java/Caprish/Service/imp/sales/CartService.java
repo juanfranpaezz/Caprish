@@ -1,6 +1,7 @@
 package Caprish.Service.imp.sales;
 
 
+import Caprish.Model.enums.CartStatus;
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Model.imp.sales.dto.CartItemViewDTO;
 import Caprish.Model.imp.sales.dto.CartViewDTO;
@@ -117,34 +118,10 @@ public List<CartViewDTO> getCartsByBusinessAndStatus(Long businessId, String car
                 .collect(Collectors.toList());
     }
 
-//    public List<ClientPurchaseDTO> getCartByClientUsername(Long clientId, String username) {
-//        return repository.findCartByClient(clientId, username)
-//                .stream()
-//                .map(row -> {
-//                    Long cartId = ((Number) row[0]).longValue();
-//
-//
-//                    List<CartItemViewDTO> items = repository.findItemsByCartId(cartId)
-//                            .stream()
-//                            .map(item -> new CartItemViewDTO(
-//                                    (String) item[0],
-//                                    ((Number) item[1]).intValue()
-//                            ))
-//                            .collect(Collectors.toList());
-//
-//                    return new ClientPurchaseDTO(
-//                            cartId,
-//                            (String) row[1],
-//                            (String) row[2],
-//                            (String) row[3],
-//                            (String) row[4],
-//                            (String) row[5],
-//                            ((Number) row[6]).doubleValue(),
-//                            items
-//                    );
-//                })
-//                .collect(Collectors.toList());
-//    }
+
+    public void confirmPurchase(Long cartId){
+        repository.confirmPurchase(cartId, new CartStatus("CONFIRMED"));
+    }
 
     @Override
     protected void verifySpecificAttributes(Cart entity) {}

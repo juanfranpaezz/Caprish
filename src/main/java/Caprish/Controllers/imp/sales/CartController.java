@@ -197,19 +197,12 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
                                 + "\" está dada de baja");
             }
         }
-        cart.setCart_status(new CartStatus("CONFIRMED"));
-        cart.setSale_date(LocalDate.now());
-        service.save(cart);
         for (Item item : cart.getItems()) {
             Long   prodId   = item.getProduct().getId();
             int    newStock = item.getProduct().getStock() - item.getQuantity();
             productService.changeField(prodId, "stock", newStock);
         }
-        Cart newCart = new Cart();
-        newCart.setCart_type(new CartType("PURCHASE"));
-        newCart.setCart_status(new CartStatus("OPEN"));
-        newCart.setClient(cart.getClient());
-        service.save(newCart);
+        service.confirmPurchase(cartId);
         return ResponseEntity.ok("Compra confirmada");
     }
 }

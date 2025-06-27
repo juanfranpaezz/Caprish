@@ -1,10 +1,14 @@
 package Caprish.Repository.interfaces.sales;
 
+import Caprish.Model.enums.CartStatus;
 import Caprish.Model.imp.sales.Cart;
 import Caprish.Model.imp.users.Client;
 import Caprish.Repository.interfaces.MyObjectGenericRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +30,19 @@ public interface CartRepository extends MyObjectGenericRepository<Cart> {
             @Param("idClient")   Long clientId
     );
 
+
+    @Modifying
+    @Transactional
+    @Query("""
+      UPDATE Cart c
+      SET c.cart_status = :statusEntity,
+          c.sale_date    = CURRENT_DATE
+      WHERE c.id = :cartId
+    """)
+    void confirmPurchase(
+            @Param("cartId") Long cartId,
+            @Param("statusEntity") CartStatus statusEntity
+    );
 
     @Query(value = """
     SELECT DISTINCT cl.*

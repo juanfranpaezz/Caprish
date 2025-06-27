@@ -138,7 +138,7 @@ public class CredentialController extends MyObjectGenericController<Credential, 
         update(cred.get().getId(),"last_name",payload.get("lastName"));
         return ResponseEntity.ok().body("Campos actualizados exitosamente");
     }
-
+    @Operation(summary = "Cerrar sesión", description = "Cierra sesión del usuario")
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@AuthenticationPrincipal UserDetails userDetails) {
         Credential cred = service.findByUsername(userDetails.getUsername()).get();

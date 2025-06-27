@@ -123,7 +123,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
             }
         return ResponseEntity.ok(carts);
     }
-
+    @Operation(summary = "Confirmar una venta", description = "Confirma una venta y cambia el estado del carrito")
     @PutMapping("/staff/confirm-sale/{cartId}")
     public ResponseEntity<String> confirmSale(@PathVariable @Positive Long cartId,
                                               @AuthenticationPrincipal UserDetails userDetails) {
@@ -148,7 +148,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         });
         return ResponseEntity.ok("Venta confirmada");
     }
-
+    @Operation(summary = "Ver mis compras", description = "Muestra las ventas realizadas del cliente")
     @GetMapping("/client/view/my-purchases")
     public ResponseEntity<?> getMyPurchases(@AuthenticationPrincipal UserDetails userDetails) {
 
@@ -163,7 +163,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         if(carts.isEmpty()) return ResponseEntity.badRequest().body("No hay carritos");
         return ResponseEntity.ok(carts);
     }
-
+    @Operation(summary = "Ver mi carrito", description = "Muestra los carritos abiertos relacionados al cliente")
     @GetMapping("/client/view/my-cart")
     public ResponseEntity<?> viewMyCart(@AuthenticationPrincipal UserDetails userDetails) {
         Client client = clientService.findByCredentialId(credentialService.getIdByUsername(userDetails.getUsername()));
@@ -174,7 +174,7 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         }
         return ResponseEntity.ok(carts);
     }
-
+    @Operation(summary = "Confirmar venta", description = "Confirma una venta por parte del cliente")
     @PutMapping("/client/confirm-purchase")
     public ResponseEntity<String> confirmPurchase(@RequestBody Map<String,String> payload,
                                                   @AuthenticationPrincipal UserDetails userDetails) {

@@ -65,7 +65,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         entity.setBusiness(business);
         return create(entity);
     }
-
+    @Operation(summary = "Eliminar un producto", description = "Elimina un producto mediante busqueda por nombre")
     @DeleteMapping("/delete/{name}")
     public ResponseEntity<String> deleteByName(@PathVariable @NotBlank String name,
                                                @AuthenticationPrincipal UserDetails userDetails) {
@@ -84,17 +84,17 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         service.deleteProductById(toDelete.getId());
         return ResponseEntity.ok("Producto '" + name + "' eliminado correctamente.");
     }
-
+    @Operation(summary = "Buscar un producto", description = "Busca un producto solicitado por el cliente")
     @GetMapping("/client/name/{name}")
-    public ResponseEntity<List<Product>> findByNameFromClient(@PathVariable @NotBlank String name) {
+    public ResponseEntity<?> findByNameFromClient(@PathVariable @NotBlank String name) {
         List<Product> all = service.findAll();
-        if (all.isEmpty()) return ResponseEntity.noContent().build();
+        if (all.isEmpty()) return ResponseEntity.badRequest().body("El producto '" + name + "' no existe.");
         List<Product> matching = all.stream()
                 .filter(p -> p.getName().equalsIgnoreCase(name))
                 .toList();
         return ResponseEntity.ok(matching);
     }
-
+    @Operation(summary = "Buscar un producto", description = "Busca un producto en el lado de un empleado, solo en su empresa asociada")
     @GetMapping("/staff/name/{name}")
     public ResponseEntity<?> findByNameFromBusiness(
             @PathVariable @NotBlank String name,
@@ -123,7 +123,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
 
         return ResponseEntity.ok(matching);
     }
-
+    @Operation(summary = "Mostrar productos de una empresa", description = "Muestra todos los productos de una empresa en especifico")
     @GetMapping("/all-by-business/{businessName}")
     public ResponseEntity<?> findAllByBusinessName(@PathVariable @NotBlank String businessName) {
         var optBusiness = businessService.findByBusinessName(businessName);
@@ -138,7 +138,7 @@ public class ProductController extends MyObjectGenericController<Product, Produc
         }
         return ResponseEntity.ok(products);
     }
-
+    @Operation(summary = "Mostrar producto de mi empresa", description = "Muestra los productos de la empresa asociada al empleado")
     @GetMapping("/all-by-my-business")
     public ResponseEntity<?> findAllByBusinessName(@AuthenticationPrincipal UserDetails userDetails) {
         var optBusiness = businessService.findById(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));

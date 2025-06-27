@@ -50,7 +50,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
     public ItemController(ItemService service) {
         super(service);
     }
-
+    @Operation(summary = "Agregar un item a un carrito", description = "Agrega un item a un carrito en especifico")
     @PostMapping("/staff/add-from-sale")
     public ResponseEntity<?> addItemFromSale(@RequestBody Map<String, String> payload,
                                              @AuthenticationPrincipal UserDetails userDetails) {
@@ -96,7 +96,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         Item saved = service.save(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
-
+    @Operation(summary = "Agregar a compra", description = "Agrega un producto buscado por el cliente a un carrito abierto, de no ser asi, crea el carrito y agrega el producto")
     @PostMapping("/client/add-from-purchase")
     public ResponseEntity<?> addItemFromPurchase(@AuthenticationPrincipal UserDetails userDetails,
                                                  @RequestBody Map<String, String> payload) {
@@ -158,7 +158,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
 
     @Operation(
             summary = "Actualizar cantidad de un ítem",
-            description = "Modifica el valor del campo 'quantity' para el ítem con el ID dado"
+            description = "Modifica el valor del campo 'quantity' para el ítem con el nombre dado"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cantidad actualizada correctamente"),
@@ -216,7 +216,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
 
         return ResponseEntity.ok("Cantidad actualizada");
     }
-
+    @Operation(summary = "Actualziar cantidad de un item", description = "Actualiza la cantidad de un item de un carrito")
     @PutMapping("/staff/update-quantity/{itemId}/{quantity}")
     public ResponseEntity<?> updateQuantityStaff(
             @PathVariable @Positive Long itemId,
@@ -242,7 +242,7 @@ public class ItemController extends MyObjectGenericController<Item, ItemReposito
         service.save(item);
         return ResponseEntity.ok("Cantidad actualizada");
     }
-
+    @Operation(summary = "Eliminar un item", description = "Elimina un item de un carrito")
     @DeleteMapping("/staff/delete/{itemId}")
     public ResponseEntity<?> deleteItemStaff(
             @PathVariable @Positive Long itemId,

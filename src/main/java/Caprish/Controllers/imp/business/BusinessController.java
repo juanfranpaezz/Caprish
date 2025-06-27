@@ -39,7 +39,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         super(service);
     }
 
-
+    @Operation(summary = "Crear una empresa", description = "Crea una empresa con sus respectivos datos.")
     @PostMapping("/create")
     public ResponseEntity<String> createBusiness(
             @RequestBody @Valid Business entity,
@@ -93,7 +93,7 @@ public class BusinessController extends MyObjectGenericController<Business, Busi
         return ResponseEntity.ok(business);
     }
 
-
+    @Operation(summary = "Ver mi empresa", description = "Muestra la empresa vinculada al jefe")
     @GetMapping("/view-my")
     public ResponseEntity<?> findObjectByBoss(@AuthenticationPrincipal UserDetails userDetails) {
         Optional<Business> a = service.findById(staffService.getBusinessIdByCredentialId(credentialService.getIdByUsername(userDetails.getUsername())));

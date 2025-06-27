@@ -159,8 +159,9 @@ public class CartController extends MyObjectGenericController<Cart, CartReposito
         if (client == null) {
             return ResponseEntity.badRequest().body("No hay ventas");
         }
-
-        return ResponseEntity.ok(service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername(), "CONFIRMED"));
+        List<ClientPurchaseDTO> carts = service.getFinalizedCartsByClientUsername(client.getId(), userDetails.getUsername(), "CONFIRMED");
+        if(carts.isEmpty()) return ResponseEntity.badRequest().body("No hay carritos");
+        return ResponseEntity.ok(carts);
     }
 
     @GetMapping("/client/view/my-cart")
